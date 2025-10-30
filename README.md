@@ -42,3 +42,5 @@ npm run dev
 ## Targets
 - LCP < 2.0s (4G), CLS ~0, 60fps animation
 - Motion durations ~220ms; respect prefers-reduced-motion
+
+
