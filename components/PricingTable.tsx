@@ -1,54 +1,67 @@
-
-'use client';
-import { useState } from 'react';
-import Magnetic from '@/components/motion/Magnetic';
+﻿"use client";
+import { useState } from "react";
 
 export default function PricingTable() {
-  const [loading, setLoading] = useState<'starter' | 'pro' | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  async function handleBuy(tier: 'starter' | 'pro') {
-    setLoading(tier);
+  async function handleBuy() {
     try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier })
-      });
+      setLoading(true);
+      const res = await fetch("/api/checkout", { method: "POST" });
       const data = await res.json();
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Checkout not configured yet. Set STRIPE keys and SITE_URL.');
-      }
-    } catch (e) {
-      alert('Error starting checkout.');
+      if (!res.ok) throw new Error(data?.error || "Checkout init failed");
+      window.location.href = data.url;
+    } catch (err) {
+      alert("Checkout failed. Please try again.");
     } finally {
-      setLoading(null);
+      setLoading(false);
     }
   }
 
-  const Btn = ({ tier, label }: any) => (
-    <Magnetic>
-      <button onClick={() => handleBuy(tier)} className="mt-6 w-full px-5 py-3 rounded-md bg-gray-900 text-white hover:bg-gray-800 focus:outline-none focus:ring disabled:opacity-50">
-        {loading === tier ? 'Redirecting…' : label}
-      </button>
-    </Magnetic>
-  );
-
   return (
-    <div className="grid md:grid-cols-2 gap-6 mt-10">
-      <div className="rounded-xl border border-gray-100 p-6 bg-white shadow-card">
-        <h3 className="text-xl font-semibold">Starter</h3>
-        <p className="text-gray-600 mt-2">Up to 5 pages, subtle motion, Stripe link checkout.</p>
-        <div className="mt-6 text-3xl font-bold">$1,000</div>
-        <Btn tier="starter" label="Buy Starter" />
+    <section className="mx-auto max-w-4xl px-4 py-24">
+      <h1 className="text-4xl font-bold tracking-tight">Pricing</h1>
+      <p className="text-gray-600 mt-3">
+        Pay once to build, then a simple monthly care plan.
+      </p>
+
+      <div className="mt-10 rounded-2xl border bg-white/50 shadow-sm backdrop-blur">
+        <div className="p-8 md:p-10">
+          <h2 className="text-2xl font-semibold">Website Build + Care</h2>
+          <p className="text-gray-600 mt-2">
+            One-time setup: <strong>$465</strong> · Then <strong>$99/mo</strong> hosting & care
+            (updates, monitoring, and priority fixes included).
+          </p>
+
+          <div className="mt-6 flex items-baseline gap-3">
+            <span className="text-3xl font-bold">$465</span>
+            <span className="text-gray-500">one-time</span>
+            <span className="text-gray-400">·</span>
+            <span className="text-xl font-semibold">$99</span>
+            <span className="text-gray-500">/mo</span>
+          </div>
+
+          <ul className="mt-6 space-y-2 text-gray-700">
+            <li>• Premium animations & responsive design</li>
+            <li>• Stripe checkout wired and tested</li>
+            <li>• Domain, SSL, analytics, contact form</li>
+            <li>• Ongoing care & updates for $99/mo</li>
+          </ul>
+
+          <button
+            onClick={handleBuy}
+            className="mt-8 w-full rounded-md bg-gray-900 px-6 py-3 text-white hover:bg-gray-800 focus:outline-none focus:ring"
+            disabled={loading}
+          >
+            {loading ? "Redirecting…" : "Buy & Subscribe"}
+          </button>
+
+          <p className="mt-3 text-xs text-gray-500">
+            You’ll see a single Stripe checkout showing $465 today and a $99/mo subscription.
+            Cancel anytime.
+          </p>
+        </div>
       </div>
-      <div className="rounded-xl border border-gray-100 p-6 bg-white shadow-card">
-        <h3 className="text-xl font-semibold">Pro</h3>
-        <p className="text-gray-600 mt-2">Up to 10 pages, CMS-ready structure, premium motion pack.</p>
-        <div className="mt-6 text-3xl font-bold">$1,600</div>
-        <Btn tier="pro" label="Buy Pro" />
-      </div>
-    </div>
+    </section>
   );
 }
