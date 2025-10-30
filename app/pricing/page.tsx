@@ -1,10 +1,8 @@
-﻿"use client";
+﻿import PricingTable from "@/components/PricingTable";
 
-import PricingTable from "@/components/PricingTable";
-
-export const dynamic = "force-dynamic";   // disable static generation
-export const revalidate = false;          // must be a number or false
-export const fetchCache = "force-no-store";
+// force dynamic rendering and disable ISR
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default function PricingPage() {
   return <PricingTable />;
