@@ -1,16 +1,18 @@
-﻿import PageReveal from "@/components/PageReveal";
+﻿"use client";
+import { useEffect } from "react";
 import PricingTable from "@/components/PricingTable";
 
 export default function PricingPage() {
-  return (
-    <PageReveal>
-      <section className="mx-auto max-w-6xl px-4 py-24">
-        <h1 className="text-4xl font-bold tracking-tight">Pricing</h1>
-        <p className="text-gray-600 mt-3">
-          Choose a package and pay securely via Stripe.
-        </p>
-        <PricingTable />
-      </section>
-    </PageReveal>
-  );
+  useEffect(() => {
+    // If user came via back/forward cache, force a refresh once
+    if (performance && "navigation" in performance) {
+      // @ts-ignore
+      const type = performance.getEntriesByType("navigation")[0]?.type;
+      if (type === "back_forward") {
+        window.location.replace(window.location.href);
+      }
+    }
+  }, []);
+
+  return <PricingTable />;
 }
