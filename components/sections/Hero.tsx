@@ -38,7 +38,9 @@ export default function Hero() {
           </div>
 
           <p className="mt-4 text-sm text-slateMuted">
-            Calls {site.phone.display} — that&apos;s the system itself picking up, not me.
+            Calls {site.phone.display}. {site.coverage.bot} that&apos;s the system
+            picking up, not me — call then and you&apos;ll hear exactly what your
+            customers would.
           </p>
         </div>
       </div>

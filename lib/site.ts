@@ -20,12 +20,12 @@ const REPLACE_ME = {
 /**
  * Live values. These are real.
  *
- * The phone number is the demo bot's own line — deliberately. Every CTA on the
- * site dials the product itself, so "call me" and "hear it answer a call" are
- * the same action, and the system escalates real prospects to the owner's
- * phone the same way it would for a client. The owner's personal number is
- * never published on the site; it exists only as an escalation target
- * configured inside the phone system.
+ * One published number, answered two ways: the owner takes it during the day,
+ * and the AI covers overnight. See `coverage` below — copy across the site
+ * reads from it, so changing the hours here updates every page.
+ *
+ * The owner's personal mobile is deliberately NOT published. Callers reach the
+ * business line; routing happens inside the phone system.
  */
 const DEFAULTS = {
   phone: '+18773799412',
@@ -91,7 +91,19 @@ export const site = {
     standardLink: process.env.NEXT_PUBLIC_STRIPE_STANDARD_LINK ?? '',
   },
 
-  /** Business hours the AI covers — used in copy and structured data. */
+  /**
+   * Who answers the published line, and when. Site copy reads from these
+   * strings so the hours are stated in exactly one place.
+   */
+  coverage: {
+    /** Hours the AI answers. */
+    bot: '10pm–6am',
+    /** Hours the owner answers personally. */
+    owner: '6am–10pm',
+    timezone: 'Mountain Time',
+  },
+
+  /** Hours a client's own system covers, once installed — used in sales copy. */
   hoursPerWeek: 168,
 } as const;
 

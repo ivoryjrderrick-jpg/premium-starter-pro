@@ -18,8 +18,9 @@ export default function ContactPage() {
         Get in touch
       </h1>
       <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slateLight">
-        Fastest way is to call. You&apos;ll hear the system answer — which is the
-        demo — and it will put you through to me or take your details.
+        Fastest way is to call. {site.coverage.owner} you get me directly. Call{' '}
+        {site.coverage.bot} and the system picks up — which is also the easiest
+        way to hear what it actually sounds like.
       </p>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
@@ -63,11 +64,10 @@ export default function ContactPage() {
             <div>
               <dt className="text-sm text-slateMuted">Hours</dt>
               <dd className="mt-1 leading-relaxed text-cream">
-                The line is answered 24/7.
+                {site.coverage.owner} {site.coverage.timezone} — you get me.
                 <span className="block text-slateLight">
-                  It puts you through to me during business hours, Mountain Time,
-                  and takes your details outside them. Same system I&apos;d build
-                  for you.
+                  {site.coverage.bot} the system answers, takes the details, and
+                  sends me the summary. Same setup I&apos;d build for you.
                 </span>
               </dd>
             </div>

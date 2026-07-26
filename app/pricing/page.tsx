@@ -97,7 +97,7 @@ export default function PricingPage() {
 
       <CtaBand
         heading="Hear it, then decide"
-        body="Call the demo line and listen to it handle a booking. If it sounds like something your customers would be fine talking to, we go from there."
+        body={`Call ${site.coverage.bot} and listen to it handle a booking start to finish. If it sounds like something your customers would be fine talking to, we go from there. Any other time you get me.`}
         showPricingLink={false}
       />
 

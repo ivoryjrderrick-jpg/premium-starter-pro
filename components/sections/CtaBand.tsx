@@ -1,8 +1,9 @@
 import { CallButton, LinkButton } from '@/components/CTA';
+import { site } from '@/lib/site';
 
 export default function CtaBand({
   heading = 'Hear it before you buy it',
-  body = 'Call the demo line. It answers like it would for your business — asks what you need, checks the calendar, books the slot. Takes two minutes.',
+  body = `Call ${site.coverage.bot} and the system takes the call end to end — asks what you need, checks the calendar, books the slot. Any other time you get me, and we can talk it through instead.`,
   showPricingLink = true,
 }: {
   heading?: string;
@@ -39,8 +40,8 @@ export default function CtaBand({
             </div>
 
             <p className="mt-5 text-sm text-slateMuted">
-              Prefer to talk to a person? Same number — say &ldquo;transfer me&rdquo;
-              and it rings my phone. That&apos;s the escalation your customers get too.
+              Overnight, if a call is urgent, the system rings my phone rather than
+              taking a message. That&apos;s the escalation your customers would get.
             </p>
           </div>
         </div>
