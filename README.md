@@ -15,13 +15,25 @@ npm run dev                  # http://localhost:3000
 
 ## ⚠️ Before you launch
 
-Search the repo for `REPLACE_ME`. Three things are placeholders:
+Search the repo for `REPLACE_ME`. **One** thing is still a placeholder:
 
 | What | Where | Notes |
 |---|---|---|
-| **Demo phone number** | `NEXT_PUBLIC_DEMO_PHONE` | Currently `+17195550142` — a reserved fictional number that won't dial a real person. Every CTA on the site uses it. |
 | **Mailing address** | `NEXT_PUBLIC_ADDRESS_LINE1/2` | **Required for SMS carrier registration.** Appears on `/privacy` and `/terms`. |
-| **Contact email** | `NEXT_PUBLIC_CONTACT_EMAIL` | |
+
+Phone and email are live: `(877) 379-9412` and `contact@rockymountainbooking.com`.
+
+### On the phone number
+
+The site publishes **the demo bot's own line**, not a personal mobile. That's
+deliberate — every CTA dials the product, so "call me" and "hear it answer a
+call" are the same action, and a prospect experiences the escalation feature
+before they've paid for it. The personal number belongs inside the phone
+system as an escalation target, never on the page.
+
+One open question: `877` is toll-free, which reads national. The positioning
+is local. A `719` number would carry that better — see the note in the launch
+checklist below.
 
 Also worth doing: have an attorney read `/privacy` and `/terms` before launch,
 particularly the liability cap and indemnity clauses. They're written to match

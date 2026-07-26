@@ -63,9 +63,11 @@ export default function ContactPage() {
             <div>
               <dt className="text-sm text-slateMuted">Hours</dt>
               <dd className="mt-1 leading-relaxed text-cream">
-                I answer during business hours, Mountain Time.
+                The line is answered 24/7.
                 <span className="block text-slateLight">
-                  The system answers the other 128.
+                  It puts you through to me during business hours, Mountain Time,
+                  and takes your details outside them. Same system I&apos;d build
+                  for you.
                 </span>
               </dd>
             </div>

@@ -7,22 +7,33 @@
  * without editing this file at all.
  *
  * ─────────────────────────────────────────────────────────────────────────────
- * ⚠️  REPLACE THESE BEFORE LAUNCH — search the repo for "REPLACE_ME"
+ * ⚠️  ONE THING LEFT BEFORE LAUNCH — search the repo for "REPLACE_ME"
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-/** Fallbacks used when no env var is set. Marked so they're easy to find. */
+/** Still a placeholder. Required for SMS/carrier registration. */
 const REPLACE_ME = {
-  /** Your demo number. 555-01xx is the reserved fictional range — it won't dial a real person. */
-  phone: '+17195550142',
-  email: 'hello@rockymountainbooking.com',
-  /** Physical mailing address, required for SMS/carrier registration. */
   addressLine1: '[REPLACE_ME — street address]',
   addressLine2: 'Colorado Springs, CO [REPLACE_ME — ZIP]',
 } as const;
 
 /**
- * Formats +17195550142 -> (719) 555-0142 so we only ever store one canonical
+ * Live values. These are real.
+ *
+ * The phone number is the demo bot's own line — deliberately. Every CTA on the
+ * site dials the product itself, so "call me" and "hear it answer a call" are
+ * the same action, and the system escalates real prospects to the owner's
+ * phone the same way it would for a client. The owner's personal number is
+ * never published on the site; it exists only as an escalation target
+ * configured inside the phone system.
+ */
+const DEFAULTS = {
+  phone: '+18773799412',
+  email: 'contact@rockymountainbooking.com',
+} as const;
+
+/**
+ * Formats +18773799412 -> (877) 379-9412 so we only ever store one canonical
  * number and never let the display copy drift from the dial target.
  */
 function formatPhone(e164: string): string {
@@ -32,7 +43,7 @@ function formatPhone(e164: string): string {
   return `(${local.slice(0, 3)}) ${local.slice(3, 6)}-${local.slice(6)}`;
 }
 
-const phoneE164 = process.env.NEXT_PUBLIC_DEMO_PHONE ?? REPLACE_ME.phone;
+const phoneE164 = process.env.NEXT_PUBLIC_DEMO_PHONE ?? DEFAULTS.phone;
 
 export const site = {
   name: 'Rocky Mountain Booking',
@@ -49,7 +60,7 @@ export const site = {
     href: `tel:${phoneE164}`,
   },
 
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? REPLACE_ME.email,
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? DEFAULTS.email,
 
   /** Used in the compliance pages and the LocalBusiness structured data. */
   address: {
