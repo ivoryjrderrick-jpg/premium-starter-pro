@@ -81,9 +81,9 @@ const localBusinessJsonLd = {
     { '@type': 'State', name: 'Colorado' },
   ],
   priceRange: '$$',
-  // The hours a person is reachable. The line itself is answered around the
-  // clock, but publishing 24/7 here would contradict the contact page and
-  // overpromise in a Google knowledge panel.
+  // The line is answered around the clock — the AI takes every call and
+  // transfers callers who want a person. This matches what the contact page
+  // states, so a Google knowledge panel won't contradict the site.
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: [
@@ -95,8 +95,8 @@ const localBusinessJsonLd = {
       'Saturday',
       'Sunday',
     ],
-    opens: '06:00',
-    closes: '22:00',
+    opens: '00:00',
+    closes: '23:59',
   },
 };
 

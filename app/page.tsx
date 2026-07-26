@@ -5,6 +5,7 @@ import HowItWorks from '@/components/sections/HowItWorks';
 import Different from '@/components/sections/Different';
 import WhoItsFor from '@/components/sections/WhoItsFor';
 import SocialProof from '@/components/sections/SocialProof';
+import RiskReversal from '@/components/sections/RiskReversal';
 import CtaBand from '@/components/sections/CtaBand';
 import { site } from '@/lib/site';
 
@@ -24,6 +25,7 @@ export default function HomePage() {
       <Different />
       <WhoItsFor />
       <SocialProof />
+      <RiskReversal />
       <CtaBand />
     </>
   );

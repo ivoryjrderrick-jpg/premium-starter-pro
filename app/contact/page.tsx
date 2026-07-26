@@ -18,9 +18,8 @@ export default function ContactPage() {
         Get in touch
       </h1>
       <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slateLight">
-        Fastest way is to call. {site.coverage.owner} you get me directly. Call{' '}
-        {site.coverage.bot} and the system picks up — which is also the easiest
-        way to hear what it actually sounds like.
+        Fastest way is to call. The system answers any hour — that&apos;s the demo —
+        and the moment you ask for a person it puts you through to me.
       </p>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
@@ -64,10 +63,12 @@ export default function ContactPage() {
             <div>
               <dt className="text-sm text-slateMuted">Hours</dt>
               <dd className="mt-1 leading-relaxed text-cream">
-                {site.coverage.owner} {site.coverage.timezone} — you get me.
+                Answered {site.coverage.answered}. Ask for a person and it transfers
+                you to me.
                 <span className="block text-slateLight">
-                  {site.coverage.bot} the system answers, takes the details, and
-                  sends me the summary. Same setup I&apos;d build for you.
+                  I&apos;m realistically reachable {site.coverage.liveTransferHours}{' '}
+                  {site.coverage.timezone}. Outside that it takes your details and
+                  texts me right then — nobody gets voicemail.
                 </span>
               </dd>
             </div>

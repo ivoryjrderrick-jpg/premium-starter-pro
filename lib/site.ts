@@ -92,14 +92,21 @@ export const site = {
   },
 
   /**
-   * Who answers the published line, and when. Site copy reads from these
-   * strings so the hours are stated in exactly one place.
+   * How the published line is answered.
+   *
+   * The AI takes every call, at every hour — deliberately. A caller who wants a
+   * person is transferred, and that transfer is the point: it's the escalation
+   * feature working in front of a prospect rather than being described to them.
+   *
+   * `liveTransferHours` is the honest caveat. Outside them a transfer may not
+   * be picked up, so the system takes details and texts instead of stranding
+   * the caller. Copy reads from these strings so the story is told once.
    */
   coverage: {
-    /** Hours the AI answers. */
-    bot: '10pm–6am',
-    /** Hours the owner answers personally. */
-    owner: '6am–10pm',
+    /** The AI answers every call, no exceptions. */
+    answered: '24/7',
+    /** When a live transfer will realistically reach a person. */
+    liveTransferHours: '6am–10pm',
     timezone: 'Mountain Time',
   },
 

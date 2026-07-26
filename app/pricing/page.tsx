@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import CostComparison from '@/components/pricing/CostComparison';
 import PricingCards from '@/components/pricing/PricingCards';
+import RiskReversal from '@/components/sections/RiskReversal';
+import Reviews from '@/components/Reviews';
 import FAQ, { type FaqItem } from '@/components/FAQ';
 import CtaBand from '@/components/sections/CtaBand';
 import ContactForm from '@/components/ContactForm';
@@ -141,13 +143,19 @@ export default function PricingPage() {
 
       <PricingCards />
 
+      <RiskReversal />
+
+      {/* Empty until there are real reviews. Pass a `reviews` array to render
+          cards — see components/Reviews.tsx. */}
+      <Reviews />
+
       {/* The first 7 show by default; the remaining 8 sit behind "See more
           questions" but are still server-rendered into the DOM. */}
       <FAQ items={FAQS} title="Questions people actually ask" initialVisible={7} />
 
       <CtaBand
         heading="Hear it, then decide"
-        body={`Call ${site.coverage.bot} and listen to it handle a booking start to finish. If it sounds like something your customers would be fine talking to, we go from there. Any other time you get me.`}
+        body="Call and listen to it handle a booking start to finish. Then ask for a person and watch it transfer you to me. That transfer is the part you're actually paying for."
         showPricingLink={false}
       />
 

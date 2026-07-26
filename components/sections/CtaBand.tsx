@@ -3,7 +3,7 @@ import { site } from '@/lib/site';
 
 export default function CtaBand({
   heading = 'Hear it before you buy it',
-  body = `Call ${site.coverage.bot} and the system takes the call end to end — asks what you need, checks the calendar, books the slot. Any other time you get me, and we can talk it through instead.`,
+  body = 'Call any hour. The system answers, asks what you need, checks the calendar, books the slot. Then ask for a person and it transfers you to me — that transfer is the escalation your customers get, and you get to watch it work.',
   showPricingLink = true,
 }: {
   heading?: string;
@@ -40,8 +40,9 @@ export default function CtaBand({
             </div>
 
             <p className="mt-5 text-sm text-slateMuted">
-              Overnight, if a call is urgent, the system rings my phone rather than
-              taking a message. That&apos;s the escalation your customers would get.
+              If I can&apos;t pick up, it takes your details and texts me right then
+              instead of leaving you in voicemail. That&apos;s the fallback your
+              customers get too.
             </p>
           </div>
         </div>
