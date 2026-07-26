@@ -1,9 +1,19 @@
+import type { MetadataRoute } from 'next';
+import { site } from '@/lib/site';
 
-export default async function sitemap() {
-  const base = process.env.SITE_URL || 'http://localhost:3000';
-  const routes = ['', '/pricing', '/about', '/blog', '/contact', '/privacy', '/terms'].map((p) => ({
-    url: `${base}${p}`,
-    lastModified: new Date().toISOString(),
+export default function sitemap(): MetadataRoute.Sitemap {
+  const routes: { path: string; priority: number }[] = [
+    { path: '', priority: 1 },
+    { path: '/pricing', priority: 0.9 },
+    { path: '/contact', priority: 0.8 },
+    { path: '/privacy', priority: 0.3 },
+    { path: '/terms', priority: 0.3 },
+  ];
+
+  return routes.map(({ path, priority }) => ({
+    url: `${site.url}${path}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority,
   }));
-  return routes;
 }

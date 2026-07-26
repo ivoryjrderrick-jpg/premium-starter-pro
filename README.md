@@ -1,46 +1,198 @@
+# Rocky Mountain Booking
 
-# Premium Starter **Pro** — Highest-Quality Package (Built-In)
+Marketing site for Rocky Mountain Booking, LLC — done-for-you AI phone systems
+for appointment-based businesses in Colorado Springs, CO.
 
-**What you get:**
-- Next.js App Router + Tailwind
-- **Premium Motion Pack** included:
-  - Page transitions (AnimatePresence)
-  - Magnetic buttons
-  - Parallax hero
-  - Section reveal animations
-  - Scroll progress bar
-  - Reduced-motion aware smooth scrolling (Lenis)
-- **Polish & Ops**: SEO helper, dynamic OG image, robots/sitemap, 404/500
-- **Checkout**: Stripe Checkout (Apple/Google Pay)
-- **A11y**: Skip link, focus rings, keyboard-friendly nav
+Next.js 14 (App Router) · TypeScript · Tailwind · react-three-fiber.
 
-## Quickstart
 ```bash
-npm i
-```
-Create `.env.local`:
-```env
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-SITE_URL=http://localhost:3000
-```
-Run:
-```bash
-npm run dev
+npm install
+cp .env.example .env.local   # then fill it in
+npm run dev                  # http://localhost:3000
 ```
 
-## Customize
-- Colors: `tailwind.config.js`
-- Fonts: add `<link>` in `app/layout.tsx` or self-host under `/public/fonts` and reference in CSS
-- Logo/copy: `components/Header.tsx`, `components/Footer.tsx`, `components/Hero.tsx`
-- Pages: `app/*/page.tsx`
+---
 
-## Production
-- Deploy to Vercel, set env vars, set `SITE_URL` to live domain
-- In Stripe, create Products/Prices and switch to fixed `price: 'price_...'` IDs
+## ⚠️ Before you launch
 
-## Targets
-- LCP < 2.0s (4G), CLS ~0, 60fps animation
-- Motion durations ~220ms; respect prefers-reduced-motion
+Search the repo for `REPLACE_ME`. Three things are placeholders:
 
+| What | Where | Notes |
+|---|---|---|
+| **Demo phone number** | `NEXT_PUBLIC_DEMO_PHONE` | Currently `+17195550142` — a reserved fictional number that won't dial a real person. Every CTA on the site uses it. |
+| **Mailing address** | `NEXT_PUBLIC_ADDRESS_LINE1/2` | **Required for SMS carrier registration.** Appears on `/privacy` and `/terms`. |
+| **Contact email** | `NEXT_PUBLIC_CONTACT_EMAIL` | |
 
+Also worth doing: have an attorney read `/privacy` and `/terms` before launch,
+particularly the liability cap and indemnity clauses. They're written to match
+how the business actually operates, but they aren't legal advice.
+
+---
+
+## Where to change things
+
+**Everything you'll routinely want to edit lives in `lib/site.ts`** — phone
+number, email, address, Stripe links, form endpoint, and both pricing plans.
+Every value there can also be overridden with an environment variable, so you
+can change the demo number in the Vercel dashboard without touching code.
+
+| Task | File |
+|---|---|
+| Phone, email, address, Stripe links | `lib/site.ts` (or env vars) |
+| Prices, plan features, footnotes | `plans` array in `lib/site.ts` |
+| Add testimonials | `TESTIMONIALS` array in `components/sections/SocialProof.tsx` |
+| Pricing FAQ | `FAQS` array in `app/pricing/page.tsx` |
+| Cost comparison figures | `components/pricing/CostComparison.tsx` |
+| Brand colours | `tailwind.config.js` |
+
+### Adding testimonials
+
+`SocialProof.tsx` ships with an empty `TESTIMONIALS` array. While it's empty the
+section shows an honest founding-client call-out. Add one entry and it switches
+itself to a testimonial grid — no other file changes.
+
+```ts
+const TESTIMONIALS = [
+  { quote: 'Booked four jobs the first weekend.',
+    name: 'Dave R.', business: 'Summit Heating & Air', location: 'Colorado Springs, CO' },
+];
+```
+
+---
+
+## Pages
+
+| Route | |
+|---|---|
+| `/` | Hero (3D scene) · problem · how it works · differentiators · who it's for · social proof · CTA |
+| `/pricing` | Cost comparison → plans → FAQ → CTA + form |
+| `/contact` | Click-to-call, email, contact form |
+| `/privacy` | Privacy Policy, incl. carrier-required SMS disclosures |
+| `/terms` | Terms of Service |
+
+---
+
+## The 3D hero
+
+**Chosen approach: react-three-fiber, lazy-loaded, desktop-only. Measured cost
+~205 KB gzipped — under the 300 KB budget.**
+
+| Chunk | gzipped |
+|---|---|
+| three.js core | 161 KB |
+| @react-three/fiber | 43 KB |
+| **Total added JS** | **~205 KB** |
+
+Critically, **that cost is not on the critical path for anyone**. Verified from
+the build output: neither chunk appears in the first-load JS graph of any page.
+The landing page's First Load JS is **96.7 KB**.
+
+`drei` is not used. Every helper the scene needed (custom geometry, flat
+shading, a render loop) is a handful of lines against core R3F, and dropping
+drei saved bundle weight for no visual difference. The mountain is generated at
+runtime from seeded ridged-noise rather than loaded as a model, so there's no
+asset to fetch either. `CapsuleGeometry` is not used anywhere.
+
+### The loading gate — `components/hero/HeroVisual.tsx`
+
+The static SVG (`MountainStatic.tsx`, ~4 KB, zero JS) renders on first paint for
+everyone. three.js loads **only** when all of these pass:
+
+- viewport ≥ 768px
+- `prefers-reduced-motion` is *not* set
+- a WebGL context is actually obtainable
+
+Because the dynamic import lives behind a state flag that starts `false`,
+three.js is **never requested** on phones or for reduced-motion users — not
+fetched-and-discarded, never requested at all.
+
+Verified in a real browser:
+
+| Scenario | three.js requests | `<canvas>` |
+|---|---|---|
+| Desktop 1440px | 2 | 1 |
+| iPhone 13 | **0** | 0 |
+| Desktop + `prefers-reduced-motion` | **0** | 0 |
+
+The render loop also stops via `IntersectionObserver` once the hero scrolls out
+of view, and DPR is capped at 1.75.
+
+---
+
+## Deploying
+
+### Vercel (what this is built for)
+
+Import the repo, add the environment variables from `.env.example`, deploy.
+No configuration file needed — `next build` is detected automatically.
+
+### Netlify
+
+Works, but install `@netlify/plugin-nextjs` so the API routes become functions.
+Static hosts without that plugin will break `/api/checkout` and the Stripe
+webhook.
+
+### Framer — you can't host this there
+
+Framer is a closed visual builder. It doesn't run a Next.js codebase, so there
+is no path to deploying this repo to Framer. Worth being blunt about the
+tradeoffs:
+
+- **Routing.** Framer has real multi-page routing, so the five pages are fine.
+- **The 3D hero.** This is where it hurts. Framer's code components can't
+  reliably code-split a 200 KB dependency behind a media-query gate, so you'd
+  either ship three.js to phones or drop the 3D. `MountainStatic.tsx` is plain
+  SVG and would port over fine on its own.
+- **SEO.** Per-page metadata, JSON-LD, sitemap and robots are all handled here
+  in code. In Framer you'd re-enter them by hand in the UI.
+- **Compliance pages.** `/privacy` and `/terms` are long documents. They'd have
+  to be pasted into Framer's editor and re-formatted.
+
+**Recommendation:** point the domain at Vercel. If you want to keep Framer for
+quick visual edits, use it for a separate landing page on a subdomain — don't
+try to reproduce this site there.
+
+---
+
+## Stripe
+
+Two options; pick one.
+
+**Payment Links (simplest).** Create a Payment Link per plan in the Stripe
+dashboard, put the URLs in `NEXT_PUBLIC_STRIPE_FOUNDING_LINK` /
+`NEXT_PUBLIC_STRIPE_STANDARD_LINK`. The cards link straight to Stripe and
+`/api/checkout` is never called. No secret keys in the app.
+
+**Checkout Sessions.** Leave those blank and set `STRIPE_SECRET_KEY` plus the
+three price IDs instead. `/api/checkout` builds a subscription session with the
+one-time setup fee on the first invoice.
+
+If neither is configured, the pricing CTAs fall back to `/contact` rather than
+rendering dead buttons.
+
+> The webhook deliberately does **not** create a separate invoice for the setup
+> fee. The checkout session already bills it on the first invoice; the previous
+> version of that file added it a second time, which double-charged.
+
+---
+
+## Contact form
+
+Set `NEXT_PUBLIC_FORM_ENDPOINT` to any service that accepts a form POST
+(Formspree, Basin, Netlify Forms). Left blank, the form opens the visitor's mail
+client pre-filled, so a lead is never silently dropped. A honeypot field handles
+basic spam.
+
+---
+
+## Accessibility & performance notes
+
+- Semantic landmarks, one `<h1>` per page, ordered heading levels
+- Skip link, visible amber focus rings, 48px minimum touch targets
+- `prefers-reduced-motion` respected globally, not just in the hero
+- FAQ uses native `<details>`/`<summary>` — keyboard accessible, works with JS off
+- No `localStorage` or `sessionStorage` anywhere
+- `LocalBusiness` and `FAQPage` JSON-LD; per-page canonical tags; geo meta
+
+Lighthouse note: mobile runs at a 412px viewport, which is below the 768px gate,
+so the mobile audit never loads three.js at all.

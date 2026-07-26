@@ -1,13 +1,82 @@
-
 import Link from 'next/link';
+import Logo from '@/components/Logo';
+import { site } from '@/lib/site';
+
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-100 mt-24">
-      <div className="mx-auto max-w-6xl px-4 py-10 grid md:grid-cols-2 gap-6 text-sm text-gray-600">
-        <p>© {new Date().getFullYear()} Acme Co. All rights reserved.</p>
-        <div className="flex gap-4 md:justify-end">
-          <Link className="hover:underline" href="/privacy">Privacy</Link>
-          <Link className="hover:underline" href="/terms">Terms</Link>
+    <footer className="mt-24 border-t border-cream/10 bg-navy-800">
+      <div className="mx-auto max-w-6xl px-5 py-12">
+        <div className="flex flex-col gap-8 md:flex-row md:justify-between">
+          <div className="max-w-sm">
+            <div className="flex items-center gap-2.5">
+              <Logo className="h-7 w-8" />
+              <span className="font-semibold tracking-tight text-cream">
+                Rocky Mountain <span className="text-amber">Booking</span>
+              </span>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-slateMuted">
+              AI phone systems for appointment-based businesses. Built, installed,
+              and supported locally from {site.city}, {site.state}.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 sm:gap-14">
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-cream">Site</h2>
+              <ul className="mt-3 space-y-2 text-sm">
+                <li>
+                  <Link className="text-slateLight hover:text-amber" href="/">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-slateLight hover:text-amber" href="/pricing">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-slateLight hover:text-amber" href="/contact">
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-cream">
+                Get in touch
+              </h2>
+              <ul className="mt-3 space-y-2 text-sm">
+                <li>
+                  <a className="text-slateLight hover:text-amber" href={site.phone.href}>
+                    {site.phone.display}
+                  </a>
+                </li>
+                <li>
+                  <a className="text-slateLight hover:text-amber" href={`mailto:${site.email}`}>
+                    {site.email}
+                  </a>
+                </li>
+                <li className="pt-1 text-slateMuted">
+                  {site.city}, {site.state}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-3 border-t border-cream/10 pt-6 text-sm text-slateMuted sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {site.legalName}. {site.city}, {site.state}.
+          </p>
+          <div className="flex gap-5">
+            <Link className="hover:text-amber" href="/privacy">
+              Privacy Policy
+            </Link>
+            <Link className="hover:text-amber" href="/terms">
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
