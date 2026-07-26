@@ -1,20 +1,24 @@
+import FaqAccordion from '@/components/FaqAccordion';
 import { serializeJsonLd } from '@/lib/json-ld';
 
 export type FaqItem = { question: string; answer: string };
 
 /**
- * Native <details>/<summary> disclosure — keyboard accessible, works without
- * JavaScript, and announces expanded state to screen readers with no ARIA
- * bookkeeping of our own.
+ * Server component wrapper. Keeping the JSON-LD here rather than inside the
+ * client accordion guarantees the structured data is in the server-rendered
+ * HTML, and it always covers every question — including the ones collapsed
+ * behind "See more questions".
  */
 export default function FAQ({
   items,
   headingId = 'faq-heading',
   title = 'Questions people actually ask',
+  initialVisible = 6,
 }: {
   items: FaqItem[];
   headingId?: string;
   title?: string;
+  initialVisible?: number;
 }) {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -39,30 +43,7 @@ export default function FAQ({
           {title}
         </h2>
 
-        <ul className="mt-8 divide-y divide-cream/10 border-y border-cream/10">
-          {items.map((item) => (
-            <li key={item.question}>
-              <details className="group">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left [&::-webkit-details-marker]:hidden">
-                  <h3 className="text-lg font-semibold text-cream">{item.question}</h3>
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-5 w-5 shrink-0 text-amber transition-transform duration-200 group-open:rotate-45"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                </summary>
-                <p className="pb-6 pr-9 leading-relaxed text-slateLight">{item.answer}</p>
-              </details>
-            </li>
-          ))}
-        </ul>
+        <FaqAccordion items={items} initialVisible={initialVisible} />
       </div>
 
       <script

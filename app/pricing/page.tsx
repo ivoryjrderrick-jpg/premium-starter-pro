@@ -73,6 +73,54 @@ const FAQS: FaqItem[] = [
       'once the system has been built, since that is the part where the work happens. Founding clients ' +
       'have their monthly rate locked for six months.',
   },
+  // ── Behind "See more questions" ────────────────────────────────────────────
+  // Still rendered server-side and present in the DOM; collapsed with CSS only.
+  {
+    question: 'Can it handle two calls at once?',
+    answer:
+      "Yes. That's one of the bigger differences from a person — nobody gets a busy signal.",
+  },
+  {
+    question: "What if my schedule changes or someone's out?",
+    answer:
+      "It only books what's actually open on your calendar. Block the time and it won't offer it. " +
+      "If it can't confirm something, it takes the details and texts you rather than guessing.",
+  },
+  {
+    question: 'Do I have to change how I work?',
+    answer:
+      'No. Your number stays the same, your calendar stays the same. The only thing that changes is ' +
+      'that calls get answered.',
+  },
+  {
+    question: 'What do you need from me to get started?',
+    answer:
+      'About twenty minutes. Your services, your hours, what counts as urgent, and your cell number ' +
+      'for escalations. I handle the rest.',
+  },
+  {
+    question: "What happens to my customers' information?",
+    answer:
+      "It stays yours. Names and numbers go to your calendar and your phone, nowhere else. It's in " +
+      'the agreement.',
+  },
+  {
+    question: 'Do you work outside Colorado Springs?',
+    answer:
+      'Yes — Pueblo through Fort Collins, and remote anywhere. Local just means I can show up if it matters.',
+  },
+  {
+    question: "What if it's not working out?",
+    answer:
+      "Thirty days notice, no penalty. I'll release your number and hand over your data. I'd rather " +
+      'you leave clean than stay annoyed.',
+  },
+  {
+    question: 'Can it do more than book appointments?',
+    answer:
+      "Eventually, yes — reminders, review requests, follow-up on quotes. Right now I'm focused on " +
+      'answering and booking, and doing that part properly.',
+  },
 ];
 
 export default function PricingPage() {
@@ -93,7 +141,9 @@ export default function PricingPage() {
 
       <PricingCards />
 
-      <FAQ items={FAQS} title="Questions people actually ask" />
+      {/* The first 7 show by default; the remaining 8 sit behind "See more
+          questions" but are still server-rendered into the DOM. */}
+      <FAQ items={FAQS} title="Questions people actually ask" initialVisible={7} />
 
       <CtaBand
         heading="Hear it, then decide"

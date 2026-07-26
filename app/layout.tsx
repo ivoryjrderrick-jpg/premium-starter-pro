@@ -72,8 +72,12 @@ const localBusinessJsonLd = {
     addressRegion: site.state,
     addressCountry: 'US',
   },
+  // Mirrors the service area stated in the pricing FAQ.
   areaServed: [
     { '@type': 'City', name: 'Colorado Springs' },
+    { '@type': 'City', name: 'Pueblo' },
+    { '@type': 'City', name: 'Denver' },
+    { '@type': 'City', name: 'Fort Collins' },
     { '@type': 'State', name: 'Colorado' },
   ],
   priceRange: '$$',
