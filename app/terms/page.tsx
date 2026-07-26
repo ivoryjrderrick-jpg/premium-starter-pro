@@ -226,7 +226,24 @@ export default function TermsPage() {
         agreement between the parties regarding the service.
       </p>
 
-      <h2>16. Contact</h2>
+      <h2>16. Website content and accessibility</h2>
+      <p>
+        Information on this website, including pricing, comparisons, and
+        descriptions of the service, is provided for general information and may
+        change without notice. Cost comparisons shown are estimates for
+        illustration and are not quotes; the rate agreed at signup is the rate that
+        applies. Nothing on this website is an offer capable of acceptance until we
+        have confirmed it in writing.
+      </p>
+      <p>
+        We aim to keep this website usable with a keyboard, with a screen reader,
+        and at increased zoom levels, and we work toward the WCAG 2.1 AA
+        guidelines. Accessibility is an ongoing effort rather than a fixed state.
+        If you have difficulty using any part of this site, contact us using the
+        details below and we will help you directly and work to fix the problem.
+      </p>
+
+      <h2>17. Contact</h2>
       <p>Notices under these terms, including cancellation notices, should be sent to:</p>
       <MailingAddress />
     </LegalLayout>

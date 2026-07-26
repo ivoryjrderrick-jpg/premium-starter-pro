@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { site } from '@/lib/site';
+import { clientKey, rateLimit } from '@/lib/rate-limit';
 
 /**
  * Checkout session builder.
@@ -16,24 +17,45 @@ import { site } from '@/lib/site';
  *   STRIPE_STANDARD_PRICE_ID        recurring monthly, $697
  */
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 const MONTHLY_PRICE_ENV: Record<string, string | undefined> = {
   founding: process.env.STRIPE_FOUNDING_PRICE_ID,
   standard: process.env.STRIPE_STANDARD_PRICE_ID,
 };
 
 export async function POST(request: Request) {
+  // Speed bump against someone hammering the endpoint to spray sessions into
+  // the Stripe dashboard. No charge can result from this, so the limit is
+  // deliberately generous.
+  const { ok, retryAfter } = rateLimit(`checkout:${clientKey(request)}`, {
+    limit: 8,
+    windowMs: 60_000,
+  });
+  if (!ok) {
+    return NextResponse.json(
+      { error: 'Too many requests.' },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } },
+    );
+  }
+
+  if (!stripe) {
+    return NextResponse.json({ error: 'Checkout is not configured yet.' }, { status: 503 });
+  }
+
   try {
-    const { plan } = (await request.json().catch(() => ({}))) as { plan?: string };
-    const planId = plan === 'standard' ? 'standard' : 'founding';
+    const body = (await request.json().catch(() => ({}))) as { plan?: unknown };
+
+    // Allowlist rather than trusting the value: this string selects a price ID,
+    // so anything unrecognised falls back to the founding plan.
+    const planId = body.plan === 'standard' ? 'standard' : 'founding';
 
     const monthly = MONTHLY_PRICE_ENV[planId];
     const setup = process.env.STRIPE_SETUP_PRICE_ID;
 
     if (!monthly || !setup) {
-      return NextResponse.json(
-        { error: 'Checkout is not configured yet.' },
-        { status: 503 },
-      );
+      return NextResponse.json({ error: 'Checkout is not configured yet.' }, { status: 503 });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -53,6 +75,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
+    // Logged server-side only. The client gets a generic message so Stripe
+    // errors never leak configuration detail into a browser.
     console.error('Checkout session creation failed:', error);
     return NextResponse.json({ error: 'Checkout failed.' }, { status: 500 });
   }

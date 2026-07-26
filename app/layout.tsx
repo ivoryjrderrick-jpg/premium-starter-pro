@@ -3,6 +3,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { site } from '@/lib/site';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -106,8 +107,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <script
           type="application/ld+json"
-          // Static, developer-authored object — no user input reaches this.
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+          // serializeJsonLd escapes angle brackets so a value can never break
+          // out of the script element. See lib/json-ld.ts.
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(localBusinessJsonLd) }}
         />
       </body>
     </html>

@@ -88,6 +88,21 @@ export default function CostComparison() {
             </li>
           ))}
         </ul>
+
+        {/*
+          Substantiation footnote. The comparison figures are advertising
+          claims, and the FTC expects a reasonable basis for them. Saying
+          plainly that they're estimates — and what they assume — is both
+          honest and the cheapest way to defuse a "deceptive comparison"
+          argument. Don't delete this to tidy up the layout.
+        */}
+        <p className="mt-8 max-w-3xl text-sm leading-relaxed text-slateMuted">
+          Figures are estimates for comparison only and are not a quote. The
+          receptionist range assumes a regional full-time wage plus payroll taxes,
+          benefits, and paid time off. Answering service pricing reflects commonly
+          advertised plan ranges and varies widely by call volume and contract.
+          Your actual costs will differ.
+        </p>
       </div>
     </section>
   );

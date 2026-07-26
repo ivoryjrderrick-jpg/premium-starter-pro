@@ -197,6 +197,43 @@ basic spam.
 
 ---
 
+## Security
+
+There is no database, no user accounts, no sessions, no cookies, no uploads,
+and nothing written to browser storage. That absence is the main reason the
+attack surface here is small — most web vulnerabilities need state to attack.
+
+What's actively in place:
+
+- **Security headers** (`next.config.js`): CSP, HSTS with preload,
+  `X-Frame-Options: DENY`, `frame-ancestors 'none'`, `nosniff`,
+  `Referrer-Policy`, `Permissions-Policy`. `X-Powered-By` is disabled.
+- **CSP allowlists the contact form endpoint only.** `connect-src` and
+  `form-action` are derived from `NEXT_PUBLIC_FORM_ENDPOINT`. Set that variable
+  and the origin is added automatically — hardcode nothing.
+- **Webhook signatures verified** before the payload is parsed or trusted.
+  Errors are returned generically so probing reveals nothing.
+- **No secret ever reaches the browser.** Only `NEXT_PUBLIC_*` values do, and
+  those are all intentionally public (phone, email, address, Stripe payment
+  links). `STRIPE_SECRET_KEY` is server-only and has no fallback value — a
+  missing key returns a clean 503 rather than failing obscurely.
+- **Rate limiting** on `/api/checkout` (`lib/rate-limit.ts`). Per-instance, so
+  it's a speed bump, not a global control. A hard limit belongs at the edge.
+- **JSON-LD is escaped** (`lib/json-ld.ts`) so a value can never break out of
+  its `<script>` tag.
+
+### Keeping it that way
+
+- `npm audit` before each deploy. Next.js in particular ships security releases
+  often, and this project was upgraded from 14.2.5, which had a critical
+  cache-poisoning advisory.
+- Never commit `.env.local`. Only `.env.example` is tracked; `.gitignore`
+  covers the rest.
+- If a key is ever pasted into a commit, rotate it in the Stripe dashboard.
+  Removing it from the code does not remove it from git history.
+- Turn on Vercel's deployment protection and 2FA on GitHub, Vercel, and Stripe.
+  For a site with no login, those accounts *are* the attack surface.
+
 ## Accessibility & performance notes
 
 - Semantic landmarks, one `<h1>` per page, ordered heading levels

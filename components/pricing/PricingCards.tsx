@@ -93,6 +93,8 @@ export default function PricingCards() {
 
         <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-slateMuted">
           No per-minute billing. No overage charges. Setup is billed once, up front.
+          Comparison based on the estimates above. Pricing is subject to change; the
+          rate agreed at signup is the rate that applies.
         </p>
       </div>
     </section>

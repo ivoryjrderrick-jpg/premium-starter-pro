@@ -1,3 +1,5 @@
+import { serializeJsonLd } from '@/lib/json-ld';
+
 export type FaqItem = { question: string; answer: string };
 
 /**
@@ -65,7 +67,7 @@ export default function FAQ({
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
     </section>
   );

@@ -3,9 +3,15 @@ import type Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 
 export const runtime = 'nodejs'; // Signature verification needs Node crypto.
+export const dynamic = 'force-dynamic';
 
 /**
  * Stripe webhook receiver.
+ *
+ * Every request is verified against STRIPE_WEBHOOK_SECRET before it is trusted.
+ * That signature check is the only thing standing between this public URL and
+ * anyone who can POST to it, so it must run before the payload is parsed or
+ * acted on — never reorder it.
  *
  * NOTE: this deliberately does NOT create an invoice for the setup fee. The
  * checkout session already bills the one-time setup price on the first invoice
@@ -16,22 +22,21 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get('stripe-signature');
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (!signature || !endpointSecret) {
+  if (!stripe || !signature || !endpointSecret) {
     return new NextResponse('Webhook not configured', { status: 400 });
   }
 
-  const body = await req.arrayBuffer();
+  // The exact raw body is required — any re-serialisation invalidates the
+  // signature, so this must not be req.json().
+  const body = await req.text();
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(
-      Buffer.from(body),
-      signature,
-      endpointSecret,
-    );
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'invalid signature';
-    return new NextResponse(`Webhook Error: ${message}`, { status: 400 });
+    event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
+  } catch {
+    // Don't echo the underlying error — it can confirm details of the secret
+    // format to someone probing the endpoint.
+    return new NextResponse('Invalid signature', { status: 400 });
   }
 
   switch (event.type) {
@@ -42,7 +47,6 @@ export async function POST(req: NextRequest) {
       console.info('New client signed up', {
         sessionId: session.id,
         plan: session.metadata?.plan,
-        email: session.customer_details?.email,
       });
       break;
     }
