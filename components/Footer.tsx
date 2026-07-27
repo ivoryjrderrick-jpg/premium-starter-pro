@@ -69,12 +69,17 @@ export default function Footer() {
           <p>
             © {new Date().getFullYear()} {site.legalName}. {site.city}, {site.state}.
           </p>
-          <div className="flex gap-5">
+          {/* SMS Terms must be reachable from every page without a login —
+              carrier / TCR reviewers look for exactly this link. */}
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
             <Link className="hover:text-amber" href="/privacy">
               Privacy Policy
             </Link>
             <Link className="hover:text-amber" href="/terms">
               Terms of Service
+            </Link>
+            <Link className="hover:text-amber" href="/sms">
+              SMS Terms
             </Link>
           </div>
         </div>

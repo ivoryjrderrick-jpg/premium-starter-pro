@@ -151,5 +151,22 @@ export const plans = [
 
 export type Plan = (typeof plans)[number];
 
-/** Last updated date shown on the Privacy Policy and Terms pages. */
-export const legalEffectiveDate = 'February 1, 2026';
+/** Last updated date shown on the Privacy Policy, Terms and SMS Terms pages. */
+export const legalEffectiveDate = 'July 27, 2026';
+
+/**
+ * Data retention periods published in the Privacy Policy.
+ *
+ * ⚠️  These MUST match what your systems actually do. Stating 90 days here and
+ *     keeping recordings indefinitely is worse than publishing nothing — it's a
+ *     written promise you're visibly breaking. Confirm each one against your
+ *     telephony and storage providers before launch.
+ */
+export const retention = {
+  callRecordings: '90 days',
+  transcripts: '12 months',
+  /** Kept for the agreement's duration, plus this long afterwards. */
+  appointmentRecords: '12 months',
+  /** Deletion/return window after a client agreement ends, on request. */
+  offboarding: '30 days',
+} as const;

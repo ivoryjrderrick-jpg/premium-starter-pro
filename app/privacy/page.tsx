@@ -1,16 +1,31 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import LegalLayout, { MailingAddress } from '@/components/legal/LegalLayout';
-import { site } from '@/lib/site';
+import { site, retention } from '@/lib/site';
 
 /**
- * ⚠️  Written to satisfy carrier / 10DLC registration requirements, including
- *     the explicit SMS disclosures reviewers look for. It is not legal advice —
- *     have an attorney review before launch if you want belt and braces.
+ * Privacy Policy — supplied by the owner for carrier / TCR review.
+ *
+ * ⚠️  Two things the source document flagged, repeated here so they don't get
+ *     lost:
+ *
+ *  1. The subprocessor list below must match what you actually use. Remove any
+ *     you don't.
+ *  2. The retention periods come from `retention` in lib/site.ts and must match
+ *     what your systems actually do.
+ *
+ * The source also carried a trailing "this document is a draft prepared for
+ * compliance review" line. That is deliberately NOT rendered — publishing it
+ * would tell a TCR reviewer your compliance page is a draft. It is guidance for
+ * you, not page copy.
+ *
+ * Not legal advice. Have a licensed Colorado attorney review before taking on
+ * paying customers.
  */
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: `How ${site.legalName} collects, uses, and protects information, including SMS messaging terms.`,
+  description: `How ${site.legalName} collects, uses, and protects information from callers and client businesses.`,
   alternates: { canonical: '/privacy' },
 };
 
@@ -18,219 +33,207 @@ export default function PrivacyPage() {
   return (
     <LegalLayout
       title="Privacy Policy"
-      intro={`This policy explains what information ${site.legalName} ("we," "us," or "our") collects, why we collect it, how we use it, and the choices you have. It applies to this website and to the call answering and appointment booking services we provide.`}
+      intro={`${site.legalName} ("we," "us") provides AI-powered phone answering and appointment booking services to home service businesses in Colorado. This policy explains what information we collect, how we use it, and the choices you have.`}
     >
-      <h2>Who we are</h2>
+      <h2>Overview</h2>
       <p>
-        {site.legalName} is a limited liability company based in {site.city},{' '}
-        {site.state}. We build and operate AI-assisted phone answering and
-        appointment booking systems for service businesses. You can reach us using
-        the details at the end of this policy.
+        This policy covers two groups: <strong>our business clients</strong>{' '}
+        (contractors who subscribe to our service) and <strong>callers</strong>{' '}
+        (people who call those businesses and reach our assistant).
+      </p>
+      <p>
+        Our text messaging program — what we send, how often, and how to stop — is
+        described in full in our <Link href="/sms">SMS Terms of Service</Link>.
       </p>
 
       <h2>Information we collect</h2>
 
-      <h3>Information you give us directly</h3>
-      <p>
-        When you contact us through this website, call us, or become a client, we
-        collect the information you choose to provide. That typically includes your
-        name, business name, phone number, email address, and anything you write in
-        a message to us.
-      </p>
-
-      <h3>Information collected when our system answers a call</h3>
-      <p>
-        When our system answers a call on behalf of a client business, we may
-        collect and process:
-      </p>
+      <h3>From callers</h3>
+      <p>When you call a business that uses our service, we may collect:</p>
       <ul>
-        <li>The caller&apos;s phone number and the time and duration of the call</li>
+        <li>Your phone number</li>
+        <li>Your name</li>
+        <li>Your service address</li>
         <li>
-          A recording and/or written transcript of the call, where permitted by law
-          and disclosed to the caller
+          The nature of your request (for example, &ldquo;no heat,&rdquo;
+          &ldquo;annual maintenance&rdquo;)
         </li>
-        <li>
-          Information the caller provides in order to book an appointment — name,
-          callback number, service address, the nature of the request, and preferred
-          appointment times
-        </li>
-        <li>Appointment details written to the client business&apos;s calendar</li>
+        <li>Appointment details you schedule</li>
+        <li>An audio recording and written transcript of the call</li>
       </ul>
-      <p>
-        Where we process this information on behalf of a client business, that
-        business is the owner of the information and we act as its service provider.
-        We use it to deliver the service and for nothing else.
-      </p>
 
-      <h3>Information collected automatically on this website</h3>
+      <h3>From our business clients</h3>
+      <ul>
+        <li>Business name, address, and contact information</li>
+        <li>Owner and staff names, email addresses, and phone numbers</li>
+        <li>
+          Business hours, service area, technician availability, and pricing
+          information you provide
+        </li>
+        <li>Calendar availability, in order to schedule appointments</li>
+        <li>Billing information, processed by our payment provider</li>
+      </ul>
+
+      <h3>Automatically</h3>
+      <ul>
+        <li>Call metadata such as time, duration, and originating number</li>
+        <li>Basic website analytics</li>
+      </ul>
+
+      <h2>What we do not collect</h2>
       <p>
-        Our web host and any analytics we run may record standard technical
-        information such as IP address, browser type, referring page, and pages
-        visited. This site does not use advertising cookies, and it does not store
-        data in your browser&apos;s local storage or session storage.
+        <strong>
+          We do not create, extract, store, or use voiceprints or any other
+          biometric identifiers.
+        </strong>{' '}
+        Our system recognizes returning callers by phone number only. We do not
+        perform voice matching, voice authentication, or speaker identification of
+        any kind.
+      </p>
+      <p>
+        We do not collect Social Security numbers, financial account numbers, health
+        information, or government ID numbers. Please do not provide this
+        information during a call.
       </p>
 
       <h2>How we use information</h2>
       <ul>
-        <li>To answer calls, book appointments, and send confirmations and reminders</li>
-        <li>To transfer urgent calls and send call summaries to the client business</li>
-        <li>To respond to enquiries and provide support</li>
-        <li>To bill for services and keep ordinary business records</li>
-        <li>To maintain, troubleshoot, and improve the reliability of the service</li>
+        <li>To answer calls and schedule appointments on behalf of our client businesses</li>
+        <li>To send appointment confirmations and reminders</li>
+        <li>To notify business owners of bookings and emergency calls</li>
+        <li>To produce call summaries and reporting for our client businesses</li>
+        <li>To improve the accuracy and quality of our service</li>
+        <li>To provide customer support</li>
+        <li>To bill our client businesses</li>
         <li>To comply with legal obligations</li>
       </ul>
       <p>
-        We do not sell personal information. We do not use information collected on
-        behalf of a client business to market to that business&apos;s customers.
+        We do not sell personal information. We do not use caller information for
+        our own marketing.
       </p>
 
-      {/* ── Carrier-required SMS disclosures ─────────────────────────────── */}
-      <h2>SMS and text messaging</h2>
-
-      <h3>What messages we send</h3>
-      <p>
-        When you or your customers provide a mobile number in connection with our
-        service, we send <strong>transactional service messages only</strong>. These
-        are appointment confirmations, appointment reminders, scheduling changes or
-        cancellations, and — for our clients — notifications summarising calls that
-        came in and alerts about urgent calls. We do not send marketing or
-        promotional text messages through this service.
-      </p>
-
-      <h3>Consent</h3>
-      <p>
-        Mobile numbers are collected when a caller books an appointment and agrees to
-        receive a confirmation, or when a client business provides its own number to
-        receive call notifications. Consent to receive text messages is not a
-        condition of purchasing any goods or services.
-      </p>
-
-      <h3>Message frequency</h3>
-      <p>
-        <strong>Message frequency varies.</strong> The number of messages you receive
-        depends on how many appointments you book or, for client businesses, how many
-        calls come in. There is no fixed number of messages per period.
-      </p>
-
-      <h3>Message and data rates</h3>
-      <p>
-        <strong>Message and data rates may apply.</strong> Your mobile carrier&apos;s
-        standard messaging and data charges apply to any messages you send or receive.
-        We do not charge you for text messages, but your carrier may.
-      </p>
-
-      <h3>How to opt out</h3>
-      <p>
-        <strong>Reply STOP to any message to opt out</strong> at any time. You will
-        receive a single confirmation message and then no further messages, other
-        than as required to complete a transaction already in progress. You may also
-        opt out by calling or emailing us using the details below. Replying{' '}
-        <strong>UNSTOP</strong> or <strong>START</strong> will resume messages.
-      </p>
-
-      <h3>How to get help</h3>
-      <p>
-        <strong>Reply HELP to any message</strong> for assistance, or contact us
-        directly at <a href={`mailto:${site.email}`}>{site.email}</a> or{' '}
-        <a href={site.phone.href}>{site.phone.display}</a>.
-      </p>
-
-      <h3>Carrier liability</h3>
-      <p>
-        Mobile carriers are not liable for delayed or undelivered messages. Message
-        delivery depends on your carrier&apos;s network and is not guaranteed.
-      </p>
-
-      <h3>Mobile opt-in data</h3>
+      <h2>Mobile information</h2>
       <p>
         <strong>
-          We do not sell, rent, or share mobile opt-in information or phone numbers
-          with third parties or affiliates for their marketing purposes.
+          No mobile information will be shared with third parties or affiliates for
+          marketing or promotional purposes.
         </strong>{' '}
-        Mobile opt-in data and consent are never shared for marketing. Phone numbers
-        are shared only with the messaging and telephony providers strictly necessary
-        to deliver the messages you have asked for, and those providers are
-        contractually restricted to that purpose.
+        Information sharing with subprocessors described below is solely to support
+        the operation of our service, and those parties are not permitted to use
+        mobile information for their own marketing.
+      </p>
+      <p>
+        Text messaging originator opt-in data and consent are not shared with any
+        third party.
       </p>
 
-      <h2>When we share information</h2>
-      <p>We share information only in these situations:</p>
+      <h2>Who we share information with</h2>
+      <p>
+        <strong>The business you called.</strong> Caller information, appointment
+        details, transcripts, and recordings are made available to the client
+        business you contacted. That business is responsible for its own handling of
+        your information.
+      </p>
+      <p>
+        <strong>Service providers (subprocessors)</strong> that operate parts of our
+        platform:
+      </p>
       <ul>
-        <li>
-          <strong>Service providers.</strong> Telephony, messaging, calendar, hosting,
-          and payment providers that operate the service on our behalf. They may use
-          the information only to provide their service to us.
-        </li>
-        <li>
-          <strong>The client business.</strong> Call details and appointment
-          information collected on a business&apos;s behalf are provided to that
-          business.
-        </li>
-        <li>
-          <strong>Legal requirements.</strong> Where we are required to by law, legal
-          process, or to protect the rights and safety of people or property.
-        </li>
-        <li>
-          <strong>Business transfer.</strong> If the business is sold or merged,
-          information may transfer as part of that transaction.
-        </li>
+        <li>Voice AI processing and call handling</li>
+        <li>Telephony and SMS delivery</li>
+        <li>Data storage and hosting</li>
+        <li>Payment processing</li>
+        <li>Calendar scheduling</li>
       </ul>
+      <p>
+        These providers process information only as needed to deliver our service
+        and are bound by their own confidentiality and security obligations.
+      </p>
+      <p>
+        <strong>Legal requirements.</strong> We may disclose information where
+        required by law, subpoena, or court order, or to protect the safety of any
+        person.
+      </p>
+      <p>
+        <strong>Business transfer.</strong> If our business is sold or merged,
+        information may transfer as part of that transaction.
+      </p>
 
       <h2>Call recording</h2>
       <p>
-        Where calls are recorded, callers are notified at the start of the call.
-        Colorado is a one-party consent state, but requirements differ elsewhere and
-        some calls cross state lines, so notice is given on every recorded call.
-        Recording can be disabled for a client business on request.
+        Calls answered on behalf of our client businesses may be recorded and
+        transcribed. Colorado is a one-party consent state, and our client business
+        is a party to these calls. Our assistant nonetheless discloses at the start
+        of every call that the call may be recorded.
+      </p>
+      <p>
+        If you do not want to be recorded, you may end the call and contact the
+        business by another method.
       </p>
 
       <h2>How long we keep information</h2>
+      <ul>
+        <li>
+          <strong>Call recordings:</strong> {retention.callRecordings}, then deleted
+        </li>
+        <li>
+          <strong>Transcripts and call summaries:</strong> {retention.transcripts}
+        </li>
+        <li>
+          <strong>Appointment and contact records:</strong> for the duration of our
+          agreement with the client business, plus {retention.appointmentRecords}
+        </li>
+        <li>
+          <strong>Billing records:</strong> as required by tax and accounting law
+        </li>
+      </ul>
       <p>
-        We keep information for as long as needed to provide the service and to meet
-        legal, tax, and accounting obligations. Call recordings and transcripts are
-        retained for a limited operational period and then deleted. A client business
-        may request deletion of its data at any time, subject to records we are
-        required to keep.
+        Client businesses may request shorter retention periods. When our agreement
+        with a client business ends, we delete or return their data within{' '}
+        {retention.offboarding} on request.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Colorado residents have rights under the Colorado Privacy Act, including the
+        right to access, correct, delete, and obtain a portable copy of personal
+        data, and to opt out of targeted advertising, sale of personal data, and
+        certain profiling. We do not engage in targeted advertising, sale of
+        personal data, or profiling.
+      </p>
+      <p>
+        To exercise any right, contact us at{' '}
+        <a href={`mailto:${site.email}`}>{site.email}</a>. We will respond within the
+        time required by law. You may appeal a denial by replying to our response.
+      </p>
+      <p>
+        Where we process information on behalf of a client business, we act as that
+        business&apos;s service provider. We will forward your request to them and
+        assist in fulfilling it.
       </p>
 
       <h2>Security</h2>
       <p>
-        We use commercially reasonable administrative and technical safeguards to
-        protect information, including encrypted transmission and access controls. No
-        method of transmission or storage is completely secure, and we cannot
-        guarantee absolute security.
-      </p>
-
-      <h2>Your choices and rights</h2>
-      <p>
-        You may ask us to access, correct, or delete personal information we hold
-        about you, and you may opt out of text messages at any time as described
-        above. Colorado residents have rights under the Colorado Privacy Act,
-        including the right to access, correct, delete, and obtain a portable copy of
-        personal data, and to opt out of targeted advertising and sale of personal
-        data — neither of which we do. To exercise any of these rights, contact us
-        using the details below. We will not discriminate against you for making a
-        request.
+        We use industry-standard measures including encryption in transit, access
+        controls, tenant data isolation, and restricted administrative access. No
+        system is completely secure, and we cannot guarantee absolute security.
       </p>
 
       <h2>Children</h2>
       <p>
-        This service is intended for businesses and is not directed to children under
-        13. We do not knowingly collect personal information from children under 13.
+        Our service is not directed to children under 13, and we do not knowingly
+        collect their personal information. If you believe a child has provided
+        information, contact us and we will delete it.
       </p>
 
       <h2>Changes to this policy</h2>
       <p>
-        We may update this policy from time to time. The effective date at the top of
-        this page shows when it was last revised. Material changes will be posted
-        here.
+        We may update this policy. The effective date above reflects the most recent
+        version. Material changes will be communicated to our client businesses
+        directly.
       </p>
 
-      <h2>Contact us</h2>
-      <p>
-        Questions about this policy, or requests about your information, can be sent
-        to:
-      </p>
+      <h2>Contact</h2>
       <MailingAddress />
     </LegalLayout>
   );
