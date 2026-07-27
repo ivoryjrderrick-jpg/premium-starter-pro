@@ -31,7 +31,9 @@ export default function SmsTermsPage() {
   return (
     <LegalLayout
       title="SMS Terms of Service"
-      intro={`${site.legalName} ("Rocky Mountain Booking," "we," "us") provides an AI-powered phone answering and appointment booking service to home service businesses in Colorado, including HVAC, plumbing, and electrical contractors. When you call one of our client businesses and we answer on their behalf, we may send you a text message related to that call.`}
+      // "appointment-based" rather than "home service" so this matches the
+      // audience the site actually markets to. See the note in privacy/page.tsx.
+      intro={`${site.legalName} ("Rocky Mountain Booking," "we," "us") provides an AI-powered phone answering and appointment booking service to appointment-based businesses in Colorado, including HVAC, plumbing, and electrical contractors. When you call one of our client businesses and we answer on their behalf, we may send you a text message related to that call.`}
     >
       <h2>Who receives messages from us</h2>
       <p>
@@ -75,6 +77,13 @@ export default function SmsTermsPage() {
         <strong>Business clients.</strong> You opt in by providing your mobile number
         and affirmatively consenting to SMS notifications when you sign up for our
         service.
+      </p>
+      <p>
+        <strong>Website enquiries.</strong> If you contact us through the form on
+        this website, you may tick an optional box to receive text messages about
+        your enquiry at the number you provide. The box is unticked by default, and
+        submitting the form without ticking it means we will not text you. Consent is
+        never a condition of purchase.
       </p>
       <p>
         We never send a text message to obtain consent, and we do not purchase, rent,

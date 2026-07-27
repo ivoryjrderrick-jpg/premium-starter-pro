@@ -15,11 +15,31 @@ npm run dev                  # http://localhost:3000
 
 ## ⚠️ Before you launch
 
-Search the repo for `REPLACE_ME`. **One** thing is still a placeholder:
+**Nothing renders as a placeholder.** The site is safe to deploy and safe to
+submit for carrier review as-is. One item is still outstanding, but it degrades
+rather than breaking:
 
 | What | Where | Notes |
 |---|---|---|
-| **Mailing address** | `NEXT_PUBLIC_ADDRESS_LINE1/2` | **Required for SMS carrier registration.** Appears on `/privacy` and `/terms`. |
+| **Street address** | `NEXT_PUBLIC_ADDRESS_LINE1/2` | Not set. `/privacy` and `/sms` currently show business name, city/state, email and phone — all real, just without a street line. Set it before submitting for carrier registration; reviewers expect a physical address. `next build` prints a warning until you do. |
+
+### Carrier / TCR registration checklist
+
+- [x] SMS Terms published at `/sms`, linked in the footer of every page
+- [x] Privacy Policy at `/privacy` with the "no mobile information shared for
+      marketing" clause
+- [x] STOP / HELP, message frequency, and rate disclosures on `/sms`
+- [x] Consent captured at the point the phone number is collected (contact
+      form), optional and unchecked by default
+- [x] Business description consistent between the site and both legal pages
+- [ ] **Street address set** — the one remaining item
+- [ ] Subprocessor list in `/privacy` matches what you actually use
+- [ ] Retention periods in `lib/site.ts` match what your systems actually do
+- [ ] Attorney review
+
+The last three can't be verified from code. The retention periods in
+particular are published promises — stating 90 days and keeping recordings
+indefinitely is worse than publishing nothing.
 
 Phone and email are live: `(877) 379-9412` and `contact@rockymountainbooking.com`.
 

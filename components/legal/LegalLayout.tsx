@@ -21,7 +21,11 @@ export function MailingAddress() {
   return (
     <address className="mt-4 rounded-xl border border-amber/30 bg-navy-800 p-5 not-italic leading-relaxed text-cream">
       <strong className="block font-semibold">{site.legalName}</strong>
-      <span className="block text-slateLight">{site.address.line1}</span>
+      {/* Street line is omitted rather than printed as a placeholder when it
+          hasn't been configured. See lib/site.ts. */}
+      {site.address.isComplete ? (
+        <span className="block text-slateLight">{site.address.line1}</span>
+      ) : null}
       <span className="block text-slateLight">{site.address.line2}</span>
       <a className="mt-2 block text-amber underline underline-offset-4" href={`mailto:${site.email}`}>
         {site.email}

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { site } from '@/lib/site';
 
@@ -75,6 +76,9 @@ export default function ContactForm() {
         `Business: ${data.get('business') ?? ''}`,
         `Phone: ${data.get('phone') ?? ''}`,
         `Email: ${data.get('email') ?? ''}`,
+        // Carried through so the consent decision is recorded alongside the
+        // number, not just captured in the browser and lost.
+        `SMS consent: ${data.get('sms_consent') ? 'YES' : 'no'}`,
         '',
         `${data.get('message') ?? ''}`,
       ].join('\n');
@@ -143,6 +147,34 @@ export default function ContactForm() {
         />
       </div>
 
+      {/*
+        Express written consent for SMS, captured at the point the number is
+        collected. Deliberately OPTIONAL and unchecked by default — conditioning
+        a service on messaging consent is exactly what the TCPA prohibits, so
+        the form submits fine either way. The disclosures sit in the label
+        itself, which is what carrier and TCR reviewers look for.
+      */}
+      <div className="rounded-xl border border-cream/10 bg-navy-800/60 p-4">
+        <div className="flex gap-3">
+          <input
+            id="sms_consent"
+            name="sms_consent"
+            type="checkbox"
+            value="yes"
+            className="mt-1 h-5 w-5 shrink-0 accent-amber"
+          />
+          <label htmlFor="sms_consent" className="text-sm leading-relaxed text-slateLight">
+            <span className="font-medium text-cream">
+              Text me about my enquiry.
+            </span>{' '}
+            By checking this box you agree to receive text messages from{' '}
+            {site.legalName} about your enquiry at the number provided. Consent is
+            not a condition of purchase. Message frequency varies. Message and data
+            rates may apply. Reply STOP to opt out, HELP for help.
+          </label>
+        </div>
+      </div>
+
       {/* Honeypot — hidden from people and from assistive tech, visible to bots. */}
       <div className="absolute left-[-9999px]" aria-hidden="true">
         <label htmlFor="company_website">Leave this field empty</label>
@@ -171,6 +203,18 @@ export default function ContactForm() {
         <a className="text-amber underline underline-offset-4" href={site.phone.href}>
           {site.phone.display}
         </a>
+      </p>
+
+      <p className="text-sm text-slateMuted">
+        See our{' '}
+        <Link className="text-amber underline underline-offset-4" href="/sms">
+          SMS Terms
+        </Link>{' '}
+        and{' '}
+        <Link className="text-amber underline underline-offset-4" href="/privacy">
+          Privacy Policy
+        </Link>
+        .
       </p>
     </form>
   );

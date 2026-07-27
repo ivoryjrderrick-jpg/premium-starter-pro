@@ -11,11 +11,27 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-/** Still a placeholder. Required for SMS/carrier registration. */
-const REPLACE_ME = {
-  addressLine1: '[REPLACE_ME — street address]',
-  addressLine2: 'Colorado Springs, CO [REPLACE_ME — ZIP]',
-} as const;
+/**
+ * Street address. Set NEXT_PUBLIC_ADDRESS_LINE1/2 before submitting for carrier
+ * registration — reviewers expect a physical address on the compliance pages.
+ *
+ * Until it's set, nothing bracketed is printed. The contact blocks fall back to
+ * the business name, city/state, email and phone, which are all real. A page
+ * that shows slightly less is fine; a page showing "[REPLACE_ME]" reads as
+ * unfinished and gets rejected.
+ */
+const streetAddress = process.env.NEXT_PUBLIC_ADDRESS_LINE1?.trim() ?? '';
+const addressLocality =
+  process.env.NEXT_PUBLIC_ADDRESS_LINE2?.trim() || 'Colorado Springs, CO';
+
+if (typeof window === 'undefined' && !streetAddress) {
+  // Surfaces in `next build` output and in Vercel logs, so this can't be
+  // quietly forgotten between now and carrier registration.
+  console.warn(
+    '[rmb] NEXT_PUBLIC_ADDRESS_LINE1 is not set — /privacy and /sms will omit ' +
+      'the street address. Set it before submitting for carrier registration.',
+  );
+}
 
 /**
  * Live values. These are real.
@@ -64,8 +80,10 @@ export const site = {
 
   /** Used in the compliance pages and the LocalBusiness structured data. */
   address: {
-    line1: process.env.NEXT_PUBLIC_ADDRESS_LINE1 ?? REPLACE_ME.addressLine1,
-    line2: process.env.NEXT_PUBLIC_ADDRESS_LINE2 ?? REPLACE_ME.addressLine2,
+    /** Empty until configured — render conditionally, never print it raw. */
+    line1: streetAddress,
+    line2: addressLocality,
+    isComplete: Boolean(streetAddress),
   },
 
   /**
