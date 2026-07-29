@@ -75,6 +75,16 @@ export default function TermsPage() {
         giving the Client notice and a reasonable opportunity to pay.
       </p>
 
+      <h3>Fair use</h3>
+      <p>
+        Plans include reasonable use of up to <strong>1,500 answered minutes per
+        month</strong> per Client. If usage exceeds that ceiling in a given month,
+        we will contact the Client to discuss the account before applying any
+        additional charges. Additional minutes beyond the ceiling are billed at{' '}
+        <strong>$0.35 per minute</strong>. This ceiling exists to protect against
+        unusual volume and is not expected to affect normal use.
+      </p>
+
       <h2>4. Client responsibilities</h2>
       <p>The Client is responsible for:</p>
       <ul>

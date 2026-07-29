@@ -143,7 +143,10 @@ export const plans = [
     features: [
       '24/7 call answering',
       'Appointment booking to your calendar',
-      'SMS confirmations',
+      // Qualified until A2P 10DLC carrier registration clears — the system
+      // cannot send texts before then, so this must not read as already live.
+      // Deliberately no date: registration timing isn't ours to promise.
+      'SMS confirmations (activates once carrier registration completes)',
       'Urgent calls transferred to your phone',
       'Local setup and support',
       'Rate locked 6 months',

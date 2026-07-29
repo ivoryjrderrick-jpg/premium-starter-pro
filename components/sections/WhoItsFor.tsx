@@ -1,5 +1,12 @@
-/** Trades lead, but the list stays deliberately open — the system doesn't care
- *  what the appointment is for. */
+/**
+ * Trades lead, but the list stays deliberately open — the system doesn't care
+ * what the appointment is for.
+ *
+ * ⚠️  Do not add dental, medical, or any other HIPAA-covered vertical here.
+ *     Soliciting covered entities requires counsel and a Business Associate
+ *     Agreement in place first. Veterinary clinics are fine — veterinary
+ *     records are not HIPAA-covered.
+ */
 const INDUSTRIES = [
   'HVAC',
   'Plumbing',
@@ -10,7 +17,6 @@ const INDUSTRIES = [
   'Auto repair',
   'Veterinary clinics',
   'Med spas',
-  'Dental practices',
   'Property management',
   'Professional services',
 ];

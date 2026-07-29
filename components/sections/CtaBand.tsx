@@ -40,8 +40,8 @@ export default function CtaBand({
             </div>
 
             <p className="mt-5 text-sm text-slateMuted">
-              If I can&apos;t pick up, it takes your details and texts me right then
-              instead of leaving you in voicemail. That&apos;s the fallback your
+              If I can&apos;t pick up, it takes your details and gets them to me right
+              away instead of leaving you in voicemail. That&apos;s the fallback your
               customers get too.
             </p>
           </div>

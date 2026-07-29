@@ -41,6 +41,31 @@ The last three can't be verified from code. The retention periods in
 particular are published promises — stating 90 days and keeping recordings
 indefinitely is worse than publishing nothing.
 
+### Open decisions (resolve with counsel — do not just pick a number)
+
+**Call recording retention vs. proof of SMS consent.** `/privacy` publishes a
+90-day deletion window for call recordings. Those same recordings are the
+record of a caller's verbal opt-in to text messages, and TCPA claims routinely
+arrive well after 90 days. Deleting on schedule means destroying the evidence
+that consent was given; keeping recordings longer contradicts the published
+policy. Both the number and the policy wording need to move together, and the
+right answer depends on advice — so the 90 days in `lib/site.ts` has
+deliberately been left alone.
+
+One option worth raising with the attorney: retain a short structured consent
+record (number, timestamp, the yes/no) separately from the audio, so the
+recording can still be deleted at 90 days without losing the proof.
+
+**Setup fee is $500 on both tiers.** `plans` in `lib/site.ts` sets `setup: 500`
+for Founding and Standard alike, and both cards render "$500 one-time setup".
+Flagged because planning documents had Standard higher than Founding. Unchanged
+pending a decision — note that a *lower* setup fee is currently one of the few
+things that does not differentiate the Founding tier.
+
+**SMS is qualified, not live.** The Founding tier feature line reads "SMS
+confirmations (activates once carrier registration completes)". Remove the
+qualifier once A2P 10DLC clears.
+
 Phone and email are live: `(877) 379-9412` and `contact@rockymountainbooking.com`.
 
 ### On the phone number

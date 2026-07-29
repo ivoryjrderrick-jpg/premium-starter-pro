@@ -12,7 +12,9 @@ const PROSE = [
   '[&_h3]:mt-8 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-amber',
   '[&_p]:mt-4 [&_p]:leading-relaxed [&_p]:text-slateLight',
   '[&_ul]:mt-4 [&_ul]:space-y-2 [&_ul]:pl-5 [&_li]:list-disc [&_li]:leading-relaxed [&_li]:text-slateLight',
-  '[&_a]:text-amber [&_a]:underline [&_a]:underline-offset-4',
+  // break-words so long unbreakable tokens (email addresses) can't push the
+  // page sideways on narrow viewports.
+  '[&_a]:text-amber [&_a]:underline [&_a]:underline-offset-4 [&_a]:break-words',
   '[&_strong]:text-cream [&_strong]:font-semibold',
 ].join(' ');
 
@@ -27,7 +29,10 @@ export function MailingAddress() {
         <span className="block text-slateLight">{site.address.line1}</span>
       ) : null}
       <span className="block text-slateLight">{site.address.line2}</span>
-      <a className="mt-2 block text-amber underline underline-offset-4" href={`mailto:${site.email}`}>
+      <a
+        className="mt-2 block break-words text-amber underline underline-offset-4"
+        href={`mailto:${site.email}`}
+      >
         {site.email}
       </a>
       <a className="block text-amber underline underline-offset-4" href={site.phone.href}>

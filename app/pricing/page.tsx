@@ -133,8 +133,9 @@ export default function PricingPage() {
           Straightforward pricing. No per-minute billing.
         </h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slateLight">
-          One monthly fee, one setup fee. You are not billed by the call, by the
-          minute, or by how busy your season gets.
+          One monthly fee, one setup fee. You are not billed by the call or by the
+          minute. Plans include up to 1,500 answered minutes a month — if you ever
+          go past that, I call you before anything changes.
         </p>
       </section>
 

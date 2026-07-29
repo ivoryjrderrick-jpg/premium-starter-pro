@@ -91,8 +91,12 @@ export default function PricingCards() {
           hours.
         </p>
 
+        {/* Must stay consistent with the fair-use clause in section 3 of the
+            Terms. "No overage charges" used to sit here, which published an
+            unlimited-usage promise the Terms did not back. */}
         <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-slateMuted">
-          No per-minute billing. No overage charges. Setup is billed once, up front.
+          No per-minute billing. Fair use up to 1,500 answered minutes a month —
+          I&apos;ll call you before anything changes. Setup is billed once, up front.
           Comparison based on the estimates above. Pricing is subject to change; the
           rate agreed at signup is the rate that applies.
         </p>

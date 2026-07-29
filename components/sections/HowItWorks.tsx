@@ -23,13 +23,13 @@ const STAGES = [
     step: '03',
     stage: 'Book',
     title: 'It books straight to your calendar',
-    body: 'It only offers what is genuinely open, books the slot, and sends your customer an SMS confirmation. You get a text telling you who called and what they want.',
+    body: 'It only offers what is genuinely open and books the slot straight onto your calendar, so the appointment is there before you hear about it. Text confirmations to your customer are part of the service.',
   },
   {
     step: '04',
     stage: 'Escalate',
     title: 'Urgent calls come straight to you',
-    body: 'An emergency does not become a message. It transfers the caller to your phone live and texts you the summary either way. If you cannot pick up, it takes the details rather than leaving them stranded.',
+    body: 'An emergency does not become a message. It transfers the caller straight to your phone while they are still on the line. If you cannot pick up, it takes the details and gets them to you rather than leaving anyone stranded.',
   },
 ];
 

@@ -34,9 +34,9 @@ export default function PrivacyPage() {
     <LegalLayout
       title="Privacy Policy"
       // Broadened from "home service businesses" to match who the site
-      // actually markets to (trades, plus vets, med spas, dental, property
-      // management, professional services). A reviewer comparing this page
-      // against the site would otherwise see two different businesses.
+      // actually markets to (trades, plus vets, med spas, property management,
+      // professional services). A reviewer comparing this page against the site
+      // would otherwise see two different businesses.
       intro={`${site.legalName} ("we," "us") provides AI-powered phone answering and appointment booking services to appointment-based businesses in Colorado, including HVAC, plumbing, and electrical contractors. This policy explains what information we collect, how we use it, and the choices you have.`}
     >
       <h2>Overview</h2>

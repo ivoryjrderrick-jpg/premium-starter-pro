@@ -20,7 +20,9 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:gap-14">
+          {/* Single column below sm: two columns left ~155px at 390px wide,
+              which clipped the email address off the right edge. */}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-14">
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-wider text-cream">Site</h2>
               <ul className="mt-3 space-y-2 text-sm">
@@ -53,7 +55,12 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a className="text-slateLight hover:text-amber" href={`mailto:${site.email}`}>
+                  {/* break-words is a safety net for very narrow viewports
+                      (~320px) — the address is one long unbreakable token. */}
+                  <a
+                    className="break-words text-slateLight hover:text-amber"
+                    href={`mailto:${site.email}`}
+                  >
                     {site.email}
                   </a>
                 </li>

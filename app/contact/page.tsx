@@ -22,8 +22,12 @@ export default function ContactPage() {
         and the moment you ask for a person it puts you through to me.
       </p>
 
+      {/* min-w-0 on the grid children: grid items default to min-width:auto and
+          so refuse to shrink below their content's min-content width. The text
+          inputs have an intrinsic width that exceeded 280px, which pushed this
+          column past the viewport and scrolled the whole page sideways at 320px. */}
       <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-amber">
             Direct
           </h2>
@@ -45,7 +49,7 @@ export default function ContactPage() {
               <dt className="text-sm text-slateMuted">Email</dt>
               <dd className="mt-1">
                 <a
-                  className="text-lg text-cream underline-offset-4 hover:text-amber hover:underline"
+                  className="break-words text-lg text-cream underline-offset-4 hover:text-amber hover:underline"
                   href={`mailto:${site.email}`}
                 >
                   {site.email}
@@ -68,7 +72,7 @@ export default function ContactPage() {
                 <span className="block text-slateLight">
                   I&apos;m realistically reachable {site.coverage.liveTransferHours}{' '}
                   {site.coverage.timezone}. Outside that it takes your details and
-                  texts me right then — nobody gets voicemail.
+                  gets them to me right away — nobody gets voicemail.
                 </span>
               </dd>
             </div>
@@ -79,7 +83,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-amber">
             Send a message
           </h2>

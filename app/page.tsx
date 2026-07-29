@@ -12,8 +12,8 @@ import { site } from '@/lib/site';
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
   description:
-    `Your phone answered 24/7 by a system built for you. Books appointments to your calendar, ` +
-    `sends SMS confirmations, transfers urgent calls to your phone. Local to ${site.city}, ${site.state}.`,
+    `Your phone answered 24/7 by a system built for you. Books appointments straight to your ` +
+    `calendar and transfers urgent calls to your phone. Local to ${site.city}, ${site.state}.`,
 };
 
 export default function HomePage() {

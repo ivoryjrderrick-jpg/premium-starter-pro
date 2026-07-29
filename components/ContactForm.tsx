@@ -26,7 +26,9 @@ function Field({
   placeholder?: string;
 }) {
   return (
-    <div>
+    // min-w-0 for the same reason as the page-level grid: an input's intrinsic
+    // width would otherwise stop this grid cell shrinking on narrow screens.
+    <div className="min-w-0">
       <label htmlFor={id} className="block text-sm font-medium text-cream">
         {label}{' '}
         {required ? (
