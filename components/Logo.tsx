@@ -1,33 +1,41 @@
+import Image from 'next/image';
+
 /**
- * Golden geometric mountain range mark.
+ * The Rocky Mountain Booking mark.
  *
- * Decorative when it sits next to the wordmark (the text carries the name), so
- * it's aria-hidden there; pass a `title` to make it a standalone labelled image.
+ * This is the real logo, extracted from the supplied artwork with a transparent
+ * background rather than the circular photo badge it was delivered in. Two
+ * reasons: the photographic backdrop turns to noise at header size, and a
+ * transparent mark sits correctly on both the header navy and the lighter
+ * footer navy without showing a disc edge.
+ *
+ * Intrinsic ratio is roughly 3.3:1, so callers should set a height and leave
+ * the width to `w-auto`.
  */
 export default function Logo({
-  className = 'h-8 w-8',
+  className = 'h-6 w-auto',
   title,
 }: {
   className?: string;
+  /** Pass to make the mark a labelled image; omit where a wordmark sits beside it. */
   title?: string;
 }) {
   return (
-    <svg
-      viewBox="0 0 48 40"
+    <Image
+      src="/logo-mark.png"
+      alt={title ?? ''}
+      width={320}
+      height={97}
+      // Header brand asset — eager so it doesn't pop in after first paint.
+      priority
+      // The asset is already sized for its largest render (~92px wide, so 320px
+      // is better than 3x on retina). Skipping the optimizer avoids the
+      // "sharp missing in production" warning when self-hosting, and a round
+      // trip through /_next/image for a 9.6KB file that never changes.
+      unoptimized
       className={className}
-      role={title ? 'img' : undefined}
+      // Decorative when the adjacent wordmark already carries the name.
       aria-hidden={title ? undefined : true}
-      aria-label={title}
-      focusable="false"
-    >
-      {title ? <title>{title}</title> : null}
-      {/* Back ridge — deeper amber so the range reads with depth at 24px. */}
-      <path d="M2 34 L14 12 L22 24 L30 8 L46 34 Z" fill="#C98F2E" />
-      {/* Front ridge */}
-      <path d="M2 34 L14 12 L26 34 Z" fill="#F5B84A" />
-      {/* Snow cap on the tall peak */}
-      <path d="M30 8 L35 15 L32 16 L30 14 L27.5 16 Z" fill="#F4EFE6" />
-      <path d="M0 34 H48 V37 H0 Z" fill="#F5B84A" opacity="0.45" />
-    </svg>
+    />
   );
 }

@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
-              <Logo className="h-7 w-8" />
+              <Logo className="h-6 w-auto" />
               <span className="font-semibold tracking-tight text-cream">
                 Rocky Mountain <span className="text-amber">Booking</span>
               </span>

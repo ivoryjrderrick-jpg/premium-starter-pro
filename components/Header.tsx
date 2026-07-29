@@ -47,7 +47,9 @@ export default function Header() {
           href="/"
           className="flex items-center gap-2.5 font-semibold tracking-tight text-cream"
         >
-          <Logo className="h-7 w-8" />
+          {/* Wide 3.3:1 mark — height-driven, smaller on mobile so the lockup
+              and the menu button both fit at 375px. */}
+          <Logo className="h-5 w-auto sm:h-6" />
           <span className="text-[15px] leading-tight sm:text-base">
             Rocky Mountain <span className="text-amber">Booking</span>
           </span>
