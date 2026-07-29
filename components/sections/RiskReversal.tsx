@@ -21,9 +21,19 @@ export default function RiskReversal() {
             Thirty days. Then you decide.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-slateLight">
-            Run it for a month. If it isn&apos;t catching calls you&apos;d have
-            missed, we stop — no penalty, and you keep every appointment it booked.
-            I&apos;ll release your number and hand over your data the same week.
+            Run it for a month. If it isn&apos;t catching calls you&apos;d have missed,
+            we stop and you get everything back — the month and the setup fee both. You
+            keep every appointment it booked. I&apos;ll release your number and hand
+            over your data inside a week.
+          </p>
+          {/*
+            The refund is founding-tier only under the founding client guarantee in
+            Terms section 3. Without this line the band reads as a universal
+            money-back promise the contract does not back — the same
+            marketing-vs-contract gap this band was created to close.
+          */}
+          <p className="mt-3 text-sm text-slateMuted">
+            Founding clients. Standard plans run on the 30-day notice terms.
           </p>
         </div>
       </div>

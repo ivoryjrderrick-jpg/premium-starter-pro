@@ -33,11 +33,12 @@ export const metadata: Metadata = {
     url: site.url,
     title: `AI Phone Answering & Appointment Booking | ${site.city}, ${site.state}`,
     description:
-      'Every call answered. Every appointment booked. Built, installed, and supported locally.',
+      'Your phone stops going to voicemail. Answered around the clock, booked to your calendar, ' +
+      'urgent calls straight to you. Built, installed, and supported locally.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${site.name} — Every call answered. Every appointment booked.`,
+    title: `${site.name} — Your phone stops going to voicemail.`,
     description: `Done-for-you AI phone systems for appointment-based businesses in ${site.city}.`,
   },
   robots: { index: true, follow: true },

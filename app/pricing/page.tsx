@@ -71,9 +71,11 @@ const FAQS: FaqItem[] = [
   {
     question: 'Am I locked into a contract?',
     answer:
-      'No. Month to month with 30 days notice to cancel. The setup fee is one-time and is not refundable ' +
-      'once the system has been built, since that is the part where the work happens. Founding clients ' +
-      'have their monthly rate locked for six months.',
+      'No. Month to month with 30 days notice to cancel. Founding clients get a full 30-day money-back ' +
+      'guarantee — cancel in writing inside the first month and everything comes back, setup fee ' +
+      'included. After that, and on the Standard plan, the setup fee is one-time and not refundable, ' +
+      'since that is the part where the work happens. Founding clients also have their monthly rate ' +
+      'locked for six months.',
   },
   // ── Behind "See more questions" ────────────────────────────────────────────
   // Still rendered server-side and present in the DOM; collapsed with CSS only.
@@ -114,8 +116,9 @@ const FAQS: FaqItem[] = [
   {
     question: "What if it's not working out?",
     answer:
-      "Thirty days notice, no penalty. I'll release your number and hand over your data. I'd rather " +
-      'you leave clean than stay annoyed.',
+      "Thirty days notice, no penalty. Founding clients who cancel inside the first month get " +
+      "everything back, setup fee included. I'll release your number and hand over your data inside a " +
+      "week. I'd rather you leave clean than stay annoyed.",
   },
   {
     question: 'Can it do more than book appointments?',

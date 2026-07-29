@@ -150,6 +150,9 @@ export const plans = [
       'Urgent calls transferred to your phone',
       'Local setup and support',
       'Rate locked 6 months',
+      // Founding-tier only — Standard setup fees stay non-refundable. See the
+      // founding client guarantee in Terms section 3.
+      '30-day money-back guarantee, setup fee included',
     ],
     footnote: 'First 3 clients only, in exchange for a testimonial.',
     featured: true,
@@ -188,6 +191,10 @@ export const retention = {
   transcripts: '12 months',
   /** Kept for the agreement's duration, plus this long afterwards. */
   appointmentRecords: '12 months',
-  /** Deletion/return window after a client agreement ends, on request. */
-  offboarding: '30 days',
+  /**
+   * Deletion/return window after a client agreement ends, on request.
+   * Matches the "inside a week" promise in the risk-reversal band and the
+   * seven-day commitment in Terms section 11 — keep all three in step.
+   */
+  offboarding: '7 days',
 } as const;

@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { site } from '@/lib/site';
 
 export const runtime = 'edge';
-export const alt = `${site.name} — Every call answered. Every appointment booked.`;
+export const alt = `${site.name} — Your phone stops going to voicemail.`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -48,7 +48,7 @@ export default function OpengraphImage() {
               letterSpacing: '-0.02em',
             }}
           >
-            Every call answered.
+            Your phone stops
           </div>
           <div
             style={{
@@ -59,7 +59,7 @@ export default function OpengraphImage() {
               letterSpacing: '-0.02em',
             }}
           >
-            Every appointment booked.
+            going to voicemail.
           </div>
         </div>
 

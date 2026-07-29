@@ -37,6 +37,10 @@ export default function TermsPage() {
         <li>Setup, configuration, and ongoing support</li>
       </ul>
       <p>
+        SMS features become active upon completion of carrier registration, which may
+        occur after service otherwise goes live.
+      </p>
+      <p>
         We may improve or modify how the service works over time. We will not
         materially reduce the functionality described above during a paid period
         without notice.
@@ -49,7 +53,8 @@ export default function TermsPage() {
         Client&apos;s reasonable cooperation — providing business information, call
         handling preferences, calendar access, and availability for a review call.
         Delays caused by the Client may extend this. The setup fee covers work
-        performed and is non-refundable once configuration has begun.
+        performed and is non-refundable once configuration has begun, except under
+        the founding client guarantee described in section 3.
       </p>
 
       <h2>3. Term, billing, and cancellation</h2>
@@ -60,11 +65,27 @@ export default function TermsPage() {
       </p>
       <p>
         <strong>Either party may cancel with 30 days written notice.</strong> Notice
-        may be sent by email to the address at the end of these terms. Service
-        continues through the end of the 30-day notice period and the final month is
-        payable. Fees already paid are not refunded on cancellation, and setup fees
-        are never refundable.
+        may be sent by email to the address at the end of these terms. Except as
+        provided under the founding client guarantee below, service continues through
+        the end of the 30-day notice period, the final month is payable, and fees
+        already paid are not refunded on cancellation.
       </p>
+
+      <h3>Founding client guarantee</h3>
+      <p>
+        Clients on the founding rate may cancel at any time during the first thirty
+        (30) days following go-live. Cancellation is effective upon written notice, no
+        further monthly fees are due, and all fees paid, including the setup fee, will
+        be refunded in full within ten (10) business days. This guarantee applies only
+        to founding clients and only where cancellation is requested in writing within
+        that initial thirty (30) day period.
+      </p>
+      <p>
+        After the initial thirty (30) day period, and for all clients not on the
+        founding rate, the notice requirements above apply and setup fees are
+        non-refundable.
+      </p>
+
       <p>
         Founding client rates, where offered, are locked for six months from the date
         service goes live. After that period the then-current standard rate applies,
@@ -198,8 +219,10 @@ export default function TermsPage() {
         and know-how used to deliver the service. The Client retains ownership of its
         own business information, customer data, call records, and appointment data.
         On cancellation, the Client may request an export of its call and appointment
-        data. The Client grants us a limited license to use its business information
-        solely to operate the service.
+        data. We will provide that export, and release any telephone number we hold on
+        the Client&apos;s behalf, within seven (7) days of the request. The Client
+        grants us a limited license to use its business information solely to operate
+        the service.
       </p>
 
       <h2>12. Termination for breach</h2>

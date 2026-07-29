@@ -15,15 +15,12 @@ export default function Hero() {
           </p>
 
           <h1 className="mt-6 text-[2.125rem] font-bold leading-[1.1] tracking-tight text-cream sm:text-6xl lg:text-7xl">
-            Every call answered.
-            <br />
-            Every appointment booked.
+            Your phone stops going to voicemail.
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-slateLight sm:text-xl">
-            Most owners lose work to voicemail — after hours, out on a job, or when
-            two calls come in at once. This answers all of them, books straight to
-            your calendar, and puts urgent callers through to your phone.
+            Answered around the clock. Booked to your calendar. Urgent calls straight
+            to you.
           </p>
 
           <p className="mt-4 max-w-xl text-lg leading-relaxed text-cream/90">

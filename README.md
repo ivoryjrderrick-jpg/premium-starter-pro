@@ -59,8 +59,29 @@ recording can still be deleted at 90 days without losing the proof.
 **Setup fee is $500 on both tiers.** `plans` in `lib/site.ts` sets `setup: 500`
 for Founding and Standard alike, and both cards render "$500 one-time setup".
 Flagged because planning documents had Standard higher than Founding. Unchanged
-pending a decision — note that a *lower* setup fee is currently one of the few
-things that does not differentiate the Founding tier.
+pending a decision. Note the tiers now differ on *refundability* rather than
+amount — see below.
+
+### Founding client guarantee — how to make it universal
+
+Founding clients get a full 30-day money-back guarantee **including the setup
+fee**. Standard clients do not; their setup fee stays non-refundable. If you
+later decide to extend the guarantee to everyone, the change is:
+
+1. `app/terms/page.tsx` §3, *Founding client guarantee* — delete the sentence
+   limiting it to founding clients ("This guarantee applies only to founding
+   clients…"), and delete the whole paragraph after it ("After the initial
+   thirty (30) day period, and for all clients not on the founding rate…").
+2. `app/terms/page.tsx` §2 — drop the "except under the founding client
+   guarantee described in section 3" qualifier and reword to match.
+3. `lib/site.ts` — remove `'30-day money-back guarantee, setup fee included'`
+   from the founding tier's `features` (it stops being a differentiator) or add
+   the same line to Standard.
+4. `components/sections/RiskReversal.tsx` — delete the "Founding clients.
+   Standard plans run on the 30-day notice terms." line beneath the body.
+5. `app/pricing/page.tsx` — the FAQ answers for *"Am I locked into a contract?"*
+   and *"What if it's not working out?"* both split founding vs Standard;
+   simplify both.
 
 **SMS is qualified, not live.** The Founding tier feature line reads "SMS
 confirmations (activates once carrier registration completes)". Remove the
