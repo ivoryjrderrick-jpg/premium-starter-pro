@@ -1,0 +1,98 @@
+---
+import '../styles/global.css';
+import '../styles/blocks.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path only, e.g. "/pricing". Used for the canonical and og:url. */
+  path?: string;
+  ping?: boolean;
+}
+
+const { title, description, path = Astro.url.pathname, ping = false } = Astro.props;
+const canonical = new URL(path, site.url).href;
+
+/**
+ * LocalBusiness block. Carriers and search both read this; the name, phone and
+ * area must agree with the footer and with the Twilio registration.
+ */
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.legalName,
+  description:
+    'AI phone answering and appointment booking for service businesses in Colorado Springs.',
+  url: site.url,
+  telephone: site.phone.e164,
+  email: site.email,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.city,
+    addressRegion: site.state,
+    addressCountry: 'US',
+  },
+  areaServed: site.serviceArea.map((name) => ({ '@type': 'City', name })),
+  priceRange: '$$',
+};
+
+/** Escaped so a value can never terminate the script element. */
+const jsonLd = JSON.stringify(localBusiness).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0D1220" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <meta name="geo.region" content="US-CO" />
+    <meta name="geo.placename" content={site.city} />
+
+    <!-- Preloaded because the display face paints the first heading. -->
+    <link
+      rel="preload"
+      href="/fonts/archivo-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-latin-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <script type="application/ld+json" set:html={jsonLd} />
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Nav ping={ping} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

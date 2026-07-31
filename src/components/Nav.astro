@@ -1,0 +1,333 @@
+---
+import { site, nav, trades } from '../config/site';
+
+interface Props {
+  /** Adds the attention ping to the phone icon. Homepage only. */
+  ping?: boolean;
+}
+const { ping = false } = Astro.props;
+const path = Astro.url.pathname;
+---
+
+<nav class="nav">
+  <a href="/" aria-label={`${site.name} home`} class="brand">
+    <svg width="30" height="20" viewBox="0 0 30 20" fill="none" aria-hidden="true">
+      <path d="M1 19L9 5l5 8 3-4.5L21 19H1z" fill="var(--gold)"></path>
+      <path d="M16 19l6-11 7 11H16z" fill="var(--gold)" opacity=".55"></path>
+    </svg>
+  </a>
+
+  <div class="nav-right">
+    <a
+      class:list={['icon-btn', 'phone-btn', { ping }]}
+      href={site.phone.href}
+      aria-label={`Call ${site.phone.display}`}
+    >
+      <svg
+        width="21"
+        height="21"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+        ></path>
+      </svg>
+    </a>
+
+    <button
+      class="icon-btn"
+      id="menu-open"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="menu"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M3 7h18M3 12h18M3 17h18"></path>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Full-screen menu. `hidden` keeps its links out of the tab order when closed. -->
+<div class="menu" id="menu" hidden>
+  <div class="menu-top">
+    <span class="menu-brand">{site.name}</span>
+    <button class="icon-btn" id="menu-close" aria-label="Close menu">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M6 6l12 12M18 6L6 18"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav class="menu-body" aria-label="Main">
+    <ul class="menu-main">
+      {
+        nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="menu-heading">Your trade</p>
+    <ul class="menu-trades">
+      {
+        trades.map((t) => (
+          <li>
+            <a href={`/for/${t.slug}`} aria-current={path === `/for/${t.slug}` ? 'page' : undefined}>
+              {t.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a class="btn menu-cta" href={site.phone.href}>Call {site.phone.display}</a>
+  </nav>
+</div>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: rgba(13, 18, 32, 0.82);
+    backdrop-filter: saturate(180%) blur(18px);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .brand {
+    display: flex;
+    border-radius: 6px;
+  }
+  .brand:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: var(--white);
+    border-radius: 8px;
+  }
+  .icon-btn:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .phone-btn {
+    color: var(--gold);
+  }
+  .phone-btn.ping {
+    animation: ping 2.4s ease-out 1.2s 2;
+  }
+  @keyframes ping {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    12% {
+      transform: scale(1.16);
+    }
+    24% {
+      transform: scale(1);
+    }
+    36% {
+      transform: scale(1.1);
+    }
+    48% {
+      transform: scale(1);
+    }
+  }
+
+  /* ---- Full-screen menu ---- */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--night);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  /* An author `display` beats the UA stylesheet's [hidden]{display:none}, so
+     without this the closed overlay still covers the viewport and swallows
+     every click on the page behind it. */
+  .menu[hidden] {
+    display: none;
+  }
+  .menu-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .menu-brand {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--white);
+  }
+  .menu-body {
+    padding: 28px 22px 60px;
+  }
+  .menu-main {
+    list-style: none;
+    margin-bottom: 34px;
+  }
+  .menu-main a {
+    display: block;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: var(--white);
+    text-decoration: none;
+    padding: 6px 0;
+  }
+  .menu-main a[aria-current='page'] {
+    color: var(--gold);
+  }
+  .menu-heading {
+    font-family: var(--display);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .menu-trades {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 34px;
+  }
+  .menu-trades a {
+    display: inline-block;
+    font-family: var(--display);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 9px 15px;
+    border-radius: 999px;
+    border: 1px solid var(--line-dark);
+    color: var(--white);
+    text-decoration: none;
+  }
+  .menu-trades a[aria-current='page'] {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .menu a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .menu-cta {
+    display: block;
+    text-align: center;
+  }
+</style>
+
+<script>
+  const openBtn = document.getElementById('menu-open');
+  const closeBtn = document.getElementById('menu-close');
+  const menu = document.getElementById('menu');
+
+  if (openBtn && closeBtn && menu) {
+    // Remembered so focus can be handed back exactly where it came from.
+    let lastFocused: HTMLElement | null = null;
+
+    const focusables = () =>
+      Array.from(
+        menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      ).filter((el) => el.offsetParent !== null);
+
+    function open() {
+      lastFocused = document.activeElement as HTMLElement;
+      menu!.hidden = false;
+      openBtn!.setAttribute('aria-expanded', 'true');
+      // Stops the page behind the overlay scrolling on touch.
+      document.body.style.overflow = 'hidden';
+      focusables()[0]?.focus();
+      document.addEventListener('keydown', onKey);
+    }
+
+    function close() {
+      menu!.hidden = true;
+      openBtn!.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKey);
+      (lastFocused ?? openBtn!).focus();
+    }
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        close();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      // Focus trap: wrap at both ends so Tab can never reach the page behind.
+      const items = focusables();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+  }
+</script>
