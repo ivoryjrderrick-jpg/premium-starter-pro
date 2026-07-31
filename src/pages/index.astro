@@ -337,10 +337,20 @@ const reasons = [
       />
       <p class="eyebrow">Who you&rsquo;re actually calling</p>
       <h2>I&rsquo;m twenty minutes away.</h2>
-      <p class="sub">
-        I&rsquo;m DJ. I&rsquo;m active duty, I live here, and I built this after calling shops around
-        the Springs at ten at night to see what happened. Mostly, nothing happened.
-      </p>
+      <div class="bio">
+        <p>
+          I&rsquo;m DJ, a military veteran, software engineer, and the founder of Rocky Mountain
+          Booking. I&rsquo;ve personally experienced what it&rsquo;s like trying to reach a business,
+          only to get sent to voicemail, sit on hold, or hear &ldquo;we&rsquo;re too busy right
+          now&rdquo;, and I realized how many great businesses are losing customers simply because
+          they can&rsquo;t get to the phone fast enough.
+        </p>
+        <p>
+          I understood the problem because I saw it firsthand, and I knew there had to be a better
+          way.
+        </p>
+        <p class="bio-close">So we built one.</p>
+      </div>
       <div class="links">
         <a class="link" href="/contact">Get your free call audit <span class="chev">›</span></a>
       </div>
@@ -363,6 +373,29 @@ const reasons = [
 </Base>
 
 <style>
+  /* The bio runs longer than .sub is sized for, so it gets its own measure. */
+  .bio {
+    max-width: 46ch;
+    margin: 0 auto 22px;
+  }
+  .bio p {
+    font-size: 1.0625rem;
+    color: var(--muted-dark);
+  }
+  .bio p + p {
+    margin-top: 14px;
+  }
+  .bio-close {
+    font-family: var(--display);
+    font-weight: 600;
+    color: var(--white);
+  }
+  @media (min-width: 700px) {
+    .bio p {
+      font-size: 1.15rem;
+    }
+  }
+
   .research-head {
     margin-top: 38px;
     margin-bottom: 18px;
