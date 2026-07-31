@@ -123,14 +123,33 @@ const faqs = [
       <p class="sub">Use your own numbers. If the answer isn&rsquo;t obvious, don&rsquo;t buy it.</p>
     </div>
     <div class="stage rise">
+      {/* Same rows and rule as before; the first three values are now inputs. */}
       <div class="mathbox">
-        <div class="mrow"><span>Calls you miss in a week</span><span class="v">4</span></div>
         <div class="mrow">
-          <span>Of those, how many would&rsquo;ve booked</span><span class="v">1 in 4</span>
+          <label for="m-missed">Calls you miss in a week</label>
+          <input id="m-missed" class="v mi" type="number" inputmode="numeric" min="0" max="200"
+            step="1" value="4" />
         </div>
-        <div class="mrow"><span>Your average job</span><span class="v">$400</span></div>
-        <div class="mrow"><span>Recovered in a month</span><span class="v">$1,600</span></div>
-        <div class="mrow win"><span>Cost</span><span class="v">${pricing.current}</span></div>
+        <div class="mrow">
+          <label for="m-rate">Of those, how many would&rsquo;ve booked</label>
+          <span class="v inline"
+            ><input id="m-rate" class="mi" type="number" inputmode="numeric" min="0" max="100"
+              step="1" value="25" /><span class="unit">%</span></span
+          >
+        </div>
+        <div class="mrow">
+          <label for="m-job">Your average job</label>
+          <span class="v inline"
+            ><span class="unit pre">$</span><input id="m-job" class="mi" type="number"
+              inputmode="numeric" min="0" max="100000" step="10" value="400" /></span
+          >
+        </div>
+        <div class="mrow">
+          <span>Recovered in a month</span><span class="v" id="m-out">$1,733</span>
+        </div>
+        <div class="mrow win">
+          <span>Cost</span><span class="v" data-cost={pricing.current}>${pricing.current}</span>
+        </div>
       </div>
       <p class="sub math-note">Those are placeholder numbers. On a call I&rsquo;ll run yours.</p>
     </div>
@@ -391,6 +410,45 @@ const faqs = [
     font-weight: 600;
     white-space: nowrap;
   }
+  .mrow label {
+    cursor: pointer;
+  }
+  .mrow .inline {
+    display: inline-flex;
+    align-items: center;
+  }
+  .unit {
+    color: var(--muted-light);
+  }
+  /* Inputs sit in the row like the numbers they replaced, right-aligned so the
+     column still lines up. */
+  .mi {
+    width: 5.5ch;
+    text-align: right;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px dashed var(--line-light);
+    padding: 2px 0;
+    border-radius: 0;
+  }
+  .mi:focus-visible {
+    outline: 2px solid var(--gold-deep);
+    outline-offset: 3px;
+  }
+  /* Strip the spinners so the row keeps its typographic rhythm. */
+  .mi::-webkit-outer-spin-button,
+  .mi::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .mi {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
   .mrow.win .v {
     color: var(--gold-deep);
   }
@@ -478,4 +536,37 @@ const faqs = [
 
 <script>
   import '../scripts/motion';
+
+  const missed = document.getElementById('m-missed') as HTMLInputElement | null;
+  const rate = document.getElementById('m-rate') as HTMLInputElement | null;
+  const job = document.getElementById('m-job') as HTMLInputElement | null;
+  const out = document.getElementById('m-out');
+
+  if (missed && rate && job && out) {
+    const money = (n: number) =>
+      '$' + Math.round(n).toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+    // Clamp to the input's own min/max so a pasted value can't produce nonsense.
+    const val = (el: HTMLInputElement) => {
+      const n = Number(el.value);
+      if (!isFinite(n)) return Number(el.min || 0);
+      return Math.min(Number(el.max), Math.max(Number(el.min), n));
+    };
+
+    const recalc = () => {
+      // 4.33 weeks a month, so the figure matches a real month rather than four weeks.
+      out.textContent = money(val(missed) * 4.33 * (val(rate) / 100) * val(job));
+    };
+
+    [missed, rate, job].forEach((el) => {
+      el.addEventListener('input', recalc);
+      // Write the clamped value back on blur, so the figure on screen always
+      // matches the one the total was calculated from.
+      el.addEventListener('change', () => {
+        el.value = String(val(el));
+        recalc();
+      });
+    });
+    recalc();
+  }
 </script>

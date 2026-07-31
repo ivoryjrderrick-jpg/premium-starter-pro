@@ -42,6 +42,13 @@ export const site = {
    * registration exactly — keep these in step with what was filed.
    */
   serviceArea: ['Colorado Springs', 'Pueblo', 'Monument', 'Fountain', 'Castle Rock'],
+
+  /**
+   * Demo recording for the homepage player. Drop the file at public/audio/.
+   * If it is missing or fails to load, the whole section hides itself rather
+   * than showing a dead player.
+   */
+  demoAudio: '/audio/sam-demo.mp3',
 } as const;
 
 /**

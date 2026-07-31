@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/blocks.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import StickyCall from '../components/StickyCall.astro';
 import { site } from '../config/site';
 
 interface Props {
@@ -111,5 +112,6 @@ const jsonLd = JSON.stringify(localBusiness).replace(/</g, '\\u003c');
       <slot />
     </main>
     <Footer />
+    <StickyCall />
   </body>
 </html>

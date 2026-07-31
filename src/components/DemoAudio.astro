@@ -1,0 +1,222 @@
+---
+import { site } from '../config/site';
+---
+
+{/*
+  Starts hidden and only reveals once the browser has actually loaded metadata
+  for the file. The recording doesn't exist yet, so today this section never
+  appears — which is the intended behaviour. Drop the file at
+  public/audio/sam-demo.mp3 and it shows up on its own.
+*/}
+<section class="card dark" id="demo-audio" data-src={site.demoAudio} hidden>
+  <div class="rise">
+    <p class="eyebrow">Hear it</p>
+    <h2>This is what your customer hears.</h2>
+  </div>
+
+  <div class="stage rise">
+    <div class="player">
+      <button type="button" class="play" id="demo-play" aria-label="Play the demo recording">
+        <svg class="ico-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M8 5.5v13l11-6.5z"></path>
+        </svg>
+        <svg class="ico-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"></path>
+        </svg>
+      </button>
+
+      <div class="track-wrap">
+        {/*
+          A real range input, so it is keyboard operable and announced properly
+          without rebuilding slider semantics by hand.
+        */}
+        <input
+          id="demo-seek"
+          class="seek"
+          type="range"
+          min="0"
+          max="100"
+          value="0"
+          step="0.1"
+          aria-label="Seek through the recording"
+        />
+        <p class="times">
+          <span id="demo-now">0:00</span>
+          <span id="demo-total">0:00</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="links links-after">
+      <a class="link" href={site.phone.href}>Or call it yourself <span class="chev">›</span></a>
+    </div>
+
+    <audio id="demo-el" preload="metadata" src={site.demoAudio}></audio>
+  </div>
+</section>
+
+<style>
+  .player {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--night-2);
+    border: 1px solid var(--line-dark);
+    border-radius: 18px;
+    padding: 18px;
+  }
+  .play {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 0;
+    background: var(--gold);
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  .play:focus-visible {
+    outline: 2px solid var(--white);
+    outline-offset: 3px;
+  }
+  .ico-pause {
+    display: none;
+  }
+  .play[data-playing='true'] .ico-play {
+    display: none;
+  }
+  .play[data-playing='true'] .ico-pause {
+    display: block;
+  }
+
+  .track-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Thin gold progress on a muted track. The fill is painted with a gradient
+     driven by --pct so there is no second element to keep in sync. */
+  .seek {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 99px;
+    background: linear-gradient(
+      to right,
+      var(--gold) 0%,
+      var(--gold) var(--pct, 0%),
+      rgba(255, 255, 255, 0.14) var(--pct, 0%),
+      rgba(255, 255, 255, 0.14) 100%
+    );
+    cursor: pointer;
+  }
+  .seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 0;
+  }
+  .seek::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 0;
+  }
+  .seek:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+  }
+
+  .times {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-family: var(--display);
+    font-size: 0.76rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted-dark);
+  }
+
+  audio {
+    display: none;
+  }
+</style>
+
+<script>
+  const section = document.getElementById('demo-audio');
+  const audio = document.getElementById('demo-el') as HTMLAudioElement | null;
+  const play = document.getElementById('demo-play');
+  const seek = document.getElementById('demo-seek') as HTMLInputElement | null;
+  const now = document.getElementById('demo-now');
+  const total = document.getElementById('demo-total');
+
+  if (section && audio && play && seek && now && total) {
+    const fmt = (s: number) => {
+      if (!isFinite(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const r = Math.floor(s % 60);
+      return `${m}:${String(r).padStart(2, '0')}`;
+    };
+
+    const setPct = (p: number) => {
+      seek.style.setProperty('--pct', `${p}%`);
+      seek.value = String(p);
+    };
+
+    // Only reveal once the file is confirmed present and readable.
+    audio.addEventListener('loadedmetadata', () => {
+      total.textContent = fmt(audio.duration);
+      section.hidden = false;
+    });
+
+    // Missing or unplayable file leaves the section hidden.
+    audio.addEventListener('error', () => {
+      section.hidden = true;
+    });
+
+    play.addEventListener('click', () => {
+      if (audio.paused) {
+        // Never autoplays. Sound only ever starts from this click.
+        void audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    audio.addEventListener('play', () => play.setAttribute('data-playing', 'true'));
+    audio.addEventListener('pause', () => play.setAttribute('data-playing', 'false'));
+    audio.addEventListener('play', () =>
+      play.setAttribute('aria-label', 'Pause the demo recording'),
+    );
+    audio.addEventListener('pause', () =>
+      play.setAttribute('aria-label', 'Play the demo recording'),
+    );
+
+    audio.addEventListener('timeupdate', () => {
+      now.textContent = fmt(audio.currentTime);
+      if (audio.duration) setPct((audio.currentTime / audio.duration) * 100);
+    });
+
+    audio.addEventListener('ended', () => {
+      play.setAttribute('data-playing', 'false');
+      setPct(0);
+      now.textContent = '0:00';
+    });
+
+    seek.addEventListener('input', () => {
+      const p = Number(seek.value);
+      seek.style.setProperty('--pct', `${p}%`);
+      if (audio.duration) audio.currentTime = (p / 100) * audio.duration;
+    });
+  }
+</script>

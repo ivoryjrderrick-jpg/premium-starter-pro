@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site, trades } from '../config/site';
+import { site } from '../config/site';
 
 const title = 'Contact | Rocky Mountain Booking';
 const description = `Ask for a free call audit, or just call. ${site.legalName}, ${site.city}, ${site.state}. ${site.phone.display}.`;
@@ -38,26 +38,25 @@ const CONSENT_TEXT =
 
         <div class="field">
           <label for="business">Business name</label>
-          <input id="business" name="business" type="text" autocomplete="organization" required />
+          <input
+            id="business"
+            name="business"
+            type="text"
+            autocomplete="organization"
+            required
+          />
         </div>
 
         <div class="field">
           <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" required />
-        </div>
-
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" required />
-        </div>
-
-        <div class="field">
-          <label for="trade">Trade</label>
-          <select id="trade" name="trade" required>
-            <option value="">Choose one</option>
-            {trades.map((t) => <option value={t}>{t}</option>)}
-            <option value="Other">Something else</option>
-          </select>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            required
+          />
         </div>
 
         {/*
@@ -94,6 +93,8 @@ const CONSENT_TEXT =
         </div>
 
         <button class="btn form-btn" type="submit" id="submit-btn" disabled>Send it over</button>
+
+        <p class="same-day">I&rsquo;ll get back to you the same day.</p>
 
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
 
@@ -208,6 +209,12 @@ const CONSENT_TEXT =
   .form-btn {
     width: 100%;
   }
+  .same-day {
+    font-size: 0.86rem;
+    color: var(--muted-dark);
+    margin-top: 12px;
+    text-align: center;
+  }
   .form-status {
     font-size: 0.88rem;
     color: var(--muted-dark);
@@ -260,8 +267,6 @@ const CONSENT_TEXT =
       `Name: ${data.get('name') ?? ''}`,
       `Business: ${data.get('business') ?? ''}`,
       `Phone: ${data.get('phone') ?? ''}`,
-      `Email: ${data.get('email') ?? ''}`,
-      `Trade: ${data.get('trade') ?? ''}`,
       '',
       `SMS consent: ${data.get('sms_consent') ? 'YES' : 'no'}`,
       `Consent recorded: ${stamp?.value ?? ''}`,
