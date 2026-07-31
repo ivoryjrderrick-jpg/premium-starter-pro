@@ -41,6 +41,8 @@ const localBusiness = {
     addressCountry: 'US',
   },
   areaServed: { '@type': 'Country', name: site.serviceArea },
+  /** Ties the Instagram profile to this business rather than a lookalike account. */
+  sameAs: [site.social.instagram.url],
   priceRange: '$$',
 };
 

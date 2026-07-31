@@ -37,6 +37,18 @@ export const site = {
   email: 'contact@rockymountainbooking.com',
 
   /**
+   * Public profiles. These also go into the LocalBusiness `sameAs` array, which
+   * is how search engines tie the profile to the business rather than treating
+   * it as an unrelated account with a similar name.
+   */
+  social: {
+    instagram: {
+      handle: '@rockymountainbooking',
+      url: 'https://www.instagram.com/rockymountainbooking/',
+    },
+  },
+
+  /**
    * The business is based in Colorado Springs and serves clients anywhere in
    * the country — the phone system does not care where the shop is.
    * `city`/`state` above remain the registered location; this is coverage.

@@ -82,10 +82,20 @@ price anywhere else.
 
 ## Security
 
+**Full detail, including the spend-cap runbook for the phone line, is in
+[SECURITY.md](./SECURITY.md). Read that one before changing anything that
+touches headers, forms, or the build.**
+
 There is no database, no accounts, no sessions, no cookies, no uploads, no
 server-side code, and nothing written to browser storage. Every page is
 prebuilt HTML served from a CDN. That absence is the main defence: most web
 vulnerabilities need state or a server to attack, and there is neither.
+
+The short version of the thing people get wrong: **the website is not where the
+money can be drained — the published phone number is.** Every call costs
+telephony minutes plus AI tokens, and toll-free means you pay for the caller's
+side too. Concurrency caps, call-duration limits and hard spend caps live in the
+phone system, not here.
 
 ### What is actively in place
 
