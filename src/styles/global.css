@@ -83,6 +83,8 @@
 }
 html {
   -webkit-text-size-adjust: 100%;
+  /* Anchor jumps glide rather than snap. */
+  scroll-behavior: smooth;
 }
 body {
   font-family: var(--body);
@@ -228,17 +230,81 @@ h2 {
   outline-offset: 3px;
 }
 
-/* ---- Scroll reveal: 22px fade-up, once, IntersectionObserver threshold .12 ---- */
+/* ---- Scroll reveal: 22px fade-up, once, IntersectionObserver threshold .12 ----
+
+   Smoothness notes:
+   - translate3d rather than translateY promotes the element to its own
+     compositor layer, so the reveal never touches layout or paint.
+   - The curve is a long-tailed ease-out (same one the meters use), which
+     decelerates far more gently than plain `ease`.
+   - will-change is set up front and released on transitionend — holding it on
+     every section at once would keep dozens of layers alive on a long page.  */
 .rise {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translate3d(0, 22px, 0);
   transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 .rise.in {
   opacity: 1;
-  transform: none;
+  transform: translate3d(0, 0, 0);
+}
+.rise.settled {
+  will-change: auto;
+}
+
+/* ---- Staggered children ----------------------------------------------------
+   Items inside a revealing block cascade instead of arriving together. Delays
+   are small and the travel is shorter than the parent's, so the group still
+   reads as one movement rather than a sequence of separate ones.            */
+.stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rise.in .stagger > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.rise.in .stagger > *:nth-child(1) {
+  transition-delay: 0.04s;
+}
+.rise.in .stagger > *:nth-child(2) {
+  transition-delay: 0.1s;
+}
+.rise.in .stagger > *:nth-child(3) {
+  transition-delay: 0.16s;
+}
+.rise.in .stagger > *:nth-child(4) {
+  transition-delay: 0.22s;
+}
+.rise.in .stagger > *:nth-child(5) {
+  transition-delay: 0.28s;
+}
+.rise.in .stagger > *:nth-child(6) {
+  transition-delay: 0.33s;
+}
+.rise.in .stagger > *:nth-child(7) {
+  transition-delay: 0.38s;
+}
+.rise.in .stagger > *:nth-child(8) {
+  transition-delay: 0.43s;
+}
+.rise.in .stagger > *:nth-child(9) {
+  transition-delay: 0.47s;
+}
+.rise.in .stagger > *:nth-child(10) {
+  transition-delay: 0.51s;
+}
+.rise.in .stagger > *:nth-child(11) {
+  transition-delay: 0.55s;
+}
+.rise.in .stagger > *:nth-child(n + 12) {
+  transition-delay: 0.58s;
 }
 
 @media (prefers-reduced-motion: reduce) {

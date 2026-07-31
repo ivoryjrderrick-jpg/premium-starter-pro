@@ -54,7 +54,7 @@ const reasons = [
       </div>
     </div>
     <div class="stage rise">
-      <div class="lock">
+      <div class="lock stagger">
         {
           missed.map((m) => (
             <div class="miss">
@@ -95,7 +95,7 @@ const reasons = [
       </p>
     </div>
     <div class="stage rise">
-      <div class="reasons">
+      <div class="reasons stagger">
         {
           reasons.map((r) => (
             <div class="reason">
@@ -220,7 +220,7 @@ const reasons = [
       </p>
     </div>
     <div class="stage rise">
-      <div class="duo">
+      <div class="duo stagger">
         <div class="cell">
           <div class="amt">2 hrs</div>
           <div class="lab">
@@ -278,7 +278,7 @@ const reasons = [
         business. No projected results, no outcome claims.
       */}
       <p class="eyebrow research-head">What the research says about local search</p>
-      <div class="duo">
+      <div class="duo stagger">
         <div class="cell">
           <div class="amt">
             <span class="count" data-to="126" data-suffix="%">0%</span>
@@ -309,7 +309,7 @@ const reasons = [
       <p class="sub">Every trade answers the phone differently. Sam gets set up for yours.</p>
     </div>
     <div class="stage rise">
-      <div class="chips">
+      <div class="chips stagger">
         {trades.map((t) => <a class="chip" href={`/for/${t.slug}`}>{t.name}</a>)}
         <a class="chip more" href="/contact">Something else ›</a>
       </div>

@@ -31,10 +31,23 @@ function initReveal() {
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          io.unobserve(e.target);
-        }
+        if (!e.isIntersecting) return;
+        const el = e.target as HTMLElement;
+        io.unobserve(el);
+
+        // Start on the next frame so the browser has a paint to promote the
+        // layer before the transition begins — without it the first frame of
+        // the reveal can hitch on slower devices.
+        requestAnimationFrame(() => el.classList.add('in'));
+
+        // Release the compositing hint once the movement is over. Staggered
+        // children finish after the parent, so wait for the last one.
+        const release = (ev: TransitionEvent) => {
+          if (ev.target !== el && !el.contains(ev.target as Node)) return;
+          window.setTimeout(() => el.classList.add('settled'), 700);
+          el.removeEventListener('transitionend', release);
+        };
+        el.addEventListener('transitionend', release);
       });
     },
     { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
