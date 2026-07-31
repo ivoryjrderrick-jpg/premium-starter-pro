@@ -1,14 +1,22 @@
 ---
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { site } from '../config/site';
+
+/**
+ * The recording may not exist yet, so the section is decided at BUILD time.
+ *
+ * Rendering the player and letting it fail at runtime meant every visitor
+ * fetched a missing file and got a 404 in the console. Checking the file here
+ * means the markup is simply absent until the recording is dropped in. Add
+ * public/audio/demo-call.mp3, rebuild, and the section appears on its own.
+ */
+const audioPath = fileURLToPath(new URL(`../../public${site.demoAudio}`, import.meta.url));
+const hasRecording = existsSync(audioPath);
 ---
 
-{/*
-  Starts hidden and only reveals once the browser has actually loaded metadata
-  for the file. The recording doesn't exist yet, so today this section never
-  appears — which is the intended behaviour. Drop the file at
-  public/audio/demo-call.mp3 and it shows up on its own.
-*/}
-<section class="card dark" id="demo-audio" data-src={site.demoAudio} hidden>
+{hasRecording && (
+<section class="card dark" id="demo-audio">
   <div class="rise">
     <p class="eyebrow">Hear it</p>
     <h2>This is what your customer hears.</h2>
@@ -54,6 +62,7 @@ import { site } from '../config/site';
     <audio id="demo-el" preload="metadata" src={site.demoAudio}></audio>
   </div>
 </section>
+)}
 
 <style>
   .player {
@@ -173,13 +182,13 @@ import { site } from '../config/site';
       seek.value = String(p);
     };
 
-    // Only reveal once the file is confirmed present and readable.
     audio.addEventListener('loadedmetadata', () => {
       total.textContent = fmt(audio.duration);
-      section.hidden = false;
     });
 
-    // Missing or unplayable file leaves the section hidden.
+    // The build only emits this section when the file exists, so this is the
+    // second line of defence: a corrupt or unplayable file hides the player
+    // rather than leaving a dead control on the page.
     audio.addEventListener('error', () => {
       section.hidden = true;
     });

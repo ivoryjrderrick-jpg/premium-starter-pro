@@ -11,7 +11,7 @@ import { site } from '../config/site';
  *  - the sentence stating mobile opt-in data is never shared for marketing
  *  - a verifiable business name, service area and business-domain email
  */
-const updated = 'February 1, 2026';
+const updated = 'July 31, 2026';
 ---
 
 <Legal
@@ -20,7 +20,7 @@ const updated = 'February 1, 2026';
   path="/privacy"
   heading="Privacy Policy"
   updated={updated}
-  intro={`${site.legalName} ("we", "us") provides AI phone answering and appointment booking for service businesses in ${site.region}. This policy covers two groups: the businesses that subscribe to our service, and the people who call those businesses and reach our assistant.`}
+  intro={`${site.legalName} ("we", "us") provides AI phone answering and appointment booking for service businesses. We are based in ${site.city}, ${site.state} and serve clients throughout the United States. This policy covers two groups: the businesses that subscribe to our service, and the people who call those businesses and reach our assistant.`}
 >
   <h2>Information we collect</h2>
 
@@ -136,10 +136,16 @@ const updated = 'February 1, 2026';
 
   <h2>Call recording</h2>
   <p>
-    Calls answered on behalf of a client business may be recorded and transcribed. Colorado is a
-    one-party consent state and the client business is a party to the call, but our assistant
-    discloses at the start of every call that it may be recorded. If you would rather not be
-    recorded, you can end the call and contact the business another way.
+    Calls answered on behalf of a client business may be recorded and transcribed.{' '}
+    <strong>Our assistant discloses at the start of every call that it may be recorded</strong>, and
+    continuing the call is how consent is given. If you would rather not be recorded, you can end
+    the call and contact the business another way.
+  </p>
+  <p>
+    We disclose on every call rather than relying on the rules of any one state. Recording laws
+    differ: some states require only one party to consent, and others require every party to. The
+    disclosure is made up front in all cases so that recording is consented to wherever the caller
+    happens to be.
   </p>
 
   <h2>How long we keep information</h2>
@@ -159,11 +165,17 @@ const updated = 'February 1, 2026';
 
   <h2>Your rights</h2>
   <p>
-    Colorado residents have rights under the Colorado Privacy Act, including to access, correct,
-    delete, and obtain a portable copy of personal data, and to opt out of targeted advertising, the
-    sale of personal data, and profiling. We do none of those three. To exercise a right, email{' '}
+    <strong>We honour these rights for everyone, wherever you live.</strong> You can ask us to
+    access, correct, delete, or give you a portable copy of your personal data, and you can opt out
+    of targeted advertising, the sale of personal data, and profiling. We do none of those last
+    three for anyone. To exercise a right, email{' '}
     <a href={`mailto:${site.email}`}>{site.email}</a>. We respond within the time the law requires,
     and you may appeal a refusal by replying to our response.
+  </p>
+  <p>
+    Depending on where you live these rights may also be guaranteed by law, including the Colorado
+    Privacy Act and comparable state privacy laws elsewhere. We do not ask which state you are in
+    before honouring a request.
   </p>
   <p>
     Where we process information on behalf of a client business, we act as that business&rsquo;s
