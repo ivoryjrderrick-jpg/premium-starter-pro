@@ -11,8 +11,11 @@ const included = [
   ['Review Bot', 'Texts every customer for a review a few hours after the job.'],
   ['Urgent calls transferred to you', "With the details texted ahead so you're not starting cold."],
   ['Automatic forwarding if anything breaks', 'Calls roll to your cell. It never dead-ends.'],
-  ['A local number, set up for you', 'You do nothing. I build it around how your shop actually runs.'],
-  ['A person in Colorado Springs to call', "When something's off, you get me. Not a ticket."],
+  [
+    'A number in your area code, set up for you',
+    'You do nothing. I build it around how your shop actually runs.',
+  ],
+  ['A person to call, not a ticket queue', "When something's off, you get me on the phone."],
 ];
 
 const faqs = [
@@ -42,7 +45,7 @@ const faqs = [
   ],
   [
     'Why is it cheaper than the other guys?',
-    "Because I'm one person in Colorado Springs with almost no overhead, and because you're early. The rate goes up once I've got case studies.",
+    "Because I'm one person with almost no overhead, and because you're early. The rate goes up once I've got case studies.",
   ],
 ];
 ---
@@ -123,29 +126,85 @@ const faqs = [
       <p class="sub">Use your own numbers. If the answer isn&rsquo;t obvious, don&rsquo;t buy it.</p>
     </div>
     <div class="stage rise">
-      {/* Same rows and rule as before; the first three values are now inputs. */}
+      {/*
+        The first three values are inputs. They are drawn as filled, bordered
+        fields rather than bare numbers, because as plain text nobody realised
+        they were editable — and the hint line plus the one-off pulse on reveal
+        says it outright rather than relying on the styling alone.
+      */}
       <div class="mathbox">
+        <p class="edit-hint">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+          </svg>
+          Tap a number to put your own in
+        </p>
+
         <div class="mrow">
           <label for="m-missed">Calls you miss in a week</label>
-          <input id="m-missed" class="v mi" type="number" inputmode="numeric" min="0" max="200"
-            step="1" value="4" />
+          <span class="v"
+            ><span class="mi-box"
+              ><input
+                id="m-missed"
+                class="mi"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                max="200"
+                step="1"
+                value="4"
+              /></span
+            ></span
+          >
         </div>
         <div class="mrow">
           <label for="m-rate">Of those, how many would&rsquo;ve booked</label>
-          <span class="v inline"
-            ><input id="m-rate" class="mi" type="number" inputmode="numeric" min="0" max="100"
-              step="1" value="25" /><span class="unit">%</span></span
+          <span class="v"
+            ><span class="mi-box"
+              ><input
+                id="m-rate"
+                class="mi"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                max="100"
+                step="1"
+                value="25"
+              /><span class="unit">%</span></span
+            ></span
           >
         </div>
         <div class="mrow">
           <label for="m-job">Your average job</label>
-          <span class="v inline"
-            ><span class="unit pre">$</span><input id="m-job" class="mi" type="number"
-              inputmode="numeric" min="0" max="100000" step="10" value="400" /></span
+          <span class="v"
+            ><span class="mi-box"
+              ><span class="unit pre">$</span><input
+                id="m-job"
+                class="mi wide"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                max="100000"
+                step="10"
+                value="400"
+              /></span
+            ></span
           >
         </div>
         <div class="mrow">
-          <span>Recovered in a month</span><span class="v" id="m-out">$1,733</span>
+          {/* Matches the default inputs: 4 × 4.33 × 25% × $400. Recalculated on load. */}
+          <span>Recovered in a month</span><span class="v" id="m-out">$1,732</span>
         </div>
         <div class="mrow win">
           <span>Cost</span><span class="v" data-cost={pricing.current}>${pricing.current}</span>
@@ -198,8 +257,11 @@ const faqs = [
   <section class="card dark">
     <div class="rise">
       <h2>Hear it before you decide.</h2>
-      <p class="sub">Call the line and book yourself an appointment. Takes two minutes.</p>
-      <a class="btn" href={site.phone.href}>Call {site.phone.display}</a>
+      <p class="sub">Test a call and book yourself an appointment. Takes two minutes.</p>
+      <div class="cta-pair">
+        <a class="btn" href={site.phone.href}>Test a call &middot; {site.phone.display}</a>
+        <a class="link" href="/contact">Or book a call with me <span class="chev">›</span></a>
+      </div>
     </div>
     <div class="stage"></div>
   </section>
@@ -413,17 +475,59 @@ const faqs = [
   .mrow label {
     cursor: pointer;
   }
-  .mrow .inline {
+
+  /* The affordance line. Sits above the rows so it is read before the first
+     field rather than explaining something the eye has already passed. */
+  .edit-hint {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .edit-hint svg {
+    flex-shrink: 0;
+  }
+
+  /* Each editable value is drawn as a real field: filled, bordered, tappable.
+     The box carries the border so the unit sign ($ / %) sits inside it and the
+     whole thing reads as one control. */
+  .mi-box {
     display: inline-flex;
     align-items: center;
+    gap: 1px;
+    background: var(--snow);
+    border: 1px solid rgba(13, 18, 32, 0.22);
+    border-radius: 9px;
+    padding: 3px 9px;
+    cursor: text;
+    transition:
+      border-color 0.18s ease,
+      background 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  .mi-box:hover {
+    border-color: var(--gold-deep);
+  }
+  .mi-box:focus-within {
+    border-color: var(--gold-deep);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(201, 144, 42, 0.22);
   }
   .unit {
     color: var(--muted-light);
   }
-  /* Inputs sit in the row like the numbers they replaced, right-aligned so the
-     column still lines up. */
+
+  /* The field itself is transparent — .mi-box supplies every visible edge, so
+     there is only one border to keep in sync. */
   .mi {
-    width: 5.5ch;
+    width: 3ch;
     text-align: right;
     font: inherit;
     font-variant-numeric: tabular-nums;
@@ -431,13 +535,15 @@ const faqs = [
     color: var(--ink);
     background: transparent;
     border: 0;
-    border-bottom: 1px dashed var(--line-light);
-    padding: 2px 0;
+    padding: 0;
     border-radius: 0;
   }
+  .mi.wide {
+    width: 5.5ch;
+  }
+  .mi:focus,
   .mi:focus-visible {
-    outline: 2px solid var(--gold-deep);
-    outline-offset: 3px;
+    outline: 0;
   }
   /* Strip the spinners so the row keeps its typographic rhythm. */
   .mi::-webkit-outer-spin-button,
@@ -449,6 +555,39 @@ const faqs = [
     -moz-appearance: textfield;
     appearance: textfield;
   }
+  /* One-off attention pulse when the block scrolls in, staggered down the three
+     fields so it reads as "these three move" rather than a flash. Two cycles
+     only — it is a hint, not an animation that keeps demanding attention. */
+  @keyframes editPulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(201, 144, 42, 0);
+      border-color: rgba(13, 18, 32, 0.22);
+    }
+    40% {
+      box-shadow: 0 0 0 5px rgba(201, 144, 42, 0.2);
+      border-color: var(--gold-deep);
+    }
+  }
+  .rise.in .mi-box {
+    animation: editPulse 1.15s cubic-bezier(0.4, 0, 0.2, 1) 2 both;
+  }
+  .rise.in .mrow:nth-of-type(1) .mi-box {
+    animation-delay: 0.45s;
+  }
+  .rise.in .mrow:nth-of-type(2) .mi-box {
+    animation-delay: 0.6s;
+  }
+  .rise.in .mrow:nth-of-type(3) .mi-box {
+    animation-delay: 0.75s;
+  }
+  /* Once someone touches any of them, stop hinting. Specificity has to beat
+     `.rise.in .mi-box` above or the animation keeps overriding the focus ring. */
+  .rise.in .mathbox.touched .mi-box,
+  .rise.in .mi-box:focus-within {
+    animation: none;
+  }
+
   .mrow.win .v {
     color: var(--gold-deep);
   }
@@ -531,6 +670,9 @@ const faqs = [
     .now {
       transition: none;
     }
+    .rise.in .mi-box {
+      animation: none;
+    }
   }
 </style>
 
@@ -558,8 +700,12 @@ const faqs = [
       out.textContent = money(val(missed) * 4.33 * (val(rate) / 100) * val(job));
     };
 
+    const box = missed.closest('.mathbox');
+
     [missed, rate, job].forEach((el) => {
       el.addEventListener('input', recalc);
+      // First interaction retires the hint pulse for good.
+      el.addEventListener('focus', () => box?.classList.add('touched'), { once: true });
       // Write the clamped value back on blur, so the figure on screen always
       // matches the one the total was calculated from.
       el.addEventListener('change', () => {

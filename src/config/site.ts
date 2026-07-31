@@ -37,11 +37,15 @@ export const site = {
   email: 'contact@rockymountainbooking.com',
 
   /**
-   * Service area stands in for a street address until one is published.
-   * 30445 also wants an address OR service area that matches the Twilio
-   * registration exactly — keep these in step with what was filed.
+   * The business is based in Colorado Springs and serves clients anywhere in
+   * the country — the phone system does not care where the shop is.
+   * `city`/`state` above remain the registered location; this is coverage.
+   *
+   * Keep this in step with what was filed with Twilio: 30445 wants an address
+   * OR a service area that matches the registration exactly.
    */
-  serviceArea: ['Colorado Springs', 'Pueblo', 'Monument', 'Fountain', 'Castle Rock'],
+  serviceArea: 'United States',
+  serviceAreaLabel: 'Based in Colorado Springs. Serving businesses anywhere in the U.S.',
 
   /**
    * Demo recording for the homepage player. Drop the file at public/audio/.
@@ -92,5 +96,5 @@ export const nav = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/who-we-serve', label: 'Who We Serve' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/contact', label: 'Book a Call' },
 ] as const;

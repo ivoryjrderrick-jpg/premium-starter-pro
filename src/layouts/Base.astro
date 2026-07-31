@@ -26,7 +26,7 @@ const localBusiness = {
   '@type': 'LocalBusiness',
   name: site.legalName,
   description:
-    'AI phone answering and appointment booking for service businesses in Colorado Springs.',
+    'AI phone answering and appointment booking for service businesses. Based in Colorado Springs, serving clients nationwide.',
   url: site.url,
   telephone: site.phone.e164,
   email: site.email,
@@ -36,7 +36,7 @@ const localBusiness = {
     addressRegion: site.state,
     addressCountry: 'US',
   },
-  areaServed: site.serviceArea.map((name) => ({ '@type': 'City', name })),
+  areaServed: { '@type': 'Country', name: site.serviceArea },
   priceRange: '$$',
 };
 

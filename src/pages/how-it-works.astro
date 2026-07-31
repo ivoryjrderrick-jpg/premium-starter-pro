@@ -4,7 +4,7 @@ import { site } from '../config/site';
 
 const title = 'How It Works | Rocky Mountain Booking';
 const description =
-  'Four steps: I set it up around your shop, you get a local number, calls get answered and booked, and urgent ones transfer to your cell. About thirty minutes of your time.';
+  'Four steps: I set it up around your shop, you get a number in your area code, calls get answered and booked, and urgent ones transfer to your cell. About thirty minutes of your time.';
 
 const steps = [
   {
@@ -14,8 +14,8 @@ const steps = [
   },
   {
     mark: '02',
-    title: 'You get a local number',
-    body: 'A Colorado Springs number that forwards from the one you already advertise, so nothing on your truck or your cards has to change. If you would rather move your number over entirely, we can do that instead.',
+    title: 'You get a number in your area code',
+    body: 'A local number that forwards from the one you already advertise, so nothing on your truck or your cards has to change. If you would rather move your number over entirely, we can do that instead.',
   },
   {
     mark: '03',
@@ -39,7 +39,7 @@ const steps = [
         Setup takes about a week. You spend roughly thirty minutes on it, total.
       </p>
       <div class="links">
-        <a class="link" href={site.phone.href}>Hear it answer <span class="chev">›</span></a>
+        <a class="link" href={site.phone.href}>Test a call <span class="chev">›</span></a>
       </div>
     </div>
     <div class="stage rise">
@@ -151,12 +151,15 @@ const steps = [
 
   <section class="card dark">
     <div class="rise">
-      <h2>Call it and see.</h2>
+      <h2>Test it and see.</h2>
       <p class="sub">
         Book yourself an appointment on the demo line. That&rsquo;s what your customer hears when you
         can&rsquo;t pick up.
       </p>
-      <a class="btn" href={site.phone.href}>Call {site.phone.display}</a>
+      <div class="cta-pair">
+        <a class="btn" href={site.phone.href}>Test a call &middot; {site.phone.display}</a>
+        <a class="link" href="/contact">Or book a call with me <span class="chev">›</span></a>
+      </div>
     </div>
     <div class="stage"></div>
   </section>

@@ -3,9 +3,9 @@ import Base from '../layouts/Base.astro';
 import { site, trades } from '../config/site';
 import DemoAudio from '../components/DemoAudio.astro';
 
-const title = 'Rocky Mountain Booking | Your phone, answered. Colorado Springs.';
+const title = 'Rocky Mountain Booking | Your phone, answered.';
 const description =
-  'AI phone answering and appointment booking for Colorado Springs service businesses. Every call answered day and night, booked straight to your calendar, urgent calls transferred to your cell.';
+  'AI phone answering and appointment booking for service businesses. Every call answered day and night, booked straight to your calendar, urgent calls transferred to your cell. Based in Colorado Springs, serving anywhere in the U.S.';
 
 /**
  * Missed-call stack. The numbers are deliberately all zeroes: any realistic
@@ -51,8 +51,8 @@ const reasons = [
       <h1>Four people tried to hire you.</h1>
       <p class="sub">You were working. They called the next name on the list.</p>
       <div class="links">
-        <a class="link" href={site.phone.href}>Hear it answer <span class="chev">›</span></a>
-        <a class="link" href="/contact">Free call audit <span class="chev">›</span></a>
+        <a class="link" href={site.phone.href}>Test a call <span class="chev">›</span></a>
+        <a class="link" href="/contact">Book a call <span class="chev">›</span></a>
       </div>
     </div>
     <div class="stage rise">
@@ -124,7 +124,7 @@ const reasons = [
         Your business name, your hours, your services. First ring, every hour of every day.
       </p>
       <div class="links">
-        <a class="link" href={site.phone.href}>Call the line <span class="chev">›</span></a>
+        <a class="link" href={site.phone.href}>Test a call <span class="chev">›</span></a>
       </div>
     </div>
     <div class="stage rise">
@@ -331,12 +331,12 @@ const reasons = [
         src="/dj-headshot.jpg"
         width="600"
         height="600"
-        alt="DJ, who builds and runs Rocky Mountain Booking, in Colorado Springs"
+        alt="DJ, who builds and runs Rocky Mountain Booking"
         loading="lazy"
         decoding="async"
       />
       <p class="eyebrow">Who you&rsquo;re actually calling</p>
-      <h2>I&rsquo;m twenty minutes away.</h2>
+      <h2>You get me on the phone.</h2>
       <div class="bio">
         <p>
           I&rsquo;m DJ, a military veteran, software engineer, and the founder of Rocky Mountain
@@ -351,22 +351,26 @@ const reasons = [
         </p>
         <p class="bio-close">So we built one.</p>
       </div>
-      <div class="links">
-        <a class="link" href="/contact">Get your free call audit <span class="chev">›</span></a>
+      <div class="cta-pair">
+        <a class="btn" href="/contact">Book a call with me</a>
+        <a class="link" href={site.phone.href}>Or test a call first <span class="chev">›</span></a>
       </div>
     </div>
     <div class="stage"></div>
   </section>
 
   {/* 10 — Closing CTA */}
-  <section class="card dark" id="audit">
+  <section class="card dark" id="start">
     <div class="rise">
       <h2>Don&rsquo;t take my word for it.</h2>
       <p class="sub">
-        Call the line right now and book yourself an appointment. That&rsquo;s what your customer
+        Test a call right now and book yourself an appointment. That&rsquo;s what your customer
         hears when you can&rsquo;t pick up.
       </p>
-      <a class="btn" href={site.phone.href}>Call {site.phone.display}</a>
+      <div class="cta-pair">
+        <a class="btn" href={site.phone.href}>Test a call &middot; {site.phone.display}</a>
+        <a class="link" href="/contact">Or book a call with me <span class="chev">›</span></a>
+      </div>
     </div>
     <div class="stage"></div>
   </section>

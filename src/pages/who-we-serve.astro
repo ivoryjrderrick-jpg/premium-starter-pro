@@ -15,8 +15,8 @@ const description = `Built for ${site.city} service businesses that run on inbou
         Every trade answers the phone differently. It gets set up for the way yours does.
       </p>
       <div class="links">
-        <a class="link" href={site.phone.href}>Hear it answer <span class="chev">›</span></a>
-        <a class="link" href="/contact">Free call audit <span class="chev">›</span></a>
+        <a class="link" href={site.phone.href}>Test a call <span class="chev">›</span></a>
+        <a class="link" href="/contact">Book a call <span class="chev">›</span></a>
       </div>
     </div>
     <div class="stage rise">
@@ -125,8 +125,11 @@ const description = `Built for ${site.city} service businesses that run on inbou
   <section class="card dark">
     <div class="rise">
       <h2>Don&rsquo;t take my word for it.</h2>
-      <p class="sub">Call the line and book yourself an appointment. Takes two minutes.</p>
-      <a class="btn" href={site.phone.href}>Call {site.phone.display}</a>
+      <p class="sub">Test a call and book yourself an appointment. Takes two minutes.</p>
+      <div class="cta-pair">
+        <a class="btn" href={site.phone.href}>Test a call &middot; {site.phone.display}</a>
+        <a class="link" href="/contact">Or book a call with me <span class="chev">›</span></a>
+      </div>
     </div>
     <div class="stage"></div>
   </section>

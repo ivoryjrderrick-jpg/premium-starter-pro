@@ -2,8 +2,8 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
 
-const title = 'Contact | Rocky Mountain Booking';
-const description = `Ask for a free call audit, or just call. ${site.legalName}, ${site.city}, ${site.state}. ${site.phone.display}.`;
+const title = 'Book a Call | Rocky Mountain Booking';
+const description = `Book a call with DJ at ${site.legalName}, ${site.city}, ${site.state}. Leave your name, business and number and he'll call you back the same day.`;
 
 /**
  * The exact consent language shown next to the checkbox. Recorded verbatim with
@@ -17,10 +17,11 @@ const CONSENT_TEXT =
 <Base title={title} description={description} path="/contact">
   <section class="card dark">
     <div class="rise">
-      <p class="eyebrow">Free call audit</p>
-      <h1>Tell me what your phone is doing.</h1>
+      <p class="eyebrow">Book a call</p>
+      <h1>Book a call with me.</h1>
       <p class="sub">
-        Fastest way is to call. If you&rsquo;d rather write it down, this takes under a minute.
+        Leave your name, your business and a number. I&rsquo;ll call you back myself, and we&rsquo;ll
+        talk through what your phone is actually doing.
       </p>
       <div class="links">
         <a class="link" href={site.phone.href}>
@@ -100,7 +101,7 @@ const CONSENT_TEXT =
 
         <p class="form-note">
           By sending this you agree to our <a href="/privacy">Privacy Policy</a>. Ticking the box
-          above is optional and is not required to get an audit. See our
+          above is optional and is not required to book a call. See our
           <a href="/sms-terms">SMS Terms</a>.
         </p>
       </form>
@@ -276,7 +277,7 @@ const CONSENT_TEXT =
     // No mail service is wired up yet, so hand off to the visitor's mail client
     // rather than posting into a void and losing the lead. Swap this for a
     // Formspree/Basin endpoint when one exists.
-    const subject = `Call audit request: ${data.get('business') || data.get('name') || 'New'}`;
+    const subject = `Book a call: ${data.get('business') || data.get('name') || 'New'}`;
     window.location.href = `mailto:contact@rockymountainbooking.com?subject=${encodeURIComponent(
       subject,
     )}&body=${encodeURIComponent(lines)}`;

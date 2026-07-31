@@ -364,3 +364,16 @@ h2 {
   opacity: 1;
   transform: none;
 }
+
+/* ---- Paired CTA: one primary button, one secondary link beneath it ----------
+   Keeps a single dominant action per block while still offering the other
+   route, rather than two buttons competing for the same weight.            */
+.cta-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.cta-pair .link {
+  margin: 0;
+}
