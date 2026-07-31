@@ -48,6 +48,12 @@ const jsonLd = JSON.stringify(localBusiness).replace(/</g, '\\u003c');
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Stops iOS Safari turning any number that looks like a phone number into a
+      blue underlined tel: link. The illustration numbers in the call mockups
+      were being auto-linked and rendered as live, dialable links.
+    -->
+    <meta name="format-detection" content="telephone=no" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -85,6 +91,17 @@ const jsonLd = JSON.stringify(localBusiness).replace(/</g, '\\u003c');
     />
 
     <script type="application/ld+json" set:html={jsonLd} />
+
+    <!--
+      Marks the document as scripted before first paint. The reveal animation
+      hides content at opacity 0 and relies on JS to reveal it, so without this
+      guard a script failure — or no JS at all — leaves the page blank. The
+      hidden state is scoped to .js in global.css, so unscripted visitors get
+      everything immediately.
+    -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
 
   <body>

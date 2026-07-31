@@ -1,5 +1,5 @@
 ---
-import { site, nav, trades } from '../config/site';
+import { site, nav } from '../config/site';
 
 interface Props {
   /** Adds the attention ping to the phone icon. Homepage only. */
@@ -40,46 +40,28 @@ const path = Astro.url.pathname;
       </svg>
     </a>
 
+    {/* Three bars drawn as spans so they can morph into an X smoothly. */}
     <button
-      class="icon-btn"
+      class="icon-btn burger"
       id="menu-open"
       aria-label="Open menu"
       aria-expanded="false"
       aria-controls="menu"
     >
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        aria-hidden="true"
-      >
-        <path d="M3 7h18M3 12h18M3 17h18"></path>
-      </svg>
+      <span class="bars" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
     </button>
   </div>
 </nav>
 
-<!-- Full-screen menu. `hidden` keeps its links out of the tab order when closed. -->
-<div class="menu" id="menu" hidden>
+<div class="menu" id="menu" aria-hidden="true">
   <div class="menu-top">
     <span class="menu-brand">{site.name}</span>
-    <button class="icon-btn" id="menu-close" aria-label="Close menu">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        aria-hidden="true"
-      >
-        <path d="M6 6l12 12M18 6L6 18"></path>
-      </svg>
+    <button class="icon-btn burger is-open" id="menu-close" aria-label="Close menu">
+      <span class="bars" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
     </button>
   </div>
 
@@ -95,20 +77,6 @@ const path = Astro.url.pathname;
         ))
       }
     </ul>
-
-    <p class="menu-heading">Your trade</p>
-    <ul class="menu-trades">
-      {
-        trades.map((t) => (
-          <li>
-            <a href={`/for/${t.slug}`} aria-current={path === `/for/${t.slug}` ? 'page' : undefined}>
-              {t.name}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-
     <a class="btn menu-cta" href={site.phone.href}>Call {site.phone.display}</a>
   </nav>
 </div>
@@ -143,13 +111,13 @@ const path = Astro.url.pathname;
   .icon-btn {
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border: 0;
     background: none;
     cursor: pointer;
     color: var(--white);
-    border-radius: 8px;
+    border-radius: 10px;
   }
   .icon-btn:focus-visible {
     outline: 2px solid var(--gold);
@@ -180,7 +148,52 @@ const path = Astro.url.pathname;
     }
   }
 
-  /* ---- Full-screen menu ---- */
+  /* ---- Animated burger -----------------------------------------------------
+     Evenly spaced bars on a fixed 20x14 box, so they can never render uneven.
+     Opening rotates the outer two into an X and fades the middle out.        */
+  .bars {
+    position: relative;
+    display: block;
+    width: 20px;
+    height: 14px;
+  }
+  .bars span {
+    position: absolute;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.25s ease;
+  }
+  .bars span:nth-child(1) {
+    top: 0;
+  }
+  .bars span:nth-child(2) {
+    top: 6px;
+  }
+  .bars span:nth-child(3) {
+    top: 12px;
+  }
+  .burger.is-open .bars span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .burger.is-open .bars span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+  .burger.is-open .bars span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* ---- Full-screen menu ----------------------------------------------------
+     Animated with opacity + transform rather than toggling `hidden`, so it
+     eases in. `visibility` carries the interactivity: it is delayed on close so
+     the fade finishes first, and it keeps the closed overlay out of the tab
+     order and off the hit-testing surface.                                    */
   .menu {
     position: fixed;
     inset: 0;
@@ -190,13 +203,24 @@ const path = Astro.url.pathname;
     flex-direction: column;
     overflow-y: auto;
     overscroll-behavior: contain;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate3d(0, -10px, 0);
+    transition:
+      opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.34s;
   }
-  /* An author `display` beats the UA stylesheet's [hidden]{display:none}, so
-     without this the closed overlay still covers the viewport and swallows
-     every click on the page behind it. */
-  .menu[hidden] {
-    display: none;
+  .menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(0, 0, 0);
+    transition:
+      opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s;
   }
+
   .menu-top {
     display: flex;
     align-items: center;
@@ -211,11 +235,38 @@ const path = Astro.url.pathname;
     color: var(--white);
   }
   .menu-body {
-    padding: 28px 22px 60px;
+    padding: 34px 22px 60px;
   }
   .menu-main {
     list-style: none;
     margin-bottom: 34px;
+  }
+  /* Links cascade in behind the overlay fade. */
+  .menu-main li {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    transition:
+      opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .menu.open .menu-main li {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  .menu.open .menu-main li:nth-child(1) {
+    transition-delay: 0.1s;
+  }
+  .menu.open .menu-main li:nth-child(2) {
+    transition-delay: 0.15s;
+  }
+  .menu.open .menu-main li:nth-child(3) {
+    transition-delay: 0.2s;
+  }
+  .menu.open .menu-main li:nth-child(4) {
+    transition-delay: 0.25s;
+  }
+  .menu.open .menu-main li:nth-child(5) {
+    transition-delay: 0.3s;
   }
   .menu-main a {
     display: block;
@@ -223,43 +274,12 @@ const path = Astro.url.pathname;
     font-weight: 600;
     font-size: clamp(1.9rem, 9vw, 2.6rem);
     letter-spacing: -0.02em;
-    line-height: 1.25;
+    line-height: 1.3;
     color: var(--white);
     text-decoration: none;
     padding: 6px 0;
   }
   .menu-main a[aria-current='page'] {
-    color: var(--gold);
-  }
-  .menu-heading {
-    font-family: var(--display);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 14px;
-  }
-  .menu-trades {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 34px;
-  }
-  .menu-trades a {
-    display: inline-block;
-    font-family: var(--display);
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 9px 15px;
-    border-radius: 999px;
-    border: 1px solid var(--line-dark);
-    color: var(--white);
-    text-decoration: none;
-  }
-  .menu-trades a[aria-current='page'] {
-    border-color: var(--gold);
     color: var(--gold);
   }
   .menu a:focus-visible {
@@ -270,6 +290,24 @@ const path = Astro.url.pathname;
   .menu-cta {
     display: block;
     text-align: center;
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    transition:
+      opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
+  }
+  .menu.open .menu-cta {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu,
+    .menu-main li,
+    .menu-cta,
+    .bars span {
+      transition: none;
+    }
   }
 </style>
 
@@ -279,27 +317,27 @@ const path = Astro.url.pathname;
   const menu = document.getElementById('menu');
 
   if (openBtn && closeBtn && menu) {
-    // Remembered so focus can be handed back exactly where it came from.
     let lastFocused: HTMLElement | null = null;
 
     const focusables = () =>
-      Array.from(
-        menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
-      ).filter((el) => el.offsetParent !== null);
+      Array.from(menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
 
     function open() {
       lastFocused = document.activeElement as HTMLElement;
-      menu!.hidden = false;
+      menu!.classList.add('open');
+      menu!.setAttribute('aria-hidden', 'false');
       openBtn!.setAttribute('aria-expanded', 'true');
-      // Stops the page behind the overlay scrolling on touch.
+      openBtn!.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       focusables()[0]?.focus();
       document.addEventListener('keydown', onKey);
     }
 
     function close() {
-      menu!.hidden = true;
+      menu!.classList.remove('open');
+      menu!.setAttribute('aria-hidden', 'true');
       openBtn!.setAttribute('aria-expanded', 'false');
+      openBtn!.classList.remove('is-open');
       document.body.style.overflow = '';
       document.removeEventListener('keydown', onKey);
       (lastFocused ?? openBtn!).focus();
@@ -312,12 +350,11 @@ const path = Astro.url.pathname;
       }
       if (e.key !== 'Tab') return;
 
-      // Focus trap: wrap at both ends so Tab can never reach the page behind.
+      // Focus trap: wrap at both ends so Tab can't reach the page behind.
       const items = focusables();
       if (!items.length) return;
       const first = items[0];
       const last = items[items.length - 1];
-
       if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last.focus();

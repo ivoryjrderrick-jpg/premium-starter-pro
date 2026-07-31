@@ -1,0 +1,125 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+
+/**
+ * The page Twilio / TCR reviewers open during toll-free verification.
+ *
+ * Rejection code 30513 wants documented opt-in; the consent checkbox on
+ * /contact plus the opt-in section below is that documentation. Code 30445
+ * wants the business verifiable — the name, service area, business phone and
+ * business-domain email all appear here and in the footer, and must match the
+ * Twilio registration exactly.
+ *
+ * ⚠️ Have this reviewed before publishing.
+ */
+const updated = 'February 1, 2026';
+---
+
+<Legal
+  title="SMS Terms — Rocky Mountain Booking"
+  description="Text messaging terms for Rocky Mountain Booking: appointment confirmations and review requests, message frequency, rates, and how to opt out with STOP or get help with HELP."
+  path="/sms-terms"
+  heading="SMS Terms"
+  updated={updated}
+  intro={`These terms cover the text messages sent by ${site.legalName} — both the messages our system sends on behalf of a client business, and the messages we send to our own clients.`}
+>
+  <h2>Program name</h2>
+  <p>
+    The program is <strong>Rocky Mountain Booking</strong>. Messages are sent by{' '}
+    {site.legalName}, {site.city}, {site.state}.
+  </p>
+
+  <h2>The two kinds of message we send</h2>
+
+  <h3>1. Appointment confirmations and reminders</h3>
+  <p>
+    When someone books an appointment through a business that uses our service, we text them a
+    confirmation with the business name, the date and time, and the address. We may also send a
+    reminder before the appointment, and a message if the appointment is changed or cancelled.
+  </p>
+
+  <h3>2. Review requests (Review Bot)</h3>
+  <p>
+    A few hours after an appointment is completed, we send one message asking the customer to leave
+    a review, with a link. Every customer receives the same message regardless of how the job went.
+    We do not screen customers before asking, we do not route unhappy customers somewhere else, and
+    we do not offer anything in exchange for a review.
+  </p>
+
+  <p>
+    We also send our own client businesses operational notifications — new bookings, urgent call
+    alerts, and periodic summaries of calls handled.
+  </p>
+
+  <p>
+    All of these are transactional or service messages.{' '}
+    <strong>We do not send marketing or promotional text messages.</strong>
+  </p>
+
+  <h2>How you opt in</h2>
+  <p>
+    <strong>Callers and customers.</strong> You opt in verbally during a call you placed to a
+    business that uses our service. Our assistant asks whether it may text a confirmation to the
+    number you are calling from, and your answer is recorded and timestamped. If you decline, we do
+    not text you.
+  </p>
+  <p>
+    <strong>Business enquiries.</strong> If you contact us through the form on this website, there
+    is an optional checkbox to receive text messages about your enquiry. It is unchecked by default,
+    it is never required in order to submit the form, and we record both the timestamp and the exact
+    wording shown to you at the time.
+  </p>
+  <p>
+    <strong>Client businesses.</strong> You opt in by providing your mobile number and agreeing to
+    notifications when your service is set up.
+  </p>
+  <p>We never text someone to ask for consent, and we do not buy, rent, or import phone lists.</p>
+
+  <h2>Message frequency</h2>
+  <p>
+    <strong>Message frequency varies</strong> and depends on activity. A customer booking an
+    appointment typically receives one to three messages per appointment. Client businesses receive
+    messages as calls come in, plus periodic summaries.
+  </p>
+
+  <h2>Cost</h2>
+  <p>
+    <strong>Message and data rates may apply.</strong> We do not charge you for text messages. Any
+    charges come from your own mobile carrier under your own plan.
+  </p>
+
+  <h2>How to stop messages</h2>
+  <p>
+    <strong>Reply STOP to any message.</strong> You will get one confirmation that you have been
+    unsubscribed, and then nothing further to that number. You can also contact us at{' '}
+    <a href={`mailto:${site.email}`}>{site.email}</a> or{' '}
+    <a href={site.phone.href}>{site.phone.display}</a> to be removed.
+  </p>
+  <p>
+    Opting out of messages does not cancel a booked appointment. To change or cancel an appointment,
+    call the business directly.
+  </p>
+
+  <h2>How to get help</h2>
+  <p>
+    <strong>Reply HELP to any message</strong>, or contact us at{' '}
+    <a href={`mailto:${site.email}`}>{site.email}</a> or{' '}
+    <a href={site.phone.href}>{site.phone.display}</a>.
+  </p>
+
+  <h2>Carriers</h2>
+  <p>
+    Carriers are not liable for delayed or undelivered messages. Delivery depends on your
+    carrier&rsquo;s network and is not guaranteed.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>
+    <strong>
+      Mobile opt-in data and consent are never shared with third parties or affiliates for marketing
+      purposes.
+    </strong>{' '}
+    Full detail is in our <a href="/privacy">Privacy Policy</a>.
+  </p>
+</Legal>

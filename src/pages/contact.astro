@@ -1,0 +1,243 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, trades } from '../config/site';
+
+const title = 'Contact — Free Call Audit | Rocky Mountain Booking';
+const description = `Ask for a free call audit, or just call. ${site.legalName}, ${site.city}, ${site.state}. ${site.phone.display}.`;
+
+/**
+ * The exact consent language shown next to the checkbox. Recorded verbatim with
+ * the submission so there is a record of what the person actually agreed to —
+ * Twilio rejection code 30513 wants documented opt-in, not just a tick.
+ */
+const CONSENT_TEXT =
+  'I agree to receive text messages from Rocky Mountain Booking about my inquiry. Message and data rates may apply. Reply STOP to opt out, HELP for help.';
+---
+
+<Base title={title} description={description} path="/contact">
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">Free call audit</p>
+      <h1>Tell me what your phone is doing.</h1>
+      <p class="sub">
+        Fastest way is to call. If you&rsquo;d rather write it down, this takes under a minute.
+      </p>
+      <div class="links">
+        <a class="link" href={site.phone.href}>
+          Call {site.phone.display} <span class="chev">›</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="stage rise">
+      <form class="form" id="audit-form" method="POST" novalidate={false}>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required />
+        </div>
+
+        <div class="field">
+          <label for="business">Business name</label>
+          <input id="business" name="business" type="text" autocomplete="organization" required />
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" required />
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+        </div>
+
+        <div class="field">
+          <label for="trade">Trade</label>
+          <select id="trade" name="trade" required>
+            <option value="">Choose one</option>
+            {trades.map((t) => <option value={t}>{t}</option>)}
+            <option value="Other">Something else</option>
+          </select>
+        </div>
+
+        {/*
+          UNCHECKED by default and never required to submit — consent cannot be
+          a condition of contact. The label text is duplicated into a hidden
+          field so the exact wording is captured with the submission.
+        */}
+        <div class="consent">
+          <input id="sms_consent" name="sms_consent" type="checkbox" value="yes" />
+          <label for="sms_consent">{CONSENT_TEXT}</label>
+        </div>
+        <input type="hidden" name="consent_language" value={CONSENT_TEXT} />
+        <input type="hidden" name="consent_timestamp" id="consent_timestamp" value="" />
+
+        {/* Honeypot — hidden from people, visible to bots. */}
+        <div class="hp" aria-hidden="true">
+          <label for="company_url">Leave this empty</label>
+          <input id="company_url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <button class="btn form-btn" type="submit">Send it over</button>
+
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+
+        <p class="form-note">
+          By sending this you agree to our <a href="/privacy">Privacy Policy</a>. Ticking the box
+          above is optional and is not required to get an audit — see our
+          <a href="/sms-terms">SMS Terms</a>.
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">Or just call</p>
+      <h2>You&rsquo;ll get me.</h2>
+      <p class="sub">
+        {site.legalName} · {site.city}, {site.state}
+      </p>
+      <div class="links">
+        <a class="link" href={site.phone.href}>{site.phone.display} <span class="chev">›</span></a>
+        <a class="link" href={`mailto:${site.email}`}>{site.email} <span class="chev">›</span></a>
+      </div>
+    </div>
+    <div class="stage"></div>
+  </section>
+</Base>
+
+<style>
+  .form {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .field {
+    margin-bottom: 16px;
+  }
+  .field label {
+    display: block;
+    font-family: var(--display);
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .field input,
+  .field select {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line-dark);
+    background: var(--night-2);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 1rem;
+  }
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .consent input:focus-visible,
+  .form-btn:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .field input::placeholder {
+    color: var(--muted-dark);
+  }
+
+  .consent {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--night-2);
+    border: 1px solid var(--line-dark);
+    border-radius: 12px;
+    padding: 14px;
+    margin: 20px 0 18px;
+  }
+  .consent input {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    accent-color: var(--gold);
+  }
+  .consent label {
+    font-size: 0.84rem;
+    line-height: 1.5;
+    color: var(--muted-dark);
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .form-btn {
+    width: 100%;
+  }
+  .form-status {
+    font-size: 0.88rem;
+    color: var(--muted-dark);
+    margin-top: 14px;
+    min-height: 1.2em;
+  }
+  .form-note {
+    font-size: 0.78rem;
+    color: var(--muted-dark);
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+  .form-note a {
+    color: var(--gold);
+  }
+</style>
+
+<script>
+  import '../scripts/motion';
+
+  const form = document.getElementById('audit-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+  const stamp = document.getElementById('consent_timestamp') as HTMLInputElement | null;
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!status) return;
+
+    const data = new FormData(form);
+
+    // Bots fill hidden fields. Show success and drop it.
+    if (data.get('company_url')) {
+      status.textContent = 'Thanks — I’ll be in touch.';
+      form.reset();
+      return;
+    }
+
+    // Timestamp the consent decision at submit time, not page load.
+    if (stamp) stamp.value = new Date().toISOString();
+
+    const lines = [
+      `Name: ${data.get('name') ?? ''}`,
+      `Business: ${data.get('business') ?? ''}`,
+      `Phone: ${data.get('phone') ?? ''}`,
+      `Email: ${data.get('email') ?? ''}`,
+      `Trade: ${data.get('trade') ?? ''}`,
+      '',
+      `SMS consent: ${data.get('sms_consent') ? 'YES' : 'no'}`,
+      `Consent recorded: ${stamp?.value ?? ''}`,
+      `Consent language shown: ${data.get('consent_language') ?? ''}`,
+    ].join('\n');
+
+    // No mail service is wired up yet, so hand off to the visitor's mail client
+    // rather than posting into a void and losing the lead. Swap this for a
+    // Formspree/Basin endpoint when one exists.
+    const subject = `Call audit request — ${data.get('business') || data.get('name') || 'New'}`;
+    window.location.href = `mailto:contact@rockymountainbooking.com?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(lines)}`;
+
+    status.textContent = 'Opening your email app…';
+  });
+</script>

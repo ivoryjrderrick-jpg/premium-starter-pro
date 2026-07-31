@@ -7,14 +7,15 @@ const description =
   'AI phone answering and appointment booking for Colorado Springs service businesses. Every call answered day and night, booked straight to your calendar, urgent calls transferred to your cell.';
 
 /**
- * Missed-call stack. Numbers are illustrative — the 555 range is reserved for
- * fiction precisely so nothing here can dial a real person.
+ * Missed-call stack. The numbers are deliberately all zeroes: any realistic
+ * pattern gets auto-linked into a live tel: link by iOS Safari, and a made-up
+ * number can belong to a real person. See also the format-detection meta.
  */
 const missed = [
-  { number: '(719) 555-0182', note: 'Missed call', time: '11:42 AM' },
-  { number: '(719) 555-0244', note: 'Missed call · no voicemail', time: '1:15 PM' },
-  { number: '(719) 555-0119', note: 'Missed call · no voicemail', time: '5:38 PM' },
-  { number: '(719) 555-0307', note: 'Missed call · no voicemail', time: '9:47 PM' },
+  { number: '(000) 000-0000', note: 'Missed call', time: '11:42 AM' },
+  { number: '(000) 000-0000', note: 'Missed call · no voicemail', time: '1:15 PM' },
+  { number: '(000) 000-0000', note: 'Missed call · no voicemail', time: '5:38 PM' },
+  { number: '(000) 000-0000', note: 'Missed call · no voicemail', time: '9:47 PM' },
 ];
 
 const reasons = [
@@ -203,7 +204,7 @@ const reasons = [
         </div>
         <div class="bubble">
           <div class="who">Text sent to you first</div>
-          Urgent — caller says it can&rsquo;t wait until morning. M. Boone, 719-555-0143, 4419 Verde
+          Urgent — caller says it can&rsquo;t wait until morning. M. Boone, 000-000-0000, 4419 Verde
           Dr. Connecting you now.
         </div>
       </div>
@@ -310,8 +311,11 @@ const reasons = [
     </div>
     <div class="stage rise">
       <div class="chips stagger">
-        {trades.map((t) => <a class="chip" href={`/for/${t.slug}`}>{t.name}</a>)}
-        <a class="chip more" href="/contact">Something else ›</a>
+        {trades.map((t) => <span class="chip">{t}</span>)}
+        <span class="chip more">and more</span>
+      </div>
+      <div class="links links-after">
+        <a class="link" href="/who-we-serve">See who this is built for <span class="chev">›</span></a>
       </div>
     </div>
   </section>

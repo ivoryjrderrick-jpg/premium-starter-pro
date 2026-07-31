@@ -239,7 +239,7 @@ h2 {
      decelerates far more gently than plain `ease`.
    - will-change is set up front and released on transitionend — holding it on
      every section at once would keep dozens of layers alive on a long page.  */
-.rise {
+.js .rise {
   opacity: 0;
   transform: translate3d(0, 22px, 0);
   transition:
@@ -259,7 +259,7 @@ h2 {
    Items inside a revealing block cascade instead of arriving together. Delays
    are small and the travel is shorter than the parent's, so the group still
    reads as one movement rather than a sequence of separate ones.            */
-.stagger > * {
+.js .stagger > * {
   opacity: 0;
   transform: translate3d(0, 14px, 0);
   transition:
@@ -340,4 +340,27 @@ h2 {
     font-size: 1.15rem;
     max-width: 40ch;
   }
+}
+
+/* Secondary link row sitting under a block rather than above it. */
+.links-after {
+  margin-top: 26px;
+  margin-bottom: 0;
+}
+
+/* ---- Above-the-fold exemption -------------------------------------------
+   The first block of the first section renders immediately rather than waiting
+   on the observer. It holds the h1, which is the largest contentful paint on
+   every page — hiding it at opacity 0 until JS runs meant Chrome recorded no
+   LCP candidate at all, and on a slow connection the headline genuinely wasn't
+   there. Everything below the fold still animates in.                        */
+.js main > .card:first-child > .rise:first-child {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  will-change: auto;
+}
+.js main > .card:first-child > .rise:first-child .stagger > * {
+  opacity: 1;
+  transform: none;
 }

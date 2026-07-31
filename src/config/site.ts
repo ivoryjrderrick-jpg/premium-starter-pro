@@ -58,19 +58,25 @@ export const pricing = {
   currency: 'USD',
 } as const;
 
-/** The eleven trades with their own pages, and the order they appear in the chip row. */
+/**
+ * Trades shown in the chip row and on /who-we-serve.
+ *
+ * Display only — these are deliberately NOT links. Eleven near-identical
+ * per-trade pages would be thin content, and one honest page covering all of
+ * them says the same thing without the SEO risk.
+ */
 export const trades = [
-  { slug: 'hvac', name: 'HVAC' },
-  { slug: 'plumbing', name: 'Plumbing' },
-  { slug: 'electrical', name: 'Electrical' },
-  { slug: 'roofing', name: 'Roofing' },
-  { slug: 'garage-door', name: 'Garage Door' },
-  { slug: 'restoration', name: 'Restoration' },
-  { slug: 'auto-repair', name: 'Auto Repair' },
-  { slug: 'towing', name: 'Towing' },
-  { slug: 'landscaping', name: 'Landscaping' },
-  { slug: 'pest-control', name: 'Pest Control' },
-  { slug: 'cleaning', name: 'Cleaning' },
+  'HVAC',
+  'Plumbing',
+  'Electrical',
+  'Roofing',
+  'Garage Door',
+  'Restoration',
+  'Auto Repair',
+  'Towing',
+  'Landscaping',
+  'Pest Control',
+  'Cleaning',
 ] as const;
 
 /** Nav destinations, shared by the mobile menu and the footer. */
@@ -78,5 +84,6 @@ export const nav = [
   { href: '/', label: 'Home' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/how-it-works', label: 'How It Works' },
+  { href: '/who-we-serve', label: 'Who We Serve' },
   { href: '/contact', label: 'Contact' },
 ] as const;

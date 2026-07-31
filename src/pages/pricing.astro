@@ -1,0 +1,481 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, pricing } from '../config/site';
+
+const title = `Pricing — $${pricing.current}/mo | Rocky Mountain Booking`;
+const description = `One plan, $${pricing.current} a month at the current rate against a $${pricing.standard} standard rate, plus a $${pricing.setup} one-time setup. No tiers, no per-minute billing, no long-term contract.`;
+
+const included = [
+  ['Answering, day and night', 'Every hour of every day, including holidays.'],
+  ['Booked straight to your calendar', 'Name, number, address, and what they need.'],
+  ['Review Bot', 'Texts every customer for a review a few hours after the job.'],
+  ['Urgent calls transferred to you', "With the details texted ahead so you're not starting cold."],
+  ['Automatic forwarding if anything breaks', 'Calls roll to your cell. It never dead-ends.'],
+  ['A local number, set up for you', 'You do nothing. I build it around how your shop actually runs.'],
+  ['A person in Colorado Springs to call', "When something's off, you get me. Not a ticket."],
+];
+
+const faqs = [
+  [
+    "I don't want a robot talking to my customers.",
+    "Fair. Don't take my word for it — call the line and hear it. Then ask yourself which one you'd rather your customer got: that, or your voicemail.",
+  ],
+  [
+    'My wife handles the phone.',
+    "Good, and she should keep doing it. This covers the hours she isn't working — nights, weekends, and the times she's already on the other line.",
+  ],
+  [
+    'What if it botches something urgent?',
+    'Urgent calls don’t get booked. They transfer straight to your cell with the details texted to you first. And if the system ever fails, calls forward to your phone automatically.',
+  ],
+  [
+    'Does Review Bot only ask happy customers?',
+    "No. Every customer gets the same message. Filtering out the unhappy ones violates Google's policies and is the fastest way to get a profile flagged.",
+  ],
+  [
+    'Is there a contract?',
+    'Month to month. Thirty days’ notice either direction. The rate you start at is the rate you keep, and that part is in writing.',
+  ],
+  [
+    "How long until it's running?",
+    'About a week from the day you say go. You spend maybe thirty minutes on it total.',
+  ],
+  [
+    'Why is it cheaper than the other guys?',
+    "Because I'm one person in Colorado Springs with almost no overhead, and because you're early. The rate goes up once I've got case studies.",
+  ],
+];
+---
+
+<Base title={title} description={description} path="/pricing">
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">Pricing</p>
+      <h1>One plan. One price.</h1>
+      <p class="sub">No tiers, no per-minute billing, no long-term contract.</p>
+    </div>
+    <div class="stage rise">
+      <div class="pricebox" id="pricebox" data-from={pricing.standard} data-to={pricing.current}>
+        {/*
+          The struck figure is the CURRENT standard rate with a current offer
+          against it — not a historical price. It is labelled as such, and the
+          label is the reason this isn't read as "was $299".
+        */}
+        <div class="oldwrap">
+          <div class="oldprice">
+            <span class="oldlabel">Standard rate</span>
+            <span class="oldnum">${pricing.standard}/mo</span>
+          </div>
+        </div>
+        <p class="now">
+          <span class="dollar">$</span><span id="priceNum">{pricing.standard}</span><span class="per"
+            >/mo</span
+          >
+        </p>
+        <p class="badge">Current rate</p>
+        <p class="lock-note">Whatever rate you start at is the rate you keep, in writing.</p>
+        <p class="setup">
+          <b>${pricing.setup} one-time setup</b> — covers building it around your business.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">What&rsquo;s included</p>
+      <h2>All of it. There&rsquo;s no upgrade.</h2>
+    </div>
+    <div class="stage rise">
+      <div class="incl stagger">
+        {
+          included.map(([label, detail]) => (
+            <div class="inc">
+              <span class="tick" aria-hidden="true">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              </span>
+              <span>
+                <b>{label}</b>
+                <span>{detail}</span>
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">The only math that matters</p>
+      <h2>One job covers the month.</h2>
+      <p class="sub">Use your own numbers. If the answer isn&rsquo;t obvious, don&rsquo;t buy it.</p>
+    </div>
+    <div class="stage rise">
+      <div class="mathbox">
+        <div class="mrow"><span>Calls you miss in a week</span><span class="v">4</span></div>
+        <div class="mrow">
+          <span>Of those, how many would&rsquo;ve booked</span><span class="v">1 in 4</span>
+        </div>
+        <div class="mrow"><span>Your average job</span><span class="v">$400</span></div>
+        <div class="mrow"><span>Recovered in a month</span><span class="v">$1,600</span></div>
+        <div class="mrow win"><span>Cost</span><span class="v">${pricing.current}</span></div>
+      </div>
+      <p class="sub math-note">Those are placeholder numbers. On a call I&rsquo;ll run yours.</p>
+    </div>
+  </section>
+
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">How to start</p>
+      <h2>Try it for thirty days.</h2>
+    </div>
+    <div class="stage rise">
+      {/*
+        No refund or money-back language anywhere — the offer is a genuine
+        month-to-month trial, not a guarantee. Keep this wording in step with
+        the Terms of Service.
+      */}
+      <div class="guar">
+        <h3>Run it a month and see what it catches.</h3>
+        <p>
+          Month to month from day one. Thirty days&rsquo; notice to cancel, any time, no reason
+          needed and no early termination fee. You keep every job it books.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">Straight answers</p>
+      <h2>What people ask.</h2>
+    </div>
+    <div class="stage rise">
+      <div class="faq">
+        {
+          faqs.map(([q, a]) => (
+            <details>
+              <summary>{q}</summary>
+              <p>{a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="card dark">
+    <div class="rise">
+      <h2>Hear it before you decide.</h2>
+      <p class="sub">Call the line and book yourself an appointment. Takes two minutes.</p>
+      <a class="btn" href={site.phone.href}>Call {site.phone.display}</a>
+    </div>
+    <div class="stage"></div>
+  </section>
+</Base>
+
+<style>
+  .pricebox {
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--night-2);
+    border: 1px solid var(--line-dark);
+    border-radius: 22px;
+    padding: 30px 24px;
+    text-align: center;
+  }
+
+  /* Reserved height so the rising standard rate never shifts layout. */
+  .oldwrap {
+    min-height: 44px;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .oldprice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    transition:
+      opacity 0.5s ease 0.95s,
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.95s;
+  }
+  .oldlabel {
+    font-family: var(--display);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+  }
+  .oldnum {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--muted-dark);
+    position: relative;
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Strikethrough draws left to right once the number has landed. */
+  .oldnum::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 52%;
+    height: 2px;
+    background: rgba(255, 107, 107, 0.85);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1) 1.45s;
+  }
+  .pricebox.go .oldprice {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  .pricebox.go .oldnum::after {
+    transform: scaleX(1);
+  }
+
+  .now {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(3.4rem, 17vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.045em;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted-dark);
+    transition: color 0.7s ease;
+    margin: 0;
+  }
+  .pricebox.go .now {
+    color: var(--gold);
+  }
+  .now .dollar {
+    font-size: 0.5em;
+    vertical-align: 0.42em;
+    margin-right: 0.04em;
+  }
+  .now .per {
+    font-size: 0.26em;
+    color: var(--muted-dark);
+    letter-spacing: 0;
+    margin-left: 0.15em;
+    vertical-align: 0.5em;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 6px 13px;
+    border-radius: 999px;
+    margin-top: 16px;
+    opacity: 0;
+    transform: scale(0.9);
+    transition:
+      opacity 0.45s ease 1.7s,
+      transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 1.7s;
+  }
+  .pricebox.go .badge {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .lock-note {
+    font-size: 0.86rem;
+    color: var(--muted-dark);
+    max-width: 31ch;
+    margin: 12px auto 0;
+  }
+  .setup {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-dark);
+    font-size: 0.9rem;
+    color: var(--muted-dark);
+  }
+  .setup b {
+    color: var(--white);
+    font-family: var(--display);
+  }
+
+  .incl {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .inc {
+    display: flex;
+    gap: 13px;
+    padding: 13px 0;
+    border-top: 1px solid var(--line-light);
+  }
+  .inc:last-child {
+    border-bottom: 1px solid var(--line-light);
+  }
+  .tick {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(201, 144, 42, 0.16);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--gold-deep);
+  }
+  .inc b {
+    font-family: var(--display);
+    font-size: 0.98rem;
+    display: block;
+    margin-bottom: 1px;
+  }
+  .inc > span:last-child > span {
+    font-size: 0.86rem;
+    color: var(--muted-light);
+  }
+
+  .mathbox {
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--white);
+    border: 1px solid var(--line-light);
+    border-radius: 18px;
+    padding: 24px 20px;
+    text-align: left;
+  }
+  .mrow {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 11px 0;
+    font-size: 0.94rem;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .mrow:last-child {
+    border-bottom: 0;
+    padding-top: 15px;
+    margin-top: 4px;
+    border-top: 2px solid var(--ink);
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .mrow .v {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .mrow.win .v {
+    color: var(--gold-deep);
+  }
+  .math-note {
+    margin-top: 22px;
+    margin-bottom: 0;
+    font-size: 0.86rem;
+  }
+
+  .guar {
+    max-width: 400px;
+    margin: 0 auto;
+    border: 2px solid var(--gold);
+    border-radius: 18px;
+    padding: 26px 22px;
+    background: rgba(245, 184, 74, 0.06);
+  }
+  .guar h3 {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 9px;
+  }
+  .guar p {
+    font-size: 0.95rem;
+    color: var(--muted-dark);
+  }
+
+  .faq {
+    max-width: 440px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .faq details {
+    border-top: 1px solid var(--line-light);
+    padding: 16px 0;
+  }
+  .faq details:last-of-type {
+    border-bottom: 1px solid var(--line-light);
+  }
+  .faq summary {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary::after {
+    content: '+';
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--gold-deep);
+    flex-shrink: 0;
+  }
+  .faq details[open] summary::after {
+    content: '\2013';
+  }
+  .faq summary:focus-visible {
+    outline: 2px solid var(--gold-deep);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .faq details p {
+    font-size: 0.92rem;
+    color: var(--muted-light);
+    margin-top: 10px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .oldprice,
+    .oldnum::after,
+    .badge,
+    .now {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/motion';
+</script>

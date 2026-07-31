@@ -1,0 +1,167 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+
+const title = 'How It Works — Rocky Mountain Booking';
+const description =
+  'Four steps: I set it up around your shop, you get a local number, calls get answered and booked, and urgent ones transfer to your cell. About thirty minutes of your time.';
+
+const steps = [
+  {
+    mark: '01',
+    title: 'I set it up around your shop',
+    body: 'We talk through what you do, the hours you keep, what you charge for a call-out, and what counts as an emergency. Then I build it. Your part is about thirty minutes on the phone, once.',
+  },
+  {
+    mark: '02',
+    title: 'You get a local number',
+    body: 'A Colorado Springs number that forwards from the one you already advertise, so nothing on your truck or your cards has to change. If you would rather move your number over entirely, we can do that instead.',
+  },
+  {
+    mark: '03',
+    title: 'Calls get answered and booked',
+    body: 'It picks up on the first or second ring, day or night. It answers what people usually ask, checks what is genuinely open on your calendar, and books the slot. You get the appointment without touching the phone.',
+  },
+  {
+    mark: '04',
+    title: 'Urgent ones transfer to your cell',
+    body: 'Anything it decides it cannot handle stops being a booking and becomes a transfer. Your phone rings with the details already texted to you. If the system itself ever fails, calls forward to your cell automatically — it never dead-ends.',
+  },
+];
+---
+
+<Base title={title} description={description} path="/how-it-works">
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">How it works</p>
+      <h1>Four steps, and one of them is yours.</h1>
+      <p class="sub">
+        Setup takes about a week. You spend roughly thirty minutes on it, total.
+      </p>
+      <div class="links">
+        <a class="link" href={site.phone.href}>Hear it answer <span class="chev">›</span></a>
+      </div>
+    </div>
+    <div class="stage rise">
+      <div class="reasons stagger">
+        {
+          steps.map((s) => (
+            <div class="reason">
+              <div class="r-mark">{s.mark}</div>
+              <div class="r-body">
+                <b>{s.title}</b>
+                <span>{s.body}</span>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">The handoff</p>
+      <h2>What it does when it can&rsquo;t help.</h2>
+      <p class="sub">
+        This is the part worth understanding, because it&rsquo;s the part everyone worries about.
+      </p>
+    </div>
+    <div class="stage rise">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="callrow">
+          <div class="avatar" aria-hidden="true">!</div>
+          <div>
+            <div class="callname">Incoming — transferred</div>
+            <div class="callsub">From Sam · 11:20 PM</div>
+          </div>
+        </div>
+        <div class="bubble">
+          <div class="who">Text sent to you first</div>
+          Urgent — caller says it can&rsquo;t wait until morning. M. Boone, 000-000-0000, 4419 Verde
+          Dr. Connecting you now.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/*
+    Review Bot: mechanism only. What it does, when it does it, and who it goes
+    to. No claims about what it will achieve — see /privacy for the policy
+    position on review gating.
+  */}
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">Also included · Review Bot</p>
+      <h2>How Review Bot works.</h2>
+      <p class="sub">
+        A few hours after an appointment is marked done, it sends one text asking for a review.
+      </p>
+    </div>
+    <div class="stage rise">
+      <div class="reasons stagger">
+        <div class="reason">
+          <div class="r-mark">01</div>
+          <div class="r-body">
+            <b>It waits until the job is finished</b>
+            <span>
+              The message goes out a few hours after the appointment, not while your tech is still
+              in the driveway.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">02</div>
+          <div class="r-body">
+            <b>Every customer gets the same message</b>
+            <span>
+              There is no sentiment check, no survey first, and no different path for someone who
+              seemed unhappy. Everyone is asked, and everyone is asked the same way.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">03</div>
+          <div class="r-body">
+            <b>One text, with a link and an opt-out</b>
+            <span>
+              A short message with a direct link to your Google profile and STOP to opt out. Nothing
+              is offered in exchange for a review.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">04</div>
+          <div class="r-body">
+            <b>It stops there</b>
+            <span>
+              No second chase, no follow-up sequence. If they do not reply, that is the end of it.
+            </span>
+          </div>
+        </div>
+      </div>
+      <p class="fineprint">
+        Screening customers before asking, or steering unhappy ones somewhere private, breaks
+        Google&rsquo;s review policies and the FTC Consumer Review Rule. This does neither, which is
+        why it asks everybody.
+      </p>
+    </div>
+  </section>
+
+  <section class="card dark">
+    <div class="rise">
+      <h2>Call it and see.</h2>
+      <p class="sub">
+        Book yourself an appointment on the demo line. That&rsquo;s what your customer hears when you
+        can&rsquo;t pick up.
+      </p>
+      <a class="btn" href={site.phone.href}>Call {site.phone.display}</a>
+    </div>
+    <div class="stage"></div>
+  </section>
+</Base>
+
+<script>
+  import '../scripts/motion';
+</script>
