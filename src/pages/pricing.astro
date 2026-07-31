@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { site, pricing } from '../config/site';
 
-const title = `Pricing — $${pricing.current}/mo | Rocky Mountain Booking`;
+const title = `Pricing | Rocky Mountain Booking`;
 const description = `One plan, $${pricing.current} a month at the current rate against a $${pricing.standard} standard rate, plus a $${pricing.setup} one-time setup. No tiers, no per-minute billing, no long-term contract.`;
 
 const included = [
@@ -18,15 +18,15 @@ const included = [
 const faqs = [
   [
     "I don't want a robot talking to my customers.",
-    "Fair. Don't take my word for it — call the line and hear it. Then ask yourself which one you'd rather your customer got: that, or your voicemail.",
+    "Fair. Don't take my word for it. Call the line and hear it, then ask yourself which one you'd rather your customer got. That, or your voicemail.",
   ],
   [
     'My wife handles the phone.',
-    "Good, and she should keep doing it. This covers the hours she isn't working — nights, weekends, and the times she's already on the other line.",
+    "Good, and she should keep doing it. This covers the hours she isn't working. Nights, weekends, and the times she's already on the other line.",
   ],
   [
     'What if it botches something urgent?',
-    'Urgent calls don’t get booked. They transfer straight to your cell with the details texted to you first. And if the system ever fails, calls forward to your phone automatically.',
+    'Urgent calls don’t get booked. They transfer straight to your cell, and the details get texted to you first. If the system ever fails, calls forward to your phone automatically.',
   ],
   [
     'Does Review Bot only ask happy customers?',
@@ -75,7 +75,7 @@ const faqs = [
         <p class="badge">Current rate</p>
         <p class="lock-note">Whatever rate you start at is the rate you keep, in writing.</p>
         <p class="setup">
-          <b>${pricing.setup} one-time setup</b> — covers building it around your business.
+          <b>${pricing.setup} one-time setup.</b> Covers building it around your business.
         </p>
       </div>
     </div>

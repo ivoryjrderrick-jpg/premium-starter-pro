@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { site, trades } from '../config/site';
 
-const title = 'Contact — Free Call Audit | Rocky Mountain Booking';
+const title = 'Contact | Rocky Mountain Booking';
 const description = `Ask for a free call audit, or just call. ${site.legalName}, ${site.city}, ${site.state}. ${site.phone.display}.`;
 
 /**
@@ -61,13 +61,28 @@ const CONSENT_TEXT =
         </div>
 
         {/*
-          UNCHECKED by default and never required to submit — consent cannot be
-          a condition of contact. The label text is duplicated into a hidden
-          field so the exact wording is captured with the submission.
+          Two separate boxes on purpose.
+
+          The first gates the submit button. It covers being contacted about the
+          request itself, which is what the person is asking for.
+
+          The second is SMS consent. It stays optional and never blocks
+          submission, because making messaging consent a condition of service is
+          the thing carriers and the TCPA specifically prohibit.
         */}
         <div class="consent">
+          <input id="agree" name="agree" type="checkbox" value="yes" required />
+          <label for="agree">
+            I agree to Rocky Mountain Booking contacting me about this request, and to the{' '}
+            <a href="/privacy">Privacy Policy</a>.
+          </label>
+        </div>
+
+        <div class="consent">
           <input id="sms_consent" name="sms_consent" type="checkbox" value="yes" />
-          <label for="sms_consent">{CONSENT_TEXT}</label>
+          <label for="sms_consent">
+            <span class="optional">Optional.</span> {CONSENT_TEXT}
+          </label>
         </div>
         <input type="hidden" name="consent_language" value={CONSENT_TEXT} />
         <input type="hidden" name="consent_timestamp" id="consent_timestamp" value="" />
@@ -78,13 +93,13 @@ const CONSENT_TEXT =
           <input id="company_url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
         </div>
 
-        <button class="btn form-btn" type="submit">Send it over</button>
+        <button class="btn form-btn" type="submit" id="submit-btn" disabled>Send it over</button>
 
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
 
         <p class="form-note">
           By sending this you agree to our <a href="/privacy">Privacy Policy</a>. Ticking the box
-          above is optional and is not required to get an audit — see our
+          above is optional and is not required to get an audit. See our
           <a href="/sms-terms">SMS Terms</a>.
         </p>
       </form>
@@ -169,6 +184,21 @@ const CONSENT_TEXT =
     line-height: 1.5;
     color: var(--muted-dark);
   }
+  .consent label a {
+    color: var(--gold);
+  }
+  .optional {
+    font-family: var(--display);
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  /* Greyed until the agreement box is ticked. */
+  .form-btn:disabled {
+    background: var(--night-3);
+    color: var(--muted-light);
+    cursor: not-allowed;
+  }
 
   .hp {
     position: absolute;
@@ -201,6 +231,14 @@ const CONSENT_TEXT =
   const form = document.getElementById('audit-form') as HTMLFormElement | null;
   const status = document.getElementById('form-status');
   const stamp = document.getElementById('consent_timestamp') as HTMLInputElement | null;
+  const agree = document.getElementById('agree') as HTMLInputElement | null;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+
+  // Button stays greyed out until the agreement box is ticked. The SMS box is
+  // deliberately not part of this.
+  agree?.addEventListener('change', () => {
+    if (submitBtn) submitBtn.disabled = !agree.checked;
+  });
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -210,7 +248,7 @@ const CONSENT_TEXT =
 
     // Bots fill hidden fields. Show success and drop it.
     if (data.get('company_url')) {
-      status.textContent = 'Thanks — I’ll be in touch.';
+      status.textContent = 'Thanks, I’ll be in touch.';
       form.reset();
       return;
     }
@@ -233,7 +271,7 @@ const CONSENT_TEXT =
     // No mail service is wired up yet, so hand off to the visitor's mail client
     // rather than posting into a void and losing the lead. Swap this for a
     // Formspree/Basin endpoint when one exists.
-    const subject = `Call audit request — ${data.get('business') || data.get('name') || 'New'}`;
+    const subject = `Call audit request: ${data.get('business') || data.get('name') || 'New'}`;
     window.location.href = `mailto:contact@rockymountainbooking.com?subject=${encodeURIComponent(
       subject,
     )}&body=${encodeURIComponent(lines)}`;

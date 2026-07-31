@@ -11,10 +11,14 @@ const path = Astro.url.pathname;
 
 <nav class="nav">
   <a href="/" aria-label={`${site.name} home`} class="brand">
-    <svg width="30" height="20" viewBox="0 0 30 20" fill="none" aria-hidden="true">
-      <path d="M1 19L9 5l5 8 3-4.5L21 19H1z" fill="var(--gold)"></path>
-      <path d="M16 19l6-11 7 11H16z" fill="var(--gold)" opacity=".55"></path>
-    </svg>
+    <img
+      src="/logo-mark.png"
+      width="360"
+      height="109"
+      alt=""
+      aria-hidden="true"
+      class="brand-mark"
+    />
   </a>
 
   <div class="nav-right">
@@ -98,6 +102,11 @@ const path = Astro.url.pathname;
   .brand {
     display: flex;
     border-radius: 6px;
+  }
+  /* 3.3:1 mark, so height drives it and width follows. */
+  .brand-mark {
+    height: 22px;
+    width: auto;
   }
   .brand:focus-visible {
     outline: 2px solid var(--gold);
