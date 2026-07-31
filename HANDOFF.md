@@ -89,6 +89,9 @@ a price anywhere else.**
 | Design tokens, reset, typography, reveal system | `src/styles/global.css` (`:root`) |
 | Reusable blocks (phone mock, meters, chips, portrait) | `src/styles/blocks.css` |
 | The three animations | `src/scripts/motion.ts` |
+| **When DJ is free** | `availability` in `src/config/site.ts` |
+| Booking widget (3 steps) | `src/components/Booking.astro` |
+| Date/time + timezone maths | `src/scripts/booking.ts` |
 | Meta, JSON-LD, OG tags, the `.js` bootstrap | `src/layouts/Base.astro` |
 | Legal page shell | `src/layouts/Legal.astro` |
 | Security headers + caching | `vercel.json` (**config, not code — port it if you leave Vercel**) |
@@ -170,7 +173,20 @@ Every one of these was a real bug. Don't rediscover them.
 8. **Astro scoped CSS + runtime classes.** `.rise.in .mi-box` scopes fine
    because `.rise` is authored in the file. For a class set on `<html>` (`.js`)
    you need `:global(.js) .thing`.
-9. **Never leave `playwright` or `sharp` in `package.json`.** Install for a
+9. **Astro scoped CSS does not reach elements built with `createElement`.**
+   They never get the `data-astro-cid-*` attribute, so scoped rules miss them
+   entirely and they render with browser defaults. The whole booking calendar
+   rendered unstyled this way. Use `.ancestor :global(.generated-class)` — the
+   ancestor stays scoped so nothing leaks.
+10. **`role="grid"` contracts to contain `role="row"`/`role="gridcell"`.**
+    Declaring it on a plain button grid drops accessibility to 93. Ordinary
+    buttons need no role; the container just needs `role="group"` and a name.
+11. **Converting a wall-clock time into an instant is a two-pass fixed point,
+    and the direction matters.** It must be `utc += target - asRead`. The
+    mirror-image form diverges on the second pass and shifts every result by a
+    whole UTC offset — a 9:00 AM slot rendered as 3:00 PM. `booking.ts` has the
+    round-trip cases; re-run them if you touch it.
+12. **Never leave `playwright` or `sharp` in `package.json`.** Install for a
    task, uninstall after, then `git checkout -- package-lock.json`.
 
 ---
@@ -186,6 +202,22 @@ Every one of these was a real bug. Don't rediscover them.
 | 3 | **Attorney review** | All three legal pages. Especially the liability cap, the indemnity, and retention periods. |
 | 4 | **Spend caps** | Telephony + LLM + Vercel. See `SECURITY.md`. |
 
+### Booking widget — what it is and is not
+
+`/contact` has a Calendly-style three-step flow: month → time slots → details.
+It is **entirely native**; a Calendly or Cal.com embed would need `frame-src`,
+`script-src` and `connect-src` opened to a third party, undoing the header work
+and handing that third party every visitor.
+
+**There is no server, so there is no live calendar and no lock on a slot.** Two
+people can request the same time and neither is told. Every string says
+*request*, and DJ confirms. **Do not reword it to "booked"** — the first
+double-booking would make the site a liar. If real scheduling is ever wanted,
+the Cal.com trade-off is written up at the top of `Booking.astro`.
+
+Times are authored in Mountain wall-clock and shown converted to the visitor's
+own zone beside them, because the site serves clients nationwide.
+
 ### Content owed
 
 | # | Item | Notes |
@@ -195,6 +227,7 @@ Every one of these was a real bug. Don't rediscover them.
 | 7 | **Confirm the hours** | Every page says answered around the clock, and **Terms §1 makes that contractual.** DJ once said the bot covers 10pm–6am and he takes the rest (commit `7662717`), then the site moved to 24/7 (`79c2997`). That was deliberate, but it needs confirming against how the assistant is actually configured. |
 | 8 | **Retention periods** | `/privacy` promises 90 days for recordings, 12 months for transcripts. These are published promises. Confirm the systems do it. |
 | 9 | **Subprocessor list** | `/privacy` lists categories, not vendors. Confirm it matches reality. |
+| 10 | **Real availability** | `availability.slots` in `site.ts` is Mon–Fri 9/10/11/1/2/3 Mountain (Fri ends at 1). Set it to DJ's actual hours, and add trips and holidays to `blackouts`. |
 
 ### Known and accepted
 

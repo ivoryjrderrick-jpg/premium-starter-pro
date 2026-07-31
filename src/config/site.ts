@@ -68,6 +68,43 @@ export const site = {
 } as const;
 
 /**
+ * When DJ is free for a call.
+ *
+ * THIS IS THE ONLY PLACE TO EDIT AVAILABILITY. The calendar, the slot list and
+ * the disabled dates are all derived from it.
+ *
+ * Times are wall-clock in `timezone`, so they stay correct across daylight
+ * saving without anyone editing them twice a year. Visitors outside Mountain
+ * Time are shown the converted time in their own zone as well, because the site
+ * now serves clients nationwide and "2:00 PM" means two different things in
+ * Denver and Boston.
+ *
+ * Important: with no server there is no live calendar and no lock on a slot.
+ * A submission is a REQUEST for a time, which DJ confirms. The UI says exactly
+ * that. Do not reword it into a confirmed booking unless real scheduling gets
+ * wired up — see the note in Booking.astro.
+ */
+export const availability = {
+  timezone: 'America/Denver',
+  timezoneLabel: 'Mountain Time',
+  durationMins: 30,
+  /** Nothing bookable inside this many hours, so there is time to see it. */
+  leadTimeHours: 12,
+  /** How far ahead the calendar will page. */
+  horizonDays: 60,
+  /** 0 = Sunday … 6 = Saturday. Omit a day to make it unbookable. */
+  slots: {
+    1: ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00'],
+    2: ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00'],
+    3: ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00'],
+    4: ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00'],
+    5: ['09:00', '10:00', '11:00', '13:00'],
+  } as Record<number, readonly string[]>,
+  /** Dates off, YYYY-MM-DD. Holidays, trips, anything already booked solid. */
+  blackouts: ['2026-11-26', '2026-11-27', '2026-12-24', '2026-12-25', '2027-01-01'],
+} as const;
+
+/**
  * Pricing.
  *
  * `standard` is the current list price and `current` is the current offer on it.
