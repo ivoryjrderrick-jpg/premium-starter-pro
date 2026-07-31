@@ -63,8 +63,8 @@ export const site = {
  * The struck-through figure must be labelled as the standard rate.
  */
 export const pricing = {
-  standard: 299,
-  current: 149,
+  standard: 349,
+  current: 199,
   setup: 299,
   currency: 'USD',
 } as const;

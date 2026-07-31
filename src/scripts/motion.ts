@@ -3,12 +3,14 @@
  *
  *  1. Scroll reveal  — sections fade up 22px, once, threshold .12
  *  2. Stat count-up  — 1.5s easeOutCubic, threshold .6, once, gold meter fills alongside
- *  3. Price drop     — 299 -> 149 over 1.1s after a 350ms beat, then gold, struck
- *                      standard rate, then badge. ~2.2s total.
+ *  3. Price drop     — standard -> current over 1.1s after a 350ms beat, then
+ *                      gold, struck standard rate, then badge. ~2.2s total.
+ *                      Both figures come from `pricing` in config/site.ts via
+ *                      data-from/data-to, so a price change needs no edit here.
  *
  * Under prefers-reduced-motion every one renders its FINAL state immediately
- * with no transition — the count-ups show their target, the price shows 149
- * with the struck 299 already in place.
+ * with no transition — the count-ups show their target, the price shows the
+ * current rate with the struck standard rate already in place.
  */
 
 const reduce =
@@ -122,6 +124,10 @@ function initPrice() {
 
   const from = parseFloat(box.dataset.from ?? '0');
   const to = parseFloat(box.dataset.to ?? '0');
+
+  // The markup ships the current rate so the box is correct without JS. Once
+  // the count-up is going to run, wind it back to the standard rate first.
+  if (!reduce) num.textContent = String(from);
 
   function run() {
     if (reduce) {

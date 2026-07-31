@@ -62,7 +62,7 @@ const faqs = [
         {/*
           The struck figure is the CURRENT standard rate with a current offer
           against it — not a historical price. It is labelled as such, and the
-          label is the reason this isn't read as "was $299".
+          label is the reason this isn't read as "was $349".
         */}
         <div class="oldwrap">
           <div class="oldprice">
@@ -71,7 +71,11 @@ const faqs = [
           </div>
         </div>
         <p class="now">
-          <span class="dollar">$</span><span id="priceNum">{pricing.standard}</span><span class="per"
+          {/*
+            Renders the CURRENT rate so the box still reads correctly with no
+            JS. The count-up resets it to the standard rate before it runs.
+          */}
+          <span class="dollar">$</span><span id="priceNum">{pricing.current}</span><span class="per"
             >/mo</span
           >
         </p>
@@ -278,25 +282,38 @@ const faqs = [
     text-align: center;
   }
 
-  /* Reserved height so the rising standard rate never shifts layout. */
+  /* Reserved height so the rising standard rate never shifts layout, and the
+     mask the standard rate slides up out of.
+
+     This block and the badge below are the only two animations on the site that
+     run automatically inside the viewport on load, which makes them the only
+     two an automated audit can catch mid-transition. Fading text from opacity 0
+     means every intermediate frame is a genuine contrast failure — a11y tools
+     read the blended colour, and at 40% through the fade the label really is
+     unreadable. So neither element fades: the standard rate is masked and slides
+     into view at full colour, and the badge springs in with a visibility step.
+     Same motion to the eye, no partial-opacity text at any instant. */
   .oldwrap {
-    min-height: 44px;
+    min-height: 48px;
     margin-bottom: 4px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
+    overflow: hidden;
   }
   .oldprice {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    opacity: 0;
-    transform: translate3d(0, 16px, 0);
-    transition:
-      opacity 0.5s ease 0.95s,
-      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.95s;
+  }
+  /* Both starting states are scoped to .js, the same as the scroll reveals — if
+     the script never runs, the box renders complete rather than missing its
+     standard rate and its badge. */
+  :global(.js) .oldprice {
+    transform: translate3d(0, 115%, 0);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.95s;
   }
   .oldlabel {
     font-family: var(--display);
@@ -315,7 +332,9 @@ const faqs = [
     display: inline-block;
     font-variant-numeric: tabular-nums;
   }
-  /* Strikethrough draws left to right once the number has landed. */
+  /* Strikethrough draws left to right once the number has landed. Drawn by
+     default and wound back only under .js, so the no-script box still shows a
+     struck standard rate rather than two live prices. */
   .oldnum::after {
     content: '';
     position: absolute;
@@ -325,12 +344,14 @@ const faqs = [
     height: 2px;
     background: rgba(255, 107, 107, 0.85);
     border-radius: 2px;
-    transform: scaleX(0);
+    transform: scaleX(1);
     transform-origin: left center;
+  }
+  :global(.js) .oldnum::after {
+    transform: scaleX(0);
     transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1) 1.45s;
   }
   .pricebox.go .oldprice {
-    opacity: 1;
     transform: translate3d(0, 0, 0);
   }
   .pricebox.go .oldnum::after {
@@ -344,9 +365,12 @@ const faqs = [
     line-height: 1;
     letter-spacing: -0.045em;
     font-variant-numeric: tabular-nums;
+    color: var(--gold);
+    margin: 0;
+  }
+  :global(.js) .now {
     color: var(--muted-dark);
     transition: color 0.7s ease;
-    margin: 0;
   }
   .pricebox.go .now {
     color: var(--gold);
@@ -376,14 +400,19 @@ const faqs = [
     padding: 6px 13px;
     border-radius: 999px;
     margin-top: 16px;
-    opacity: 0;
+  }
+  /* visibility is discrete: 0s duration with the same delay flips it at the
+     START of the spring rather than the end, so it appears and scales as one
+     movement. */
+  :global(.js) .badge {
+    visibility: hidden;
     transform: scale(0.9);
     transition:
-      opacity 0.45s ease 1.7s,
-      transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 1.7s;
+      transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 1.7s,
+      visibility 0s linear 1.7s;
   }
   .pricebox.go .badge {
-    opacity: 1;
+    visibility: visible;
     transform: scale(1);
   }
 
