@@ -52,7 +52,7 @@ export const site = {
    * If it is missing or fails to load, the whole section hides itself rather
    * than showing a dead player.
    */
-  demoAudio: '/audio/sam-demo.mp3',
+  demoAudio: '/audio/demo-call.mp3',
 } as const;
 
 /**

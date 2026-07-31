@@ -115,11 +115,11 @@ const reasons = [
     </div>
   </section>
 
-  {/* 3 — Sam answers */}
+  {/* 3 — The line answers */}
   <section class="card dark">
     <div class="rise">
       <p class="eyebrow">What changes</p>
-      <h2>Sam picks up. Every time.</h2>
+      <h2>You pick up. Every time.</h2>
       <p class="sub">
         Your business name, your hours, your services. First ring, every hour of every day.
       </p>
@@ -130,15 +130,33 @@ const reasons = [
     <div class="stage rise">
       <div class="phone">
         <div class="notch"></div>
+        {/*
+          The assistant is not given a name anywhere. Callers hear the client's
+          business, so the mock is labelled that way rather than introducing a
+          persona the product does not actually use.
+        */}
         <div class="callrow">
-          <div class="avatar" aria-hidden="true">S</div>
+          <div class="avatar" aria-hidden="true">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" />
+            </svg>
+          </div>
           <div>
-            <div class="callname">Sam</div>
+            <div class="callname">Your Business</div>
             <div class="callsub">On the line · 0:11</div>
           </div>
         </div>
         <div class="bubble">
-          <div class="who">Sam</div>
+          <div class="who">Your business</div>
           Happy to get you on the schedule. Does a morning or an afternoon work better for you?
         </div>
         <div class="bubble gold">
@@ -187,7 +205,7 @@ const reasons = [
       <p class="eyebrow">The one everyone asks about</p>
       <h2>Anything urgent still reaches a person.</h2>
       <p class="sub">
-        Sam knows what it can&rsquo;t handle. Those calls go straight to your cell with the details
+        It knows what it can&rsquo;t handle. Those calls go straight to your cell with the details
         texted ahead. If anything ever breaks, calls forward to you automatically. It never
         dead-ends.
       </p>
@@ -202,7 +220,7 @@ const reasons = [
           <div class="avatar" aria-hidden="true">!</div>
           <div>
             <div class="callname">Incoming, transferred</div>
-            <div class="callsub">From Sam · 11:20 PM</div>
+            <div class="callsub">From your line · 11:20 PM</div>
           </div>
         </div>
         <div class="bubble">
@@ -310,7 +328,7 @@ const reasons = [
     <div class="rise">
       <p class="eyebrow">Built for</p>
       <h2>If your phone is how people hire you.</h2>
-      <p class="sub">Every trade answers the phone differently. Sam gets set up for yours.</p>
+      <p class="sub">Every trade answers the phone differently. It gets set up for yours.</p>
     </div>
     <div class="stage rise">
       <div class="chips stagger">
