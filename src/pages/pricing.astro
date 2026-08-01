@@ -60,9 +60,14 @@ const faqs = [
     <div class="stage rise">
       <div class="pricebox" id="pricebox" data-from={pricing.standard} data-to={pricing.current}>
         {/*
-          The struck figure is the CURRENT standard rate with a current offer
-          against it — not a historical price. It is labelled as such, and the
-          label is the reason this isn't read as "was $349".
+          The struck figure is the CURRENT standard rate with an offer against
+          it — not a historical price. It is labelled as such, and that label is
+          the reason this does not read as "was $399".
+
+          "Limited time only" only stays truthful if the rate genuinely rises.
+          An offer that never ends, against a list price nobody is ever charged,
+          is what the FTC treats as deceptive pricing. Set a real date to move
+          it, or change this badge back to "Current rate".
         */}
         <div class="oldwrap">
           <div class="oldprice">
@@ -79,7 +84,7 @@ const faqs = [
             >/mo</span
           >
         </p>
-        <p class="badge">Current rate</p>
+        <p class="badge">Limited time only</p>
         <p class="lock-note">Whatever rate you start at is the rate you keep, in writing.</p>
         <p class="setup">
           <b>${pricing.setup} one-time setup.</b> Covers building it around your business.

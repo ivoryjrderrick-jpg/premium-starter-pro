@@ -112,8 +112,8 @@ export const availability = {
  * The struck-through figure must be labelled as the standard rate.
  */
 export const pricing = {
-  standard: 349,
-  current: 199,
+  standard: 399,
+  current: 249,
   setup: 299,
   currency: 'USD',
 } as const;

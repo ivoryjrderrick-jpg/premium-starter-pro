@@ -96,7 +96,7 @@ a price anywhere else.**
 | Legal page shell | `src/layouts/Legal.astro` |
 | Security headers + caching | `vercel.json` (**config, not code — port it if you leave Vercel**) |
 
-**Current values:** `$349` standard / `$199` current / `$299` setup ·
+**Current values:** `$399` standard / `$249` current / `$299` setup ·
 `+18773799412` → `(877) 379-9412` · `contact@rockymountainbooking.com` ·
 `@rockymountainbooking`
 
