@@ -44,8 +44,8 @@ const reasons = [
 ---
 
 <Base title={title} description={description} path="/" ping>
-  {/* 1 — Hero: the missed-call stack */}
-  <section class="card dark">
+  {/* 1 — Hero: the missed-call stack. `hero-split` goes two-column at 1000px. */}
+  <section class="card dark hero-split">
     <div class="rise">
       <p class="eyebrow">Yesterday</p>
       <h1>Four people tried to hire you.</h1>
@@ -346,8 +346,8 @@ const reasons = [
     </div>
   </section>
 
-  {/* 9 — Founder */}
-  <section class="card dark">
+  {/* 9 — Founder. `founder-split` puts the portrait beside the bio at 1000px. */}
+  <section class="card dark founder-split">
     <div class="rise">
       <img
         class="portrait-img"
@@ -426,6 +426,16 @@ const reasons = [
   .research-head {
     margin-top: 38px;
     margin-bottom: 18px;
+  }
+
+  /* ---- Desktop: the bio sits beside the portrait, so it gets its own measure
+     rather than the centred one. Grid itself is in styles/desktop.css. ---- */
+  @media (min-width: 1000px) {
+    .bio {
+      margin-left: 0;
+      margin-right: 0;
+      max-width: 52ch;
+    }
   }
 </style>
 

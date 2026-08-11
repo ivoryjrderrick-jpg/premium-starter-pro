@@ -6,7 +6,18 @@ interface Props {
   ping?: boolean;
 }
 const { ping = false } = Astro.props;
-const path = Astro.url.pathname;
+
+/**
+ * Current page, trailing slash removed.
+ *
+ * Astro builds /pricing to /pricing/index.html and reports the pathname as
+ * "/pricing/", while `nav` stores hrefs without the slash. Comparing them raw
+ * meant only the homepage ever got aria-current, so every other page rendered
+ * an unmarked nav — invisible on desktop, and no "you are here" for a screen
+ * reader either.
+ */
+const path = Astro.url.pathname.replace(/(.)\/$/, '$1');
+const isCurrent = (href: string) => path === href;
 ---
 
 <nav class="nav">
@@ -20,6 +31,23 @@ const path = Astro.url.pathname;
       class="brand-mark"
     />
   </a>
+
+  {/*
+    Always in the DOM, hidden below 1000px in desktop.css. Rendering them for
+    everyone keeps one set of nav markup and one source of truth (`nav` in
+    config), rather than a second copy that drifts from the overlay menu.
+  */}
+  <ul class="nav-links">
+    {
+      nav.map((item) => (
+        <li>
+          <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
 
   <div class="nav-right">
     <a
@@ -74,7 +102,7 @@ const path = Astro.url.pathname;
       {
         nav.map((item) => (
           <li>
-            <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
               {item.label}
             </a>
           </li>
@@ -112,6 +140,41 @@ const path = Astro.url.pathname;
     outline: 2px solid var(--gold);
     outline-offset: 4px;
   }
+  /* Hidden by default and switched on at 1000px in desktop.css. Kept in the
+     DOM at every width so there is one set of nav markup, not two. */
+  .nav-links {
+    display: none;
+    list-style: none;
+    align-items: center;
+    gap: 30px;
+    margin: 0 auto;
+  }
+  .nav-links a {
+    font-family: var(--display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--muted-dark);
+    text-decoration: none;
+    padding: 8px 2px;
+    border-bottom: 2px solid transparent;
+    transition:
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+  .nav-links a:hover {
+    color: var(--white);
+  }
+  /* The page you are on, marked with aria-current and shown, not just implied. */
+  .nav-links a[aria-current='page'] {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .nav-links a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
   .nav-right {
     display: flex;
     align-items: center;
@@ -316,6 +379,26 @@ const path = Astro.url.pathname;
     .menu-cta,
     .bars span {
       transition: none;
+    }
+  }
+
+  /* ---- Desktop nav (partner rules live in styles/desktop.css) --------------
+     The hamburger is a phone pattern. On a wide screen the links belong on the
+     bar: one click instead of two, and visible without having to ask. */
+  @media (min-width: 1000px) {
+    .nav {
+      padding: 14px 40px;
+    }
+    .nav-links {
+      display: flex;
+    }
+    .burger {
+      display: none;
+    }
+    /* Belt and braces: the overlay cannot be opened at this width, but a resize
+       while it is showing must not leave it covering the page. */
+    .menu {
+      display: none;
     }
   }
 </style>

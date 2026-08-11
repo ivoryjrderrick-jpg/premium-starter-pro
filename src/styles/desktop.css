@@ -1,0 +1,186 @@
+/* ============================================================================
+   DESKTOP LAYOUT
+
+   The site is authored mobile-first from the approved phone concepts. Every
+   rule that makes it a desktop layout lives in this one file, so there is a
+   single place to look when the wide view needs changing — and so the phone
+   view can never be broken by a desktop edit.
+
+   This is one site, not two. Same HTML, same URL, same content; the layout
+   reflows above a breakpoint. Two separate builds would double the work, drift
+   apart within a month, and split the SEO across duplicate pages.
+
+   Breakpoints:
+     720px  tablet and up   — list blocks go two-up, blocks widen
+     1000px desktop         — real nav bar, split hero, split founder, 4-up grids
+
+   Loaded last, so where a rule ties on specificity with global.css or
+   blocks.css this file wins.
+
+   SCOPE: this file styles GLOBAL classes only — the ones declared in
+   global.css and blocks.css. Classes declared inside a component's own <style>
+   block are compiled by Astro to `.foo[data-astro-cid-x]`, which outranks a
+   plain `.foo` here regardless of load order, so their desktop rules live in
+   the component beside the mobile ones. Those components are:
+     Nav.astro      desktop nav bar, hamburger hidden
+     Footer.astro   footer as a row
+     pricing.astro  price box, math box, two-up included list, FAQ measure
+     Booking.astro  wider booking card
+     index.astro    founder bio measure
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- 720px ---- */
+@media (min-width: 720px) {
+  /* Give every section a real measure. Without this the copy keeps the phone's
+     column width on a 27-inch monitor and the headline runs the full 1440px. */
+  .card > * {
+    max-width: 1120px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  h1,
+  h2 {
+    font-size: clamp(2.5rem, 4.6vw, 3.9rem);
+  }
+  .sub {
+    max-width: 46ch;
+  }
+
+  /* Blocks that were sized for a 390px screen. */
+  .lock {
+    width: 340px;
+  }
+  .reasons {
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 34px;
+  }
+  .duo {
+    max-width: 560px;
+  }
+  .chips {
+    max-width: 620px;
+  }
+  .phone {
+    width: 268px;
+  }
+  .cal {
+    width: 340px;
+  }
+
+}
+
+/* --------------------------------------------------------------- 1000px ---- */
+@media (min-width: 1000px) {
+  .card {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  /* ---- Split hero --------------------------------------------------------
+     Copy left, the missed-call stack right. Centred text on a 1440px screen
+     reads as a phone page that was stretched; a split reads as designed for
+     the screen it is on. */
+  .hero-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    column-gap: 72px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+    padding-bottom: 98px;
+  }
+  .hero-split > * {
+    max-width: none;
+  }
+  .hero-split .sub {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 34ch;
+  }
+  .hero-split .links {
+    justify-content: flex-start;
+  }
+  .hero-split .stage {
+    padding-bottom: 0;
+  }
+  .hero-split .lock {
+    margin-right: 0;
+    width: 100%;
+    max-width: 400px;
+  }
+  .hero-split .lock-note-under {
+    text-align: center;
+  }
+
+  /* ---- Split founder -----------------------------------------------------
+     Portrait beside the bio instead of a small circle floating above a long
+     centred paragraph.
+
+     The rows are declared explicitly and every child is placed by hand. Left to
+     auto-placement, `grid-row: 1 / -1` on the portrait resolves -1 against the
+     single implicit row that exists at that point rather than against the four
+     rows the text actually needs, so the image spans one row, the headline
+     escapes into the full width and the block falls apart. */
+  .founder-split .rise {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    column-gap: 56px;
+    align-content: center;
+    text-align: left;
+    max-width: 900px;
+  }
+  .founder-split .portrait-img {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    align-self: center;
+    width: 260px;
+    height: 260px;
+    margin: 0;
+  }
+  .founder-split .eyebrow {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .founder-split h2 {
+    grid-column: 2;
+    grid-row: 2;
+    /* Narrower column than a full-width heading, so it steps down a size. */
+    font-size: clamp(1.9rem, 2.7vw, 2.5rem);
+  }
+  .founder-split .bio {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  .founder-split .cta-pair {
+    grid-column: 2;
+    grid-row: 4;
+    align-items: flex-start;
+    margin-top: 4px;
+  }
+
+  /* ---- Four-up where four things belong side by side ---- */
+  .reasons {
+    max-width: 1120px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 28px;
+  }
+  .chips {
+    max-width: 760px;
+  }
+
+}
+
+/* --------------------------------------------------------------- 1320px ---- */
+@media (min-width: 1320px) {
+  .hero-split {
+    column-gap: 110px;
+  }
+  .reasons {
+    gap: 0 40px;
+  }
+}

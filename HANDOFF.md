@@ -87,6 +87,7 @@ a price anywhere else.**
 | --- | --- |
 | Phone, email, city, service area, socials, prices, trades, nav | `src/config/site.ts` |
 | Design tokens, reset, typography, reveal system | `src/styles/global.css` (`:root`) |
+| **Desktop layout** | `src/styles/desktop.css` (global classes only — see below) |
 | Reusable blocks (phone mock, meters, chips, portrait) | `src/styles/blocks.css` |
 | The three animations | `src/scripts/motion.ts` |
 | **When DJ is free** | `availability` in `src/config/site.ts` |
@@ -99,6 +100,10 @@ a price anywhere else.**
 **Current values:** `$399` standard / `$249` current / `$299` setup ·
 `+18773799412` → `(877) 379-9412` · `contact@rockymountainbooking.com` ·
 `@rockymountainbooking`
+
+**Two views, one site.** Mobile-first CSS with desktop layouts above 720px and
+1000px — same HTML, same URL, same content. There is no separate desktop build
+and there should never be one.
 
 **Pages:** `/` `/pricing` `/how-it-works` `/who-we-serve` `/contact`
 `/privacy` `/terms` `/sms-terms` `/sitemap.xml` (generated from files that exist)
@@ -186,7 +191,20 @@ Every one of these was a real bug. Don't rediscover them.
     mirror-image form diverges on the second pass and shifts every result by a
     whole UTC offset — a 9:00 AM slot rendered as 3:00 PM. `booking.ts` has the
     round-trip cases; re-run them if you touch it.
-12. **Never leave `playwright` or `sharp` in `package.json`.** Install for a
+12. **Desktop rules for a component-scoped class must live in that component.**
+    Astro compiles `.foo` inside a component's `<style>` to `.foo[data-astro-cid-x]`,
+    which outranks a plain `.foo` in a global sheet no matter the load order.
+    `desktop.css` therefore covers global classes only; `Nav`, `Footer`,
+    `Booking`, `pricing.astro` and `index.astro` carry their own `@media`
+    blocks. The header of `desktop.css` lists them.
+13. **`grid-row: 1 / -1` needs explicit rows.** With auto-placement, `-1`
+    resolves against the rows that exist at that moment, not the ones the
+    content will need. The founder portrait spanned one row and the whole block
+    collapsed. Declare `grid-template-rows` and place every child by hand.
+14. **`Astro.url.pathname` has a trailing slash.** It is `/pricing/` while
+    `nav` stores `/pricing`, so a raw `===` marked only the homepage as current.
+    `Nav.astro` strips it before comparing.
+15. **Never leave `playwright` or `sharp` in `package.json`.** Install for a
    task, uninstall after, then `git checkout -- package-lock.json`.
 
 ---

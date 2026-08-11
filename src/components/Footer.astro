@@ -122,4 +122,27 @@ import { site } from '../config/site';
        3.18:1. --muted-dark is the on-dark pair and clears AA. */
     color: var(--muted-dark);
   }
+
+  /* ---- Desktop footer (see styles/desktop.css) ---- */
+  @media (min-width: 1000px) {
+    .foot {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px 40px;
+      text-align: left;
+      padding: 40px max(40px, calc((100% - 1120px) / 2)) 52px;
+    }
+    .foot-biz,
+    .foot-social,
+    .foot-links {
+      margin-bottom: 0;
+    }
+    .foot-copy {
+      flex-basis: 100%;
+      padding-top: 20px;
+      border-top: 1px solid var(--line-dark);
+    }
+  }
 </style>

@@ -710,6 +710,30 @@ const faqs = [
       animation: none;
     }
   }
+
+  /* ---- Desktop (see styles/desktop.css) ---- */
+  @media (min-width: 720px) {
+    .pricebox,
+    .mathbox,
+    .guar {
+      max-width: 460px;
+    }
+    .incl {
+      max-width: 760px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 40px;
+    }
+    /* Each row draws its own top rule and only the true last child draws a
+       bottom one. In two columns the left column ends one item early, so that
+       item needs a bottom rule too or the grid looks torn off. */
+    .incl .inc:nth-last-child(2) {
+      border-bottom: 1px solid var(--line-light);
+    }
+    .faq {
+      max-width: 680px;
+    }
+  }
 </style>
 
 <script>
