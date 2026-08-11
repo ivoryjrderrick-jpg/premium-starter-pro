@@ -1,0 +1,882 @@
+---
+import { site, availability } from '../config/site';
+
+/**
+ * Three-step booking: pick a date, pick a time, leave details.
+ *
+ * WHAT THIS IS, AND WHAT IT DELIBERATELY IS NOT
+ *
+ * There is no server behind this site, so there is no live calendar and no lock
+ * on a slot. Two people can pick the same time and neither will be told. That
+ * is why every piece of copy here says REQUEST rather than booked, and why the
+ * confirmation says DJ will come back to confirm. Do not reword it into "your
+ * call is booked" — the first double-booking would make the site a liar.
+ *
+ * Availability lives in `availability` in config/site.ts. Nothing here is
+ * hardcoded; the calendar, the slot list and the greyed-out dates all derive
+ * from the same function, so an enabled date can never have nothing behind it.
+ *
+ * The upgrade path, if real scheduling is ever wanted: swap steps 1 and 2 for a
+ * Cal.com embed. That means relaxing frame-src, script-src and connect-src in
+ * vercel.json to a third party, and letting that third party see every visitor.
+ * It buys genuine availability and double-booking prevention. It is a real
+ * trade, not an obvious win — see SECURITY.md before doing it.
+ */
+const CONSENT_TEXT =
+  'I agree to receive text messages from Rocky Mountain Booking about my inquiry. Message and data rates may apply. Reply STOP to opt out, HELP for help.';
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+---
+
+<div
+  class="bk"
+  id="booking"
+  data-tz={availability.timezone}
+  data-tz-label={availability.timezoneLabel}
+  data-duration={availability.durationMins}
+  data-lead={availability.leadTimeHours}
+  data-horizon={availability.horizonDays}
+  data-slots={JSON.stringify(availability.slots)}
+  data-blackouts={JSON.stringify(availability.blackouts)}
+>
+  <div class="bk-head">
+    <button type="button" class="bk-back" id="bk-back" hidden aria-label="Go back a step">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </button>
+    <div class="bk-meta">
+      <p class="bk-dur">{availability.durationMins} min &middot; on the phone</p>
+      <p class="bk-sum" id="bk-sum">Pick a day that works</p>
+    </div>
+  </div>
+
+  {/* Height is animated on this wrapper; the steps inside are absolutely
+      positioned so they can cross over each other without jumping. */}
+  <div class="bk-view" id="bk-view">
+    {/* ---------- STEP 1 — the month ---------- */}
+    <section class="bk-step is-active" id="bk-step-1" aria-label="Choose a date">
+      <div class="bk-month">
+        <button type="button" class="bk-nav" id="bk-prev" aria-label="Previous month">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6"></path>
+          </svg>
+        </button>
+        <p class="bk-mname" id="bk-mname" aria-live="polite">&nbsp;</p>
+        <button type="button" class="bk-nav" id="bk-next" aria-label="Next month">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18l6-6-6-6"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="bk-dow" aria-hidden="true">
+        {WEEKDAYS.map((d) => <span>{d}</span>)}
+      </div>
+      {/*
+        Deliberately NOT role="grid". That role contracts to contain role="row"
+        elements holding role="gridcell" children, and declaring it without that
+        structure is worse than no role at all — it promises a shape assistive
+        tech then cannot find. These are ordinary buttons, which are already
+        announced and operable; the group just needs a name.
+      */}
+      <div class="bk-grid" id="bk-grid" role="group" aria-label="Available dates"></div>
+
+      <p class="bk-tz" id="bk-tz"></p>
+    </section>
+
+    {/* ---------- STEP 2 — the times ---------- */}
+    <section class="bk-step" id="bk-step-2" aria-label="Choose a time" hidden>
+      <p class="bk-daylabel" id="bk-daylabel"></p>
+      <div class="bk-times" id="bk-times"></div>
+      <p class="bk-tz" id="bk-tz2"></p>
+    </section>
+
+    {/* ---------- STEP 3 — details ---------- */}
+    <section class="bk-step" id="bk-step-3" aria-label="Your details" hidden>
+      <div class="bk-chosen" id="bk-chosen"></div>
+
+      {/*
+        No method and no action: there is no endpoint. Submission is handled in
+        script and handed to the visitor's mail client.
+      */}
+      <form class="bk-form" id="booking-form" novalidate={false}>
+        <div class="field">
+          <label for="bk-name">Your name</label>
+          <input id="bk-name" name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="bk-business">Business name</label>
+          <input id="bk-business" name="business" type="text" autocomplete="organization" required />
+        </div>
+        <div class="field">
+          <label for="bk-phone">Phone</label>
+          <input id="bk-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
+        </div>
+
+        {/*
+          Two boxes on purpose. The first gates submit and covers being
+          contacted about the request itself. The second is SMS consent, which
+          stays optional and never blocks submission — making messaging consent
+          a condition of service is the thing the TCPA and carriers prohibit.
+        */}
+        <div class="consent">
+          <input id="bk-agree" name="agree" type="checkbox" value="yes" required />
+          <label for="bk-agree">
+            I agree to Rocky Mountain Booking contacting me about this request, and to the{' '}
+            <a href="/privacy">Privacy Policy</a>.
+          </label>
+        </div>
+        <div class="consent">
+          <input id="bk-sms" name="sms_consent" type="checkbox" value="yes" />
+          <label for="bk-sms">
+            <span class="optional">Optional.</span> {CONSENT_TEXT}
+          </label>
+        </div>
+
+        <div class="hp" aria-hidden="true">
+          <label for="bk-url">Leave this empty</label>
+          <input id="bk-url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <button class="btn bk-submit" type="submit" id="bk-submit" disabled>
+          Request this time
+        </button>
+        <p class="bk-note" id="bk-status" role="status" aria-live="polite"></p>
+        <p class="bk-fine">
+          I&rsquo;ll confirm by text or email, usually the same day. Ticking the SMS box is optional
+          and is not required. See our <a href="/sms-terms">SMS Terms</a>.
+        </p>
+
+        <noscript>
+          <p class="bk-fine">
+            Booking needs JavaScript. Call <a href={site.phone.href}>{site.phone.display}</a> or
+            email <a href={`mailto:${site.email}`}>{site.email}</a> instead.
+          </p>
+        </noscript>
+      </form>
+    </section>
+  </div>
+</div>
+
+<style>
+  .bk {
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--night-2);
+    border: 1px solid var(--line-dark);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: left;
+  }
+
+  .bk-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .bk-back {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--line-dark);
+    background: transparent;
+    color: var(--gold);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    /* Slides in from the left rather than appearing, so the header does not
+       jump when the flow moves past step one. */
+    transition:
+      opacity 0.28s ease,
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .bk-back[hidden] {
+    display: none;
+  }
+  .bk-back.is-in {
+    opacity: 0;
+    transform: translate3d(-8px, 0, 0);
+  }
+  .bk-back:hover {
+    border-color: var(--gold);
+  }
+  .bk-back:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .bk-meta {
+    min-width: 0;
+  }
+  .bk-dur {
+    font-family: var(--display);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .bk-sum {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--white);
+    margin-top: 2px;
+  }
+
+  /* ---- The animated stage ---------------------------------------------
+     Height transitions on the wrapper while the steps slide across it. Steps
+     are absolutely positioned so the outgoing and incoming panels overlap
+     instead of stacking and shoving the page around mid-transition. */
+  .bk-view {
+    position: relative;
+    overflow: hidden;
+    transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .bk-step {
+    padding-top: 16px;
+  }
+  /* Only under .js — with no script the first step is the only one rendered
+     and it should sit in normal flow at full opacity. */
+  :global(.js) .bk-step {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    /* visibility keeps inactive panels out of the accessibility tree and out of
+       the tab order, and being discrete it must get its own 0s timing or it
+       flips at the END of the transition. */
+    visibility: hidden;
+    transform: translate3d(var(--bk-x, 28px), 0, 0);
+    transition:
+      opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.42s;
+  }
+  :global(.js) .bk-step.is-active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(0, 0, 0);
+    transition:
+      opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
+      transform 0.46s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
+      visibility 0s linear 0s;
+  }
+  .bk-step[hidden] {
+    display: none;
+  }
+
+  /* ---- Month ---- */
+  .bk-month {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .bk-nav {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line-dark);
+    background: transparent;
+    color: var(--white);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition:
+      border-color 0.18s ease,
+      color 0.18s ease;
+  }
+  .bk-nav:hover:not(:disabled) {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .bk-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .bk-nav:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .bk-mname {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--white);
+  }
+
+  .bk-dow,
+  .bk-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .bk-dow span {
+    text-align: center;
+    font-family: var(--display);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    padding-bottom: 6px;
+  }
+  .bk :global(.bk-day) {
+    aspect-ratio: 1;
+    min-height: 40px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted-dark);
+    font: inherit;
+    font-size: 0.88rem;
+    font-variant-numeric: tabular-nums;
+    display: grid;
+    place-items: center;
+    cursor: not-allowed;
+  }
+  .bk :global(.bk-day.is-open) {
+    color: var(--white);
+    font-family: var(--display);
+    font-weight: 600;
+    background: rgba(245, 184, 74, 0.1);
+    border-color: rgba(245, 184, 74, 0.28);
+    cursor: pointer;
+    transition:
+      background 0.18s ease,
+      border-color 0.18s ease,
+      transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .bk :global(.bk-day.is-open:hover) {
+    background: rgba(245, 184, 74, 0.2);
+    border-color: var(--gold);
+    transform: scale(1.06);
+  }
+  .bk :global(.bk-day.is-selected) {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+  .bk :global(.bk-day:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .bk :global(.bk-day.is-blank) {
+    visibility: hidden;
+  }
+
+  .bk-tz {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line-dark);
+    font-size: 0.76rem;
+    color: var(--muted-dark);
+    line-height: 1.5;
+  }
+
+  /* ---- Times ---- */
+  .bk-daylabel {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .bk-times {
+    display: grid;
+    gap: 8px;
+  }
+  .bk :global(.bk-slot) {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 12px;
+    border: 1px solid rgba(245, 184, 74, 0.34);
+    background: rgba(245, 184, 74, 0.07);
+    color: var(--gold);
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.98rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition:
+      background 0.18s ease,
+      border-color 0.18s ease,
+      transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .bk :global(.bk-slot:hover) {
+    background: rgba(245, 184, 74, 0.16);
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
+  .bk :global(.bk-slot:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .bk :global(.bk-slot .alt) {
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--muted-dark);
+  }
+  .bk :global(.bk-none) {
+    font-size: 0.9rem;
+    color: var(--muted-dark);
+  }
+
+  /* ---- Details ---- */
+  .bk-chosen {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(245, 184, 74, 0.09);
+    border: 1px solid rgba(245, 184, 74, 0.3);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--white);
+    line-height: 1.4;
+  }
+  .bk :global(.bk-chosen .alt) {
+    display: block;
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 0.78rem;
+    color: var(--muted-dark);
+    margin-top: 2px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+  .field label {
+    display: block;
+    font-family: var(--display);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line-dark);
+    background: var(--night-3);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 1rem;
+  }
+  .field input:focus-visible,
+  .consent input:focus-visible,
+  .bk-submit:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .consent {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--night-3);
+    border: 1px solid var(--line-dark);
+    border-radius: 12px;
+    padding: 13px;
+    margin: 14px 0;
+  }
+  .consent input {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    accent-color: var(--gold);
+  }
+  .consent label {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--muted-dark);
+  }
+  .consent label a {
+    color: var(--gold);
+  }
+  .optional {
+    font-family: var(--display);
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .bk-submit {
+    width: 100%;
+    margin-top: 4px;
+  }
+  .bk-submit:disabled {
+    background: var(--night-3);
+    color: var(--muted-light);
+    cursor: not-allowed;
+  }
+  .bk-note {
+    font-size: 0.86rem;
+    color: var(--muted-dark);
+    margin-top: 12px;
+    min-height: 1.2em;
+    text-align: center;
+  }
+  .bk-fine {
+    font-size: 0.78rem;
+    color: var(--muted-dark);
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+  .bk-fine a {
+    color: var(--gold);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bk-view,
+    :global(.js) .bk-step,
+    :global(.js) .bk-step.is-active,
+    .bk :global(.bk-day),
+    .bk :global(.bk-slot),
+    .bk-back {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import {
+    slotsForDate,
+    dateIsOpen,
+    monthGrid,
+    dayLabel,
+    visitorZone,
+    zoneAbbr,
+    isoDateIn,
+    type AvailabilityConfig,
+    type SlotView,
+  } from '../scripts/booking';
+
+  const root = document.getElementById('booking');
+  if (root) {
+    const cfg: AvailabilityConfig = {
+      timezone: root.dataset.tz!,
+      durationMins: Number(root.dataset.duration),
+      leadTimeHours: Number(root.dataset.lead),
+      horizonDays: Number(root.dataset.horizon),
+      slots: JSON.parse(root.dataset.slots!),
+      blackouts: JSON.parse(root.dataset.blackouts!),
+    };
+    const hostLabel = root.dataset.tzLabel!;
+    const localTz = visitorZone(cfg.timezone);
+    const sameZone = localTz === cfg.timezone;
+
+    const view = document.getElementById('bk-view')!;
+    const steps = [
+      document.getElementById('bk-step-1')!,
+      document.getElementById('bk-step-2')!,
+      document.getElementById('bk-step-3')!,
+    ];
+    const backBtn = document.getElementById('bk-back') as HTMLButtonElement;
+    const summary = document.getElementById('bk-sum')!;
+    const grid = document.getElementById('bk-grid')!;
+    const mname = document.getElementById('bk-mname')!;
+    const prev = document.getElementById('bk-prev') as HTMLButtonElement;
+    const next = document.getElementById('bk-next') as HTMLButtonElement;
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+
+    let current = 0;
+    let selectedDate: string | null = null;
+    let selectedSlot: SlotView | null = null;
+
+    const now = new Date();
+    const todayIso = isoDateIn(now, cfg.timezone);
+    let cursor = new Date(Date.UTC(Number(todayIso.slice(0, 4)), Number(todayIso.slice(5, 7)) - 1, 1));
+    const lastMonth = new Date(now.getTime() + cfg.horizonDays * 86400_000);
+    /** Set below to the first month that actually has an opening. */
+    let firstMonth = cursor;
+
+    /* ---- Step transitions ------------------------------------------------
+       Height is measured off the incoming panel and set on the wrapper, so the
+       card grows or shrinks with the same curve the panels slide on instead of
+       snapping when the swap finishes. */
+    function goTo(index: number) {
+      if (index === current) return;
+      const forward = index > current;
+      const outgoing = steps[current];
+      const incoming = steps[index];
+
+      incoming.hidden = false;
+      // Enter from the side the flow is travelling from.
+      incoming.style.setProperty('--bk-x', forward ? '28px' : '-28px');
+      outgoing.style.setProperty('--bk-x', forward ? '-28px' : '28px');
+
+      // Lock the current height before the swap so there is something to animate from.
+      view.style.height = `${outgoing.offsetHeight}px`;
+      // Force layout so the browser registers the start height.
+      void view.offsetHeight;
+
+      outgoing.classList.remove('is-active');
+      incoming.classList.add('is-active');
+
+      view.style.height = `${incoming.offsetHeight}px`;
+
+      const settle = () => {
+        outgoing.hidden = true;
+        // Release the fixed height so the panel can grow (validation text, etc).
+        view.style.height = '';
+      };
+      if (reduce) settle();
+      else window.setTimeout(settle, 470);
+
+      current = index;
+      updateHeader();
+    }
+
+    function updateHeader() {
+      const show = current > 0;
+      if (show) {
+        backBtn.hidden = false;
+        backBtn.classList.add('is-in');
+        // Next frame, so the transition has a start state to run from.
+        requestAnimationFrame(() => backBtn.classList.remove('is-in'));
+      } else {
+        backBtn.hidden = true;
+      }
+      // Step 2 prints the day in full inside the panel, so the header stays
+      // generic rather than saying the same thing twice on one screen.
+      if (current === 0) summary.textContent = 'Pick a day that works';
+      else if (current === 1) {
+        summary.textContent = 'Choose a time';
+      } else if (current === 2 && selectedSlot) {
+        summary.textContent = `${dayLabel(selectedSlot.at, cfg.timezone)}, ${selectedSlot.hostLabel}`;
+      }
+    }
+
+    backBtn.addEventListener('click', () => goTo(Math.max(0, current - 1)));
+
+    /* ---- Step 1: the month ---- */
+    function renderMonth() {
+      const y = cursor.getUTCFullYear();
+      const mi = cursor.getUTCMonth();
+      mname.textContent = new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }).format(cursor);
+
+      grid.innerHTML = '';
+      for (const iso of monthGrid(y, mi)) {
+        if (!iso) {
+          const blank = document.createElement('span');
+          blank.className = 'bk-day is-blank';
+          grid.appendChild(blank);
+          continue;
+        }
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bk-day';
+        btn.textContent = String(Number(iso.slice(8, 10)));
+
+        const open = slotsForDate(iso, cfg, localTz, now);
+        if (open.length > 0) {
+          btn.classList.add('is-open');
+          // Spoken as "Monday, August 3, 6 times available", not as a raw
+          // ISO string, which a screen reader reads out digit by digit.
+          btn.setAttribute(
+            'aria-label',
+            `${dayLabel(open[0].at, cfg.timezone)}, ${open.length} time${open.length === 1 ? '' : 's'} available`,
+          );
+          if (iso === selectedDate) btn.classList.add('is-selected');
+          btn.addEventListener('click', () => {
+            selectedDate = iso;
+            renderTimes(iso);
+            goTo(1);
+          });
+        } else {
+          btn.disabled = true;
+          btn.setAttribute('aria-label', `${Number(iso.slice(8, 10))}, unavailable`);
+        }
+        grid.appendChild(btn);
+      }
+
+      prev.disabled = y === firstMonth.getUTCFullYear() && mi === firstMonth.getUTCMonth();
+      next.disabled =
+        y > lastMonth.getUTCFullYear() ||
+        (y === lastMonth.getUTCFullYear() && mi >= lastMonth.getUTCMonth());
+    }
+
+    /** Does this month contain any bookable date at all? */
+    function monthHasOpening(d: Date): boolean {
+      return monthGrid(d.getUTCFullYear(), d.getUTCMonth()).some(
+        (iso) => iso !== null && dateIsOpen(iso, cfg, localTz, now),
+      );
+    }
+
+    prev.addEventListener('click', () => {
+      cursor = new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() - 1, 1));
+      renderMonth();
+    });
+    next.addEventListener('click', () => {
+      cursor = new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() + 1, 1));
+      renderMonth();
+    });
+
+    /* ---- Step 2: the times ---- */
+    const timesWrap = document.getElementById('bk-times')!;
+    const dayLabelEl = document.getElementById('bk-daylabel')!;
+
+    function renderTimes(iso: string) {
+      const slots = slotsForDate(iso, cfg, localTz, now);
+      dayLabelEl.textContent = slots[0] ? dayLabel(slots[0].at, cfg.timezone) : iso;
+      timesWrap.innerHTML = '';
+
+      if (slots.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'bk-none';
+        p.textContent = 'Nothing left on this day. Try another.';
+        timesWrap.appendChild(p);
+        return;
+      }
+
+      for (const slot of slots) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bk-slot';
+        btn.append(document.createTextNode(slot.hostLabel));
+        if (slot.localLabel) {
+          const alt = document.createElement('span');
+          alt.className = 'alt';
+          alt.textContent = `(${slot.localLabel} your time)`;
+          btn.appendChild(alt);
+        }
+        btn.addEventListener('click', () => {
+          selectedSlot = slot;
+          renderChosen();
+          goTo(2);
+        });
+        timesWrap.appendChild(btn);
+      }
+    }
+
+    /* ---- Step 3: details ---- */
+    const chosen = document.getElementById('bk-chosen')!;
+    function renderChosen() {
+      if (!selectedSlot) return;
+      chosen.textContent = '';
+      const main = document.createElement('span');
+      main.textContent = `${dayLabel(selectedSlot.at, cfg.timezone)} at ${selectedSlot.hostLabel} ${zoneAbbr(selectedSlot.at, cfg.timezone)}`;
+      if (selectedSlot.localLabel) {
+        const alt = document.createElement('span');
+        alt.className = 'alt';
+        alt.textContent = `${selectedSlot.localLabel} ${zoneAbbr(selectedSlot.at, localTz)} where you are`;
+        main.appendChild(alt);
+      }
+      chosen.appendChild(main);
+    }
+
+    /* ---- Timezone footnotes ---- */
+    const tzNote = sameZone
+      ? `All times ${hostLabel}.`
+      : `Times shown in ${hostLabel}, with your local time beside them.`;
+    document.getElementById('bk-tz')!.textContent = tzNote;
+    document.getElementById('bk-tz2')!.textContent = tzNote;
+
+    /* ---- Submission ---- */
+    const form = document.getElementById('booking-form') as HTMLFormElement;
+    const agree = document.getElementById('bk-agree') as HTMLInputElement;
+    const submit = document.getElementById('bk-submit') as HTMLButtonElement;
+    const status = document.getElementById('bk-status')!;
+
+    // Compiled in rather than read back out of a hidden input, so the consent
+    // record is generated by our code and not by the submitter. See contact.astro.
+    const CONSENT_LANGUAGE =
+      'I agree to receive text messages from Rocky Mountain Booking about my inquiry. Message and data rates may apply. Reply STOP to opt out, HELP for help.';
+
+    agree.addEventListener('change', () => {
+      submit.disabled = !agree.checked;
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+
+      if (data.get('company_url')) {
+        status.textContent = 'Thanks, I’ll be in touch.';
+        form.reset();
+        return;
+      }
+      if (!selectedSlot) {
+        status.textContent = 'Pick a time first.';
+        return;
+      }
+
+      const recordedAt = new Date().toISOString();
+      const lines = [
+        `REQUESTED: ${dayLabel(selectedSlot.at, cfg.timezone)} at ${selectedSlot.hostLabel} ${zoneAbbr(selectedSlot.at, cfg.timezone)}`,
+        `In their zone: ${selectedSlot.localLabel ?? selectedSlot.hostLabel} (${localTz})`,
+        `UTC: ${selectedSlot.at.toISOString()}`,
+        `Duration: ${cfg.durationMins} min`,
+        '',
+        `Name: ${data.get('name') ?? ''}`,
+        `Business: ${data.get('business') ?? ''}`,
+        `Phone: ${data.get('phone') ?? ''}`,
+        '',
+        `SMS consent: ${data.get('sms_consent') ? 'YES' : 'no'}`,
+        `Consent recorded: ${recordedAt}`,
+        `Consent language shown: ${CONSENT_LANGUAGE}`,
+      ].join('\n');
+
+      const subject = `Call request: ${data.get('business') || data.get('name') || 'New'} — ${dayLabel(selectedSlot.at, cfg.timezone)} ${selectedSlot.hostLabel}`;
+      window.location.href = `mailto:contact@rockymountainbooking.com?subject=${encodeURIComponent(
+        subject,
+      )}&body=${encodeURIComponent(lines)}`;
+      status.textContent = 'Opening your email app…';
+    });
+
+    /* Open on the first month that has something in it.
+
+       Landing on the current month is wrong near the end of a month: on the
+       31st every remaining slot is behind the lead time, so the visitor gets a
+       grid of dead dates and has to guess that "next" is the way out. Skip
+       forward to where the openings actually are, and pin the back limit there
+       so they cannot page into empty months behind it either. */
+    while (!monthHasOpening(cursor)) {
+      const step = new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() + 1, 1));
+      if (
+        step.getUTCFullYear() > lastMonth.getUTCFullYear() ||
+        (step.getUTCFullYear() === lastMonth.getUTCFullYear() &&
+          step.getUTCMonth() > lastMonth.getUTCMonth())
+      ) {
+        break;
+      }
+      cursor = step;
+    }
+    firstMonth = cursor;
+
+    renderMonth();
+    view.style.height = '';
+  }
+</script>

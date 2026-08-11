@@ -1,0 +1,225 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site, pricing } from '../config/site';
+
+/**
+ * ⚠️ Have this reviewed by a Colorado attorney before publishing.
+ *
+ * Section 3 must stay word-for-word consistent with the cancellation copy on
+ * /pricing. There is deliberately NO refund, money-back, or guarantee language
+ * anywhere: the offer is a genuine month-to-month trial, and the setup fee is
+ * one-time and non-refundable once the work has been done.
+ */
+const updated = 'July 31, 2026';
+---
+
+<Legal
+  title="Terms of Service | Rocky Mountain Booking"
+  description="The terms governing AI phone answering and appointment booking provided by Rocky Mountain Booking, LLC. Month to month, thirty days' notice, no early termination fee."
+  path="/terms"
+  heading="Terms of Service"
+  updated={updated}
+  intro={`These terms govern the service ${site.legalName} ("we", "us") provides to you ("Client"). By purchasing or using the service you agree to them.`}
+>
+  <h2>1. The service</h2>
+  <p>Depending on what has been set up for you, the service includes:</p>
+  <ul>
+    <li>Answering inbound calls to a number you designate, 24 hours a day</li>
+    <li>Answering common questions using information you supply</li>
+    <li>Booking appointments to a calendar you designate</li>
+    <li>Sending SMS appointment confirmations and reminders</li>
+    <li>Sending review request messages after completed appointments (Review Bot)</li>
+    <li>Transferring calls identified as urgent to a number you designate</li>
+    <li>Forwarding calls to your phone automatically if the system is unavailable</li>
+    <li>Setup, configuration, and ongoing support</li>
+  </ul>
+  <p>
+    SMS features become active on completion of carrier registration, which may happen after the
+    service otherwise goes live.
+  </p>
+
+  <h2>2. Setup</h2>
+  <p>
+    A one-time setup fee of ${pricing.setup} is charged before configuration begins. Setup usually
+    takes about a week from the initial call and needs your reasonable cooperation: business
+    details, call handling preferences, calendar access, and availability for a review call. The
+    setup fee covers work performed and is <strong>not refundable</strong> once configuration has
+    begun.
+  </p>
+
+  <h2>3. Term, billing, and cancellation</h2>
+  <p>
+    <strong>The service is month to month from day one.</strong> There is no long-term contract and
+    no minimum term. Monthly fees are billed in advance from the date the service goes live.
+  </p>
+  <p>
+    <strong>
+      Except as set out under &ldquo;Initial thirty days&rdquo; below, either party may cancel at
+      any time with thirty (30) days&rsquo; written notice, for any reason or none.
+    </strong>{' '}
+    Notice may be sent by email to the address at the end of these terms. There is{' '}
+    <strong>no early termination fee</strong>. After the initial period described below, service
+    continues through the end of the notice period and that final month is payable. Fees already
+    paid are not returned, and the setup fee is not refundable.
+  </p>
+
+  <h3>Initial thirty days</h3>
+  <p>
+    Cancellation during the first thirty (30) days following go-live is effective on written notice,
+    and <strong>no further monthly fees are due</strong>. The thirty (30) day notice requirement
+    above applies after that initial period. Setup fees remain non-refundable in all cases.
+  </p>
+  <p>
+    <strong>You keep every appointment the service booked for you.</strong> Appointment and contact
+    records belong to you, and on cancellation we will export them and release any number we hold on
+    your behalf within seven (7) days of your request.
+  </p>
+  <p>
+    <strong>The rate you start at is the rate you keep.</strong> Your monthly rate does not change
+    for as long as your service runs continuously. If we raise prices for new clients, that does not
+    affect you. Current rate is ${pricing.current} per month against a standard rate of ${
+      pricing.standard
+    } per month.
+  </p>
+  <p>
+    We may suspend the service if fees are more than 10 days overdue, after notice and a reasonable
+    chance to pay.
+  </p>
+
+  <h2>4. Your responsibilities</h2>
+  <ul>
+    <li>Giving us accurate information about your business, services, hours and pricing</li>
+    <li>Telling us what counts as an urgent call for you</li>
+    <li>Maintaining your own phone service, calendar, and any accounts we connect to</li>
+    <li>Reviewing booked appointments and responding to transferred urgent calls</li>
+  </ul>
+
+  <h3>Consent for contacts you supply</h3>
+  <p>
+    <strong>
+      You are solely responsible for obtaining and maintaining any legally required consent from
+      people whose contact details you provide to us.
+    </strong>{' '}
+    That includes consent required under the Telephone Consumer Protection Act, state messaging
+    laws, and carrier rules. You confirm you have that consent, that you will honour opt-out
+    requests promptly, and you indemnify us against claims arising from a failure to do so.
+  </p>
+
+  <h2>5. Reviews</h2>
+  <p>
+    Review requests are sent to every customer after a completed appointment, with no screening and
+    nothing offered in exchange. We will not configure the service to filter by sentiment, to route
+    dissatisfied customers away from a public review, or to incentivise reviews, because those
+    practices breach Google&rsquo;s policies and the FTC Consumer Review Rule.
+  </p>
+  <p>
+    We do not control what customers write, whether they write at all, or what any review platform
+    does with a review. We make no representation about the number, rating, or content of reviews
+    you will receive.
+  </p>
+
+  <h2>6. Acceptable use</h2>
+  <p>
+    The service may not be used for unlawful, deceptive or harassing purposes, for unsolicited
+    marketing or robocalling, or in any way that breaches carrier rules or messaging regulations. We
+    may suspend or terminate immediately for a breach of this section.
+  </p>
+
+  <h2>7. Availability</h2>
+  <p>
+    We will use <strong>commercially reasonable efforts</strong> to keep the service running and to
+    respond promptly to problems you report. The service depends on third-party telephony,
+    messaging, calendar and hosting providers as well as your own phone and internet service.
+  </p>
+  <p>
+    <strong>We do not offer a guaranteed uptime percentage or a service level agreement.</strong> If
+    the system is unavailable, calls forward to the phone number you designated.
+  </p>
+
+  <h2>8. No guarantee of outcomes</h2>
+  <p>
+    <strong>We do not guarantee any particular business result.</strong> We make no representation
+    about calls answered, appointments booked, jobs won, revenue, or reviews received. Any figures
+    or examples shown on our website or discussed on a call are illustrative only.
+  </p>
+  <p>
+    The service uses automated systems that interpret natural speech. It will not handle every call
+    perfectly. It may misunderstand a caller, misjudge urgency, or fail to book correctly. You
+    accept this as inherent to the service and agree to keep your own oversight of your operations,
+    including for emergencies and safety-related matters.
+  </p>
+
+  <h2>9. Disclaimer of warranties</h2>
+  <p>
+    Except as expressly stated here, the service is provided &ldquo;as is&rdquo; and &ldquo;as
+    available&rdquo;, without warranties of any kind, express, implied or statutory, including
+    implied warranties of merchantability, fitness for a particular purpose, and non-infringement.
+  </p>
+
+  <h2>10. Limitation of liability</h2>
+  <p>
+    <strong>
+      Our total aggregate liability arising out of or relating to the service will not exceed the
+      total fees you actually paid us in the three (3) months immediately before the event giving
+      rise to the claim.
+    </strong>
+  </p>
+  <p>
+    We are not liable for indirect, incidental, special, consequential, exemplary or punitive
+    damages, or for lost profits, revenue, business, data, or missed opportunities, even if advised
+    of the possibility.
+  </p>
+  <p>
+    Nothing here limits liability that cannot lawfully be limited, including for fraud, wilful
+    misconduct, or gross negligence.
+  </p>
+
+  <h2>11. Confidentiality and data</h2>
+  <p>
+    Each party will protect the other&rsquo;s non-public business information with reasonable care.
+    We retain ownership of the systems, configurations, prompts and tooling used to deliver the
+    service. You retain ownership of your business information, customer data, call records and
+    appointment data. Our handling of personal information is described in our{' '}
+    <a href="/privacy">Privacy Policy</a>, which forms part of these terms.
+  </p>
+
+  <h2>12. Termination for breach</h2>
+  <p>
+    Either party may terminate immediately if the other materially breaches these terms and does not
+    cure within 15 days of written notice. On termination we disable the service and you should
+    redirect your number. Fees accrued up to termination remain payable.
+  </p>
+
+  <h2>13. Changes to these terms</h2>
+  <p>
+    We may update these terms. Material changes take effect 30 days after we post or notify them.
+    Continuing to use the service after that means you accept the revised terms; if you do not, you
+    may cancel under section 3.
+  </p>
+
+  <h2>14. Governing law</h2>
+  <p>
+    These terms are governed by the laws of the State of Colorado, without regard to conflict of
+    laws rules. The parties submit to the exclusive jurisdiction of the state and federal courts in
+    El Paso County, Colorado, and agree to attempt to resolve any dispute in good faith first.
+  </p>
+
+  <h2>15. Website content and accessibility</h2>
+  <p>
+    Information on this website, including pricing and comparisons, is general information and may
+    change. Figures used in examples are illustrative and are not quotes. Nothing on this site is an
+    offer capable of acceptance until confirmed in writing.
+  </p>
+  <p>
+    We aim to keep this site usable with a keyboard, with a screen reader, and at increased zoom,
+    and we work toward WCAG 2.1 AA. If you have difficulty using any part of it, contact us and we
+    will help directly and work to fix it.
+  </p>
+
+  <h2>16. General</h2>
+  <p>
+    If any provision is unenforceable the rest remain in effect. Failure to enforce a provision is
+    not a waiver. You may not assign these terms without our written consent. These terms, with the
+    Privacy Policy, SMS Terms and any written order, are the entire agreement about the service.
+  </p>
+</Legal>

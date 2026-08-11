@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import Booking from '../components/Booking.astro';
+import { site } from '../config/site';
+
+const title = 'Book a Call | Rocky Mountain Booking';
+const description = `Book a call with DJ at ${site.legalName}, ${site.city}, ${site.state}. Leave your name, business and number and he'll call you back the same day.`;
+
+---
+
+<Base title={title} description={description} path="/contact">
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">Book a call</p>
+      <h1>Book a call with me.</h1>
+      <p class="sub">
+        Pick a time that suits you and leave three details. I&rsquo;ll call you myself, and
+        we&rsquo;ll talk through what your phone is actually doing.
+      </p>
+      <div class="links">
+        <a class="link" href={site.phone.href}>
+          Call {site.phone.display} <span class="chev">›</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="stage rise">
+      <Booking />
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">Or just call</p>
+      <h2>You&rsquo;ll get me.</h2>
+      <p class="sub">
+        {site.legalName} · {site.city}, {site.state}
+      </p>
+      <div class="links">
+        <a class="link" href={site.phone.href}>{site.phone.display} <span class="chev">›</span></a>
+        <a class="link" href={`mailto:${site.email}`}>{site.email} <span class="chev">›</span></a>
+      </div>
+    </div>
+    <div class="stage"></div>
+  </section>
+</Base>
+
+<script>
+  // Required: the page's sections start at opacity 0 under `.js` and are
+  // revealed by the observer in here. Deleting this import renders /contact
+  // completely blank — it has happened twice now.
+  import '../scripts/motion';
+</script>

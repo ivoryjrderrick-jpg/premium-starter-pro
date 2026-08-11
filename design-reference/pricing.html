@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Rocky Mountain Booking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0D1220;--night-2:#141B2B;--night-3:#1C2537;
+    --snow:#F7F8FA;--white:#FFFFFF;--ink:#0D1220;
+    --muted-dark:#8A94AA;--muted-light:#5C6577;
+    --gold:#F5B84A;--gold-deep:#C9902A;--alert:#FF6B6B;
+    --line-dark:rgba(255,255,255,.10);--line-light:rgba(13,18,32,.10);
+    --display:'Archivo',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:var(--body);background:var(--night);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+
+  .nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(13,18,32,.82);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid var(--line-dark)}
+  .nav-right{display:flex;align-items:center;gap:18px}
+  .icon-btn{display:grid;place-items:center;width:36px;height:36px;border:0;background:none;cursor:pointer;color:#fff;border-radius:8px}
+  .icon-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .phone-btn{color:var(--gold)}
+
+  .card{padding:74px 22px 0;text-align:center;overflow:hidden}
+  .card.dark{background:var(--night);color:#fff}
+  .card.light{background:var(--snow);color:var(--ink)}
+  .card + .card{margin-top:10px}
+  .stage{padding-bottom:74px}
+
+  .eyebrow{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .card.light .eyebrow{color:var(--gold-deep)}
+  h2{font-family:var(--display);font-size:clamp(1.9rem,7.8vw,3rem);font-weight:700;line-height:1.06;letter-spacing:-.025em;margin-bottom:14px}
+  .sub{font-size:1.0625rem;max-width:33ch;margin:0 auto 22px;color:var(--muted-light)}
+  .card.dark .sub{color:var(--muted-dark)}
+  .btn{display:inline-block;background:var(--gold);color:#0D1220;font-family:var(--display);font-weight:600;font-size:1.0625rem;padding:15px 30px;border-radius:999px;text-decoration:none;border:0;cursor:pointer}
+  .btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+  /* ---- animated price ---- */
+  .pricebox{max-width:400px;margin:0 auto;background:var(--night-2);border:1px solid var(--line-dark);border-radius:22px;padding:30px 24px;text-align:center}
+
+  .oldwrap{height:26px;margin-bottom:4px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+  .oldprice{
+    font-family:var(--display);font-weight:600;font-size:1.4rem;
+    color:var(--muted-dark);position:relative;display:inline-block;
+    opacity:0;transform:translateY(16px);
+    transition:opacity .5s ease .95s, transform .6s cubic-bezier(.22,1,.36,1) .95s;
+  }
+  .oldprice::after{
+    content:'';position:absolute;left:-4px;right:-4px;top:52%;height:2px;
+    background:rgba(255,107,107,.85);border-radius:2px;
+    transform:scaleX(0);transform-origin:left center;
+    transition:transform .5s cubic-bezier(.65,0,.35,1) 1.45s;
+  }
+  .pricebox.go .oldprice{opacity:1;transform:translateY(0)}
+  .pricebox.go .oldprice::after{transform:scaleX(1)}
+
+  .now{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(3.4rem,17vw,4.6rem);line-height:1;letter-spacing:-.045em;
+    font-variant-numeric:tabular-nums;color:var(--muted-dark);
+    transition:color .7s ease;
+  }
+  .pricebox.go .now{color:var(--gold)}
+  .now .per{font-size:.26em;color:var(--muted-dark);letter-spacing:0;margin-left:.15em;vertical-align:.5em}
+
+  .badge{
+    display:inline-block;font-family:var(--display);font-size:.7rem;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase;color:#0D1220;background:var(--gold);
+    padding:6px 13px;border-radius:999px;margin-top:16px;
+    opacity:0;transform:scale(.9);
+    transition:opacity .45s ease 1.7s, transform .45s cubic-bezier(.34,1.56,.64,1) 1.7s;
+  }
+  .pricebox.go .badge{opacity:1;transform:scale(1)}
+
+  .lock-note{font-size:.86rem;color:var(--muted-dark);max-width:31ch;margin:12px auto 0}
+  .setup{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-dark);font-size:.9rem;color:var(--muted-dark)}
+  .setup b{color:#fff;font-family:var(--display)}
+
+  .incl{max-width:400px;margin:0 auto;text-align:left}
+  .inc{display:flex;gap:13px;padding:13px 0;border-top:1px solid var(--line-light)}
+  .inc:last-child{border-bottom:1px solid var(--line-light)}
+  .tick{width:20px;height:20px;border-radius:50%;background:rgba(201,144,42,.16);display:grid;place-items:center;flex-shrink:0;margin-top:2px;color:var(--gold-deep)}
+  .inc b{font-family:var(--display);font-size:.98rem;display:block;margin-bottom:1px}
+  .inc span{font-size:.86rem;color:var(--muted-light)}
+
+  .mathbox{max-width:400px;margin:0 auto;background:var(--white);border:1px solid var(--line-light);border-radius:18px;padding:24px 20px;text-align:left}
+  .mrow{display:flex;justify-content:space-between;gap:14px;padding:11px 0;font-size:.94rem;border-bottom:1px solid var(--line-light)}
+  .mrow:last-child{border-bottom:0;padding-top:15px;margin-top:4px;border-top:2px solid var(--ink);font-family:var(--display);font-weight:700;font-size:1.05rem}
+  .mrow .v{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+  .mrow.win .v{color:var(--gold-deep)}
+
+  .guar{max-width:400px;margin:0 auto;border:2px solid var(--gold);border-radius:18px;padding:26px 22px;background:rgba(245,184,74,.06)}
+  .guar h3{font-family:var(--display);font-size:1.3rem;font-weight:700;margin-bottom:9px}
+  .guar p{font-size:.95rem;color:var(--muted-dark)}
+
+  .faq{max-width:440px;margin:0 auto;text-align:left}
+  details{border-top:1px solid var(--line-light);padding:16px 0}
+  details:last-of-type{border-bottom:1px solid var(--line-light)}
+  summary{font-family:var(--display);font-weight:600;font-size:1rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'+';font-size:1.4rem;line-height:1;color:var(--gold-deep);flex-shrink:0}
+  details[open] summary::after{content:'–'}
+  details p{font-size:.92rem;color:var(--muted-light);margin-top:10px}
+
+  .foot{background:var(--night);color:var(--muted-dark);padding:44px 22px 60px;text-align:center;font-size:.8rem;border-top:1px solid var(--line-dark)}
+  .foot a{color:var(--muted-dark)}
+
+  .rise{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .rise.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .rise{opacity:1;transform:none;transition:none}
+    .oldprice,.oldprice::after,.badge,.now{transition:none}
+  }
+  @media(min-width:700px){.card{padding-top:98px}.stage{padding-bottom:98px}.sub{font-size:1.15rem;max-width:42ch}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#" aria-label="Rocky Mountain Booking home" style="display:flex">
+    <svg width="30" height="20" viewBox="0 0 30 20" fill="none" aria-hidden="true"><path d="M1 19L9 5l5 8 3-4.5L21 19H1z" fill="#F5B84A"/><path d="M16 19l6-11 7 11H16z" fill="#F5B84A" opacity=".55"/></svg>
+  </a>
+  <div class="nav-right">
+    <a class="icon-btn phone-btn" href="tel:+17195550100" aria-label="Call the demo line">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </a>
+    <button class="icon-btn" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
+  </div>
+</nav>
+
+<section class="card dark">
+  <div class="rise">
+    <p class="eyebrow">Pricing</p>
+    <h2>One plan. One price.</h2>
+    <p class="sub">No tiers, no per-minute billing, no long-term contract.</p>
+  </div>
+  <div class="stage rise">
+    <div class="pricebox" id="pricebox">
+      <div class="oldwrap"><div class="oldprice">$299/mo</div></div>
+      <div class="now"><span id="priceNum">299</span><span class="per">/mo</span></div>
+      <div class="badge">Current rate</div>
+      <p class="lock-note">Whatever rate you start at is the rate you keep, in writing.</p>
+      <div class="setup"><b>$299 one-time setup</b> — covers building it around your business.</div>
+    </div>
+  </div>
+</section>
+
+<section class="card light">
+  <div class="rise">
+    <p class="eyebrow">What's included</p>
+    <h2>All of it. There's no upgrade.</h2>
+  </div>
+  <div class="stage rise">
+    <div class="incl">
+      <div class="inc"><div class="tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Answering, day and night</b><span>Every hour of every day, including holidays.</span></div></div>
+      <div class="inc"><div class="tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Booked straight to your calendar</b><span>Name, number, address, and what they need.</span></div></div>
+      <div class="inc"><div class="tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Review Bot</b><span>Texts every customer for a review a few hours after the job.</span></div></div>
+      <div class="inc"><div class="tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Urgent calls transferred to you</b><span>With the details texted ahead so you're not starting cold.</span></div></div>
+      <div class="inc"><div class="tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Automatic forwarding if anything breaks</b><span>Calls roll to your cell. It never dead-ends.</span></div></div>
+      <div class="inc"><div class="tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>A local number, set up for you</b><span>You do nothing. I build it around how your shop actually runs.</span></div></div>
+      <div class="inc"><div class="tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>A person in Colorado Springs to call</b><span>When something's off, you get me. Not a ticket.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="card light">
+  <div class="rise">
+    <p class="eyebrow">The only math that matters</p>
+    <h2>One job covers the month.</h2>
+    <p class="sub">Use your own numbers. If the answer isn't obvious, don't buy it.</p>
+  </div>
+  <div class="stage rise">
+    <div class="mathbox">
+      <div class="mrow"><span>Calls you miss in a week</span><span class="v">4</span></div>
+      <div class="mrow"><span>Of those, how many would've booked</span><span class="v">1 in 4</span></div>
+      <div class="mrow"><span>Your average job</span><span class="v">$400</span></div>
+      <div class="mrow"><span>Recovered in a month</span><span class="v">$1,600</span></div>
+      <div class="mrow win"><span>Cost</span><span class="v">$149</span></div>
+    </div>
+    <p class="sub" style="margin-top:22px;margin-bottom:0;font-size:.86rem">Those are placeholder numbers. On a call I'll run yours.</p>
+  </div>
+</section>
+
+<section class="card dark">
+  <div class="rise">
+    <p class="eyebrow">How to start</p>
+    <h2>Try it for thirty days.</h2>
+  </div>
+  <div class="stage rise">
+    <div class="guar">
+      <h3>Run it a month and see what it catches.</h3>
+      <p>Month to month from day one. Thirty days' notice to cancel, any time, no reason needed and no early termination fee. You keep every job it books.</p>
+    </div>
+  </div>
+</section>
+
+<section class="card light">
+  <div class="rise">
+    <p class="eyebrow">Straight answers</p>
+    <h2>What people ask.</h2>
+  </div>
+  <div class="stage rise">
+    <div class="faq">
+      <details><summary>I don't want a robot talking to my customers.</summary><p>Fair. Don't take my word for it — call the line and hear it. Then ask yourself which one you'd rather your customer got: that, or your voicemail.</p></details>
+      <details><summary>My wife handles the phone.</summary><p>Good, and she should keep doing it. This covers the hours she isn't working — nights, weekends, and the times she's already on the other line.</p></details>
+      <details><summary>What if it botches something urgent?</summary><p>Urgent calls don't get booked. They transfer straight to your cell with the details texted to you first. And if the system ever fails, calls forward to your phone automatically.</p></details>
+      <details><summary>Does Review Bot only ask happy customers?</summary><p>No. Every customer gets the same message. Filtering out the unhappy ones violates Google's policies and is the fastest way to get a profile flagged.</p></details>
+      <details><summary>Is there a contract?</summary><p>Month to month. Thirty days' notice either direction. The rate you start at is the rate you keep, and that part is in writing.</p></details>
+      <details><summary>How long until it's running?</summary><p>About a week from the day you say go. You spend maybe thirty minutes on it total.</p></details>
+      <details><summary>Why is it cheaper than the other guys?</summary><p>Because I'm one person in Colorado Springs with almost no overhead, and because you're early. The rate goes up once I've got case studies.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="card dark">
+  <div class="rise">
+    <h2>Hear it before you decide.</h2>
+    <p class="sub">Call the line and book yourself an appointment. Takes two minutes.</p>
+    <a class="btn" href="tel:+17195550100">Call (719) 555-0100</a>
+  </div>
+  <div class="stage"></div>
+</section>
+
+<footer class="foot">Rocky Mountain Booking · Colorado Springs, CO<br><a href="tel:+17195550100">(719) 555-0100</a></footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FROM = 299, TO = 149;
+  var box = document.getElementById('pricebox');
+  var num = document.getElementById('priceNum');
+
+  function easeOutCubic(t){return 1-Math.pow(1-t,3)}
+
+  function runPrice(){
+    if(reduce){ num.textContent = TO; box.classList.add('go'); return }
+    var dur = 1100, start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/dur,1);
+      num.textContent = Math.round(FROM - easeOutCubic(p)*(FROM-TO));
+      if(p<1){requestAnimationFrame(step)}
+      else{ num.textContent = TO; box.classList.add('go') }
+    }
+    requestAnimationFrame(step);
+  }
+
+  var rises = document.querySelectorAll('.rise');
+  if(!('IntersectionObserver' in window)){
+    rises.forEach(function(e){e.classList.add('in')});
+    runPrice();
+    return;
+  }
+  var riseIO = new IntersectionObserver(function(en){
+    en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');riseIO.unobserve(e.target)}})
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  rises.forEach(function(e){riseIO.observe(e)});
+
+  var priceIO = new IntersectionObserver(function(en){
+    en.forEach(function(e){if(e.isIntersecting){setTimeout(runPrice,350);priceIO.unobserve(e.target)}})
+  },{threshold:.5});
+  priceIO.observe(box);
+})();
+</script>
+</body>
+</html>

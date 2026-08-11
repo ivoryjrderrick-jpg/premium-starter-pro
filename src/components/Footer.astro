@@ -1,0 +1,125 @@
+---
+import { site } from '../config/site';
+---
+
+<!--
+  Twilio 30445 (business info unverifiable) needs the business name, service
+  area, and business phone reachable on the site. They live here so they appear
+  on every page, and must match the Twilio registration exactly.
+-->
+<footer class="foot">
+  <p class="foot-biz">
+    <strong>{site.legalName}</strong><br />
+    {site.city}, {site.state}<br />
+    <a href={site.phone.href}>{site.phone.display}</a><br />
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+  </p>
+
+  {/*
+    rel="me" marks this as a profile belonging to the same entity, which pairs
+    with the sameAs entry in the LocalBusiness block. noopener/noreferrer
+    because it opens in a new tab and the destination has no business knowing
+    which page it was opened from.
+  */}
+  <p class="foot-social">
+    <a
+      class="ig"
+      href={site.social.instagram.url}
+      rel="me noopener noreferrer"
+      target="_blank"
+    >
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="2" y="2" width="20" height="20" rx="5.5"></rect>
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"></circle>
+      </svg>
+      {site.social.instagram.handle}
+    </a>
+  </p>
+
+  <nav class="foot-links" aria-label="Legal">
+    <a href="/privacy">Privacy Policy</a>
+    <a href="/terms">Terms of Service</a>
+    <a href="/sms-terms">SMS Terms</a>
+  </nav>
+
+  <p class="foot-copy">
+    &copy; {new Date().getFullYear()} {site.legalName}. {site.serviceAreaLabel}
+  </p>
+</footer>
+
+<style>
+  .foot {
+    background: var(--night);
+    color: var(--muted-dark);
+    padding: 44px 22px 60px;
+    text-align: center;
+    font-size: 0.8rem;
+    border-top: 1px solid var(--line-dark);
+  }
+  .foot-biz {
+    line-height: 1.9;
+    margin-bottom: 22px;
+  }
+  .foot-biz strong {
+    font-family: var(--display);
+    font-weight: 600;
+    color: var(--white);
+    font-size: 0.9rem;
+  }
+  .foot a {
+    color: var(--muted-dark);
+    word-break: break-word;
+  }
+  .foot a:hover {
+    color: var(--gold);
+  }
+  .foot a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .foot-social {
+    margin-bottom: 20px;
+  }
+  .ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.84rem;
+    color: var(--muted-dark);
+    /* 44px tall so it clears the touch-target minimum on its own. */
+    padding: 11px 16px;
+    border: 1px solid var(--line-dark);
+    border-radius: 999px;
+  }
+  .ig:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .foot-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .foot-copy {
+    /* --muted-light is the on-light token; on the dark footer it only reaches
+       3.18:1. --muted-dark is the on-dark pair and clears AA. */
+    color: var(--muted-dark);
+  }
+</style>

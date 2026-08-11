@@ -18,3 +18,15 @@ pnpm-debug.log*
 # misc
 .DS_Store
 *.zip
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Astro
+dist/
+.astro/
+
+# env files (this project uses none, but never commit one if that changes)
+.env
+.env.*
+!.env.example

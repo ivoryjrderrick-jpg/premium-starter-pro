@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, trades } from '../config/site';
+
+const title = 'Who We Serve | Rocky Mountain Booking';
+const description = `Built for ${site.city} service businesses that run on inbound calls. Trades, shops, and anyone whose phone is how people hire them.`;
+---
+
+<Base title={title} description={description} path="/who-we-serve">
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">Who we serve</p>
+      <h1>If your phone is how people hire you.</h1>
+      <p class="sub">
+        Every trade answers the phone differently. It gets set up for the way yours does.
+      </p>
+      <div class="links">
+        <a class="link" href={site.phone.href}>Test a call <span class="chev">›</span></a>
+        <a class="link" href="/contact">Book a call <span class="chev">›</span></a>
+      </div>
+    </div>
+    <div class="stage rise">
+      <div class="chips stagger">
+        {trades.map((t) => <span class="chip">{t}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">What they have in common</p>
+      <h2>Not the trade. The phone.</h2>
+      <p class="sub">
+        The list above is who calls me. What actually matters is whether these are true for you.
+      </p>
+    </div>
+    <div class="stage rise">
+      <div class="reasons stagger">
+        <div class="reason">
+          <div class="r-mark">01</div>
+          <div class="r-body">
+            <b>A missed call is a lost job</b>
+            <span>
+              Not a lost enquiry to follow up next week. A job that went to whoever picked up
+              instead.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">02</div>
+          <div class="r-body">
+            <b>You can&rsquo;t answer while you&rsquo;re working</b>
+            <span>
+              Hands full, under something, on a roof, with a customer. The phone rings anyway.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">03</div>
+          <div class="r-body">
+            <b>Some calls genuinely can&rsquo;t wait</b>
+            <span>
+              There is a real difference between someone booking a service and someone with water
+              coming through a ceiling, and it has to be handled differently.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">04</div>
+          <div class="r-body">
+            <b>The work is scheduled, not sold on the call</b>
+            <span>
+              You need an appointment on a calendar with an address, not a long sales conversation.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card light">
+    <div class="rise">
+      <p class="eyebrow">Who it isn&rsquo;t for</p>
+      <h2>It won&rsquo;t suit everybody.</h2>
+    </div>
+    <div class="stage rise">
+      <div class="reasons stagger">
+        <div class="reason">
+          <div class="r-mark">01</div>
+          <div class="r-body">
+            <b>Businesses that close a sale on the phone</b>
+            <span>
+              If the call itself is the pitch and the price is negotiated live, you want a person,
+              not this.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">02</div>
+          <div class="r-body">
+            <b>Anyone wanting outbound calling</b>
+            <span>
+              It answers your phone. It does not cold call, chase old leads, or run campaigns.
+            </span>
+          </div>
+        </div>
+        <div class="reason">
+          <div class="r-mark">03</div>
+          <div class="r-body">
+            <b>Medical and dental practices</b>
+            <span>
+              Patient information carries obligations I am not set up to take on yet, so I don&rsquo;t
+              take that work.
+            </span>
+          </div>
+        </div>
+      </div>
+      <p class="fineprint">
+        Not sure which side of that you fall on? Call and ask. I&rsquo;ll tell you straight if it
+        isn&rsquo;t a fit.
+      </p>
+    </div>
+  </section>
+
+  <section class="card dark">
+    <div class="rise">
+      <h2>Don&rsquo;t take my word for it.</h2>
+      <p class="sub">Test a call and book yourself an appointment. Takes two minutes.</p>
+      <div class="cta-pair">
+        <a class="btn" href={site.phone.href}>Test a call &middot; {site.phone.display}</a>
+        <a class="link" href="/contact">Or book a call with me <span class="chev">›</span></a>
+      </div>
+    </div>
+    <div class="stage"></div>
+  </section>
+</Base>
+
+<script>
+  import '../scripts/motion';
+</script>

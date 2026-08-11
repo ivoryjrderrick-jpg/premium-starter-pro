@@ -1,0 +1,84 @@
+---
+import { site } from '../config/site';
+---
+
+{/*
+  Mobile-only sticky call bar. Appears once the hero has scrolled past, so it
+  never competes with the hero CTAs. Fades in only — no slide, no bounce.
+*/}
+<div class="sticky-call" id="sticky-call" aria-hidden="true">
+  <a class="btn" href={site.phone.href} tabindex="-1">Call {site.phone.display}</a>
+</div>
+
+<style>
+  .sticky-call {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: rgba(13, 18, 32, 0.92);
+    backdrop-filter: saturate(180%) blur(18px);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    border-top: 1px solid var(--line-dark);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s linear 0.3s;
+  }
+  .sticky-call.show {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s;
+  }
+  .sticky-call .btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Desktop keeps the nav phone icon; the bar would be redundant. */
+  @media (min-width: 700px) {
+    .sticky-call {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-call {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.getElementById('sticky-call');
+  const link = bar?.querySelector('a');
+
+  if (bar && link && window.matchMedia('(max-width: 699px)').matches) {
+    const hero = document.querySelector('main > .card');
+
+    const setShown = (shown: boolean) => {
+      bar.classList.toggle('show', shown);
+      // Keep it out of the tab order and off the a11y tree while invisible.
+      bar.setAttribute('aria-hidden', shown ? 'false' : 'true');
+      link.setAttribute('tabindex', shown ? '0' : '-1');
+      // Reserve room so the bar never sits on top of the footer links.
+      document.body.style.paddingBottom = shown ? `${bar.offsetHeight}px` : '';
+    };
+
+    if (hero && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        ([entry]) => setShown(!entry.isIntersecting),
+        { threshold: 0 },
+      );
+      io.observe(hero);
+    } else {
+      setShown(true);
+    }
+  }
+</script>

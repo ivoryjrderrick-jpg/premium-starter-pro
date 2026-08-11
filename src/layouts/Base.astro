@@ -1,0 +1,135 @@
+---
+import '../styles/global.css';
+import '../styles/blocks.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import StickyCall from '../components/StickyCall.astro';
+import { site } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path only, e.g. "/pricing". Used for the canonical and og:url. */
+  path?: string;
+  ping?: boolean;
+}
+
+const { title, description, path = Astro.url.pathname, ping = false } = Astro.props;
+const canonical = new URL(path, site.url).href;
+
+/** Link-preview card. One image for the whole site; regenerate if the brand changes. */
+const ogImage = new URL('/og.png', site.url).href;
+const ogImageAlt = `${site.name}. Your phone, answered. Call ${site.phone.display}.`;
+
+/**
+ * LocalBusiness block. Carriers and search both read this; the name, phone and
+ * area must agree with the footer and with the Twilio registration.
+ */
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.legalName,
+  description:
+    'AI phone answering and appointment booking for service businesses. Based in Colorado Springs, serving clients nationwide.',
+  url: site.url,
+  telephone: site.phone.e164,
+  email: site.email,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.city,
+    addressRegion: site.state,
+    addressCountry: 'US',
+  },
+  areaServed: { '@type': 'Country', name: site.serviceArea },
+  /** Ties the Instagram profile to this business rather than a lookalike account. */
+  sameAs: [site.social.instagram.url],
+  priceRange: '$$',
+};
+
+/** Escaped so a value can never terminate the script element. */
+const jsonLd = JSON.stringify(localBusiness).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Stops iOS Safari turning any number that looks like a phone number into a
+      blue underlined tel: link. The illustration numbers in the call mockups
+      were being auto-linked and rendered as live, dialable links.
+    -->
+    <meta name="format-detection" content="telephone=no" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0D1220" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    {/*
+      Absolute URL, which Open Graph requires — a root-relative path is ignored
+      by every scraper. Shared from a preview deployment this still points at
+      the production domain, so the card only resolves once that domain is live.
+    */}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <meta name="geo.region" content="US-CO" />
+    <meta name="geo.placename" content={site.city} />
+
+    <!-- Preloaded because the display face paints the first heading. -->
+    <link
+      rel="preload"
+      href="/fonts/archivo-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-latin-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <script type="application/ld+json" set:html={jsonLd} />
+
+    <!--
+      Marks the document as scripted before first paint. The reveal animation
+      hides content at opacity 0 and relies on JS to reveal it, so without this
+      guard a script failure — or no JS at all — leaves the page blank. The
+      hidden state is scoped to .js in global.css, so unscripted visitors get
+      everything immediately.
+    -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Nav ping={ping} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <StickyCall />
+  </body>
+</html>

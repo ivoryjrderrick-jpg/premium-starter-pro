@@ -1,0 +1,379 @@
+/* ============================================================================
+   Design tokens — extracted from design-reference/*.html.
+   Every colour, face, and rule below comes from the approved concepts.
+   Components reference tokens only; no hardcoded hex anywhere else.
+   ========================================================================= */
+
+:root {
+  --night: #0d1220;
+  --night-2: #141b2b;
+  --night-3: #1c2537;
+
+  --snow: #f7f8fa;
+  --white: #ffffff;
+  --ink: #0d1220;
+
+  --muted-dark: #8a94aa;
+  --muted-light: #5c6577;
+
+  /* Gold is interactive-only: links, buttons, logo mark, active states, and
+     the two animated stat treatments. Never a decorative fill or gradient. */
+  --gold: #f5b84a;
+  --gold-deep: #c9902a;
+  --alert: #ff6b6b;
+
+  --line-dark: rgba(255, 255, 255, 0.1);
+  --line-light: rgba(13, 18, 32, 0.1);
+
+  --display: 'Archivo', system-ui, sans-serif;
+  --body: 'Inter', system-ui, sans-serif;
+}
+
+/* ---- Self-hosted faces. font-display:swap so text paints immediately. ---- */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/archivo-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/archivo-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/archivo-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-latin-600-normal.woff2') format('woff2');
+}
+
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Anchor jumps glide rather than snap. */
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--body);
+  background: var(--night);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Every number on the site lines up in columns. */
+.tnum,
+.m-time,
+.mrow .v,
+.amt,
+.now,
+.cal-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Skip link ---- */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 0 0 8px 0;
+}
+.skip:focus {
+  left: 0;
+}
+
+/* ============================================================================
+   Sections — full-bleed, alternating dark/light, 10px gap, centred, mobile-first
+   ========================================================================= */
+
+.card {
+  padding: 74px 22px 0;
+  text-align: center;
+  overflow: hidden;
+}
+.card.dark {
+  background: var(--night);
+  color: var(--white);
+}
+.card.light {
+  background: var(--snow);
+  color: var(--ink);
+}
+.card + .card {
+  margin-top: 10px;
+}
+.stage {
+  padding-bottom: 74px;
+}
+
+.eyebrow {
+  font-family: var(--display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.card.light .eyebrow {
+  color: var(--gold-deep);
+}
+
+h1,
+h2 {
+  font-family: var(--display);
+  font-size: clamp(2rem, 8.4vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 14px;
+}
+
+.sub {
+  font-size: 1.0625rem;
+  max-width: 31ch;
+  margin: 0 auto 22px;
+  color: var(--muted-light);
+}
+.card.dark .sub {
+  color: var(--muted-dark);
+}
+
+.links {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.link {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--gold);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.card.light .link {
+  color: var(--gold-deep);
+}
+.link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.chev {
+  font-size: 1.15em;
+  line-height: 1;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  padding: 15px 30px;
+  border-radius: 999px;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+/* ---- Scroll reveal: 22px fade-up, once, IntersectionObserver threshold .12 ----
+
+   Smoothness notes:
+   - translate3d rather than translateY promotes the element to its own
+     compositor layer, so the reveal never touches layout or paint.
+   - The curve is a long-tailed ease-out (same one the meters use), which
+     decelerates far more gently than plain `ease`.
+   - will-change is set up front and released on transitionend — holding it on
+     every section at once would keep dozens of layers alive on a long page.  */
+.js .rise {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.rise.in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.rise.settled {
+  will-change: auto;
+}
+
+/* ---- Staggered children ----------------------------------------------------
+   Items inside a revealing block cascade instead of arriving together. Delays
+   are small and the travel is shorter than the parent's, so the group still
+   reads as one movement rather than a sequence of separate ones.            */
+.js .stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rise.in .stagger > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.rise.in .stagger > *:nth-child(1) {
+  transition-delay: 0.04s;
+}
+.rise.in .stagger > *:nth-child(2) {
+  transition-delay: 0.1s;
+}
+.rise.in .stagger > *:nth-child(3) {
+  transition-delay: 0.16s;
+}
+.rise.in .stagger > *:nth-child(4) {
+  transition-delay: 0.22s;
+}
+.rise.in .stagger > *:nth-child(5) {
+  transition-delay: 0.28s;
+}
+.rise.in .stagger > *:nth-child(6) {
+  transition-delay: 0.33s;
+}
+.rise.in .stagger > *:nth-child(7) {
+  transition-delay: 0.38s;
+}
+.rise.in .stagger > *:nth-child(8) {
+  transition-delay: 0.43s;
+}
+.rise.in .stagger > *:nth-child(9) {
+  transition-delay: 0.47s;
+}
+.rise.in .stagger > *:nth-child(10) {
+  transition-delay: 0.51s;
+}
+.rise.in .stagger > *:nth-child(11) {
+  transition-delay: 0.55s;
+}
+.rise.in .stagger > *:nth-child(n + 12) {
+  transition-delay: 0.58s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .phone-btn.ping {
+    animation: none;
+  }
+  .meter i {
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+@media (min-width: 700px) {
+  .card {
+    padding-top: 98px;
+  }
+  .stage {
+    padding-bottom: 98px;
+  }
+  .sub {
+    font-size: 1.15rem;
+    max-width: 40ch;
+  }
+}
+
+/* Secondary link row sitting under a block rather than above it. */
+.links-after {
+  margin-top: 26px;
+  margin-bottom: 0;
+}
+
+/* ---- Above-the-fold exemption -------------------------------------------
+   The first block of the first section renders immediately rather than waiting
+   on the observer. It holds the h1, which is the largest contentful paint on
+   every page — hiding it at opacity 0 until JS runs meant Chrome recorded no
+   LCP candidate at all, and on a slow connection the headline genuinely wasn't
+   there. Everything below the fold still animates in.                        */
+.js main > .card:first-child > .rise:first-child {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  will-change: auto;
+}
+.js main > .card:first-child > .rise:first-child .stagger > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Paired CTA: one primary button, one secondary link beneath it ----------
+   Keeps a single dominant action per block while still offering the other
+   route, rather than two buttons competing for the same weight.            */
+.cta-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.cta-pair .link {
+  margin: 0;
+}
