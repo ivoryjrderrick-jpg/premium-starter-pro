@@ -19,7 +19,13 @@
   /* Gold is interactive-only: links, buttons, logo mark, active states, and
      the two animated stat treatments. Never a decorative fill or gradient. */
   --gold: #f5b84a;
-  --gold-deep: #c9902a;
+  /* The on-light pair. #c9902a was the value in the approved concepts and it
+     only reaches 2.63:1 on --snow, so every eyebrow and every gold link on a
+     light card failed WCAG AA for small text. Darkened to clear 4.5:1 on all
+     three light surfaces the site uses: --snow (5.2), --white (5.5) and the
+     light bubble #edeff3 (4.8). Every use of this token is on a light
+     background, so nothing else moves. */
+  --gold-deep: #8a6114;
   --alert: #ff6b6b;
 
   --line-dark: rgba(255, 255, 255, 0.1);

@@ -21,7 +21,6 @@ export const site = {
   /** Used in copy and in the LocalBusiness block. */
   city: 'Colorado Springs',
   state: 'CO',
-  region: 'Colorado',
   url: 'https://rockymountainbooking.com',
 
   phone: {

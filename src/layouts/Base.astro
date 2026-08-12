@@ -111,7 +111,7 @@ const jsonLd = JSON.stringify(localBusiness).replace(/</g, '\\u003c');
       crossorigin
     />
 
-    <script type="application/ld+json" set:html={jsonLd} />
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
 
     <!--
       Marks the document as scripted before first paint. The reveal animation

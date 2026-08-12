@@ -11,7 +11,7 @@ import { site } from '../config/site';
 const pageFiles = import.meta.glob('./**/*.astro');
 
 /** Pages that should not be advertised to search engines. */
-const EXCLUDE = new Set<string>([]);
+const EXCLUDE = new Set<string>(['404']);
 
 /** Legal pages are real but rarely change and should not outrank the offer. */
 const LOW_PRIORITY = new Set(['privacy', 'terms', 'sms-terms']);

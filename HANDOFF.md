@@ -106,7 +106,8 @@ a price anywhere else.**
 and there should never be one.
 
 **Pages:** `/` `/pricing` `/how-it-works` `/who-we-serve` `/contact`
-`/privacy` `/terms` `/sms-terms` `/sitemap.xml` (generated from files that exist)
+`/privacy` `/terms` `/sms-terms` `/404` `/sitemap.xml` (generated from the
+pages that exist; `404` is excluded)
 
 ---
 
@@ -142,8 +143,9 @@ Because there are **zero customers**, none of these may ever appear:
   unavailable
 
 Research figures are allowed **only** when labelled as industry research with
-the "not a promise about your business" fineprint. See §7 on `/` for the one
-unsourced number still outstanding.
+the "not a promise about your business" fineprint, which the two stats in the
+`/` research block carry. Everything else on the site is now claim-free — the
+old unsourced "$199 cost per lead" stat was removed rather than cited.
 
 ---
 
@@ -204,7 +206,15 @@ Every one of these was a real bug. Don't rediscover them.
 14. **`Astro.url.pathname` has a trailing slash.** It is `/pricing/` while
     `nav` stores `/pricing`, so a raw `===` marked only the homepage as current.
     `Nav.astro` strips it before comparing.
-15. **Never leave `playwright` or `sharp` in `package.json`.** Install for a
+15. **Lighthouse mobile can miss real contrast failures.** Sections below the
+    fold sit at `opacity: 0` until revealed, and axe skips fully transparent
+    elements — so `--gold-deep` failed AA on every light card for weeks while
+    mobile scored 100. The desktop preset caught it because its taller viewport
+    revealed more. **Audit with the reveals forced open**, e.g. inject axe-core
+    after `document.querySelectorAll('.rise').forEach(e=>e.classList.add('in'))`.
+16. **Never leave `playwright`, `sharp`, `axe-core` or `@astrojs/check` in
+    `package.json`.** Install for a task, uninstall after, then
+    `git checkout -- package-lock.json`. Install for a
    task, uninstall after, then `git checkout -- package-lock.json`.
 
 ---
@@ -240,7 +250,6 @@ own zone beside them, because the site serves clients nationwide.
 
 | # | Item | Notes |
 | --- | --- | --- |
-| 5 | **Cost-per-lead source** | The `$199` stat on `/` ("what one new lead costs on Google") has no citation. It is **not** the price — it just happens to match. Cite it or cut it. |
 | 6 | **Demo recording** | `public/audio/demo-call.mp3`. The section is decided at **build time** and is simply absent until the file exists. Drop it in, rebuild, it appears. |
 | 7 | **Confirm the hours** | Every page says answered around the clock, and **Terms §1 makes that contractual.** DJ once said the bot covers 10pm–6am and he takes the rest (commit `7662717`), then the site moved to 24/7 (`79c2997`). That was deliberate, but it needs confirming against how the assistant is actually configured. |
 | 8 | **Retention periods** | `/privacy` promises 90 days for recordings, 12 months for transcripts. These are published promises. Confirm the systems do it. |

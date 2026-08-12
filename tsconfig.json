@@ -1,5 +1,8 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "legacy-nextjs"]
+  // design-reference holds the approved static concepts and the old
+  // Next.js legal pages, kept for copy reference. They are not built and not
+  // shipped; type-checking them produced 463 errors that hid real ones.
+  "exclude": ["dist", "legacy-nextjs", "design-reference"]
 }

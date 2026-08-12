@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, nav } from '../config/site';
+
+/**
+ * Custom 404.
+ *
+ * Without this, a mistyped URL gets Vercel's generic white error page — no
+ * branding, no phone number, no way back. Someone who half-remembers the URL
+ * from a truck door or a business card is exactly the visitor worth catching,
+ * so this page keeps the two real actions in front of them.
+ *
+ * Astro emits it as dist/404.html and Vercel serves it automatically.
+ */
+const title = 'Page not found | Rocky Mountain Booking';
+const description = 'That page does not exist. Call the line or book a call with DJ.';
+---
+
+<Base title={title} description={description} path="/404">
+  <section class="card dark">
+    <div class="rise">
+      <p class="eyebrow">404</p>
+      <h1>That page isn&rsquo;t here.</h1>
+      <p class="sub">
+        It may have moved, or the link may have a typo in it. The phone still works.
+      </p>
+      <div class="cta-pair">
+        <a class="btn" href={site.phone.href}>Test a call &middot; {site.phone.display}</a>
+        <a class="link" href="/contact">Or book a call with me <span class="chev">›</span></a>
+      </div>
+    </div>
+
+    <div class="stage rise">
+      <nav class="lost" aria-label="All pages">
+        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 420px;
+    /* The CTA pair sits directly above; without this the pills crowd it. */
+    margin: 26px auto 0;
+  }
+  .lost a {
+    font-family: var(--display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted-dark);
+    text-decoration: none;
+    /* 44px tall so it clears the touch-target minimum unaided. */
+    padding: 12px 18px;
+    border: 1px solid var(--line-dark);
+    border-radius: 999px;
+    transition:
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+  .lost a:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+  .lost a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+</style>
+
+<script>
+  import '../scripts/motion';
+</script>
